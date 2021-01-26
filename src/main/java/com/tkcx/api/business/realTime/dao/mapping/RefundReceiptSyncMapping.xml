@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.realTime.dao.RefundReceiptSyncDao">
+
+    <resultMap id="BaseResultMap" type="com.tkcx.api.business.realTime.model.RefundReceiptSyncModel">
+        <result column="DEBT_NO" property="debtNo" />
+        <result column="DUE_DATE" property="dueDate" />
+        <result column="GRANT_DATE" property="grantDate" />
+        <result column="INTEREST_RATE" property="interestRate" />
+        <result column="LOAN_ACCOUNT" property="loanAccount" />
+        <result column="LOAN_AMOUNT" property="loanAmount" />
+        <result column="OVERDUE_INTEREST_RATE" property="overdueInterestRate" />
+        <result column="PAY_ACCOUNT" property="payAccount" />
+        <result column="PAYOFF_DATE" property="payoffDate" />
+        <result column="REFUND_NAME" property="refundName" />
+        <result column="ASSEMBLY_ID" property="assemblyId" />
+        <result column="ACCT_DATE" property="acctDate" />
+        <result column="BORROWER_IDNUM" property="borrowerIdnum" />
+        <result column="ORG_CODE" property="orgCode" />
+        <result column="ASSET_NO" property="assetNo" />
+        <result column="REPAY_TYPE" property="repayType" />
+
+    </resultMap>
+
+    <select id="selectListByRealTimeQuery" resultMap="BaseResultMap">
+        select rar.REPAY_ASSEMBLY_ID as ASSEMBLY_ID, cii.CARDII_NAME as REFUND_NAME,
+        rar.INDIVIDUAL_IDNUM as BORROWER_IDNUM, rar.ASSET_NO as ASSET_NO,
+        rar.REPAY_CARD as PAY_ACCOUNT, rar.REPAY_FINISH_TIME as PAYOFF_DATE,
+        ast.ASSET_DEBT_NO as DEBT_NO, ast.ASSET_LOAN_ACCOUNT as LOAN_ACCOUNT,
+        ast.ASSET_GRANTED_PRINCIPAL_AMOUNT as LOAN_AMOUNT, ast.ASSET_DUE_AT as DUE_DATE,
+        ast.ASSET_ACTUAL_GRANT_AT as GRANT_DATE, ast.ASSET_INTEREST_RATE as INTEREST_RATE,
+        ast.ASSET_PENALTY_INTEREST_RATE as OVERDUE_INTEREST_RATE, ast.ORGID as ORG_CODE,
+        rar.CORE_SYS_DATE as ACCT_DATE, rar.REPAY_TYPE as REPAY_TYPE
+        from QN_DB_BIZ.REPAY_ASSEMBLY_RECORD rar, QN_DB_BIZ.CARDII cii, QN_DB_BIZ.ASSET ast
+        <where>
+            rar.INDIVIDUAL_IDNUM = cii.CARDII_IDNUM AND rar.ASSET_NO = ast.ASSET_ITEM_NO
+
+            <if test="e.refundName != null and e.refundName != '' ">
+                AND cii.CARDII_NAME = #{e.refundName}
+            </if>
+            <if test="e.loanAccount != null and e.loanAccount != '' ">
+                AND ast.ASSET_LOAN_ACCOUNT = #{e.loanAccount}
+            </if>
+            <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+                AND rar.REPAY_FINISH_TIME BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+            </if>
+            ORDER BY rar.REPAY_FINISH_TIME ASC
+
+        </where>
+    </select>
+
+</mapper>

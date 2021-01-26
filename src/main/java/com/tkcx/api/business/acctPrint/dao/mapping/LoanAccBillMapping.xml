@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.LoanAccBillDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.LoanAccBillModel">
+		    <result column="ACC_BILL_ID" property="accBillId" />
+		    <result column="ACCOUNT_STATUS" property="accountStatus" />
+		    <result column="ACTUAL_RATE" property="actualRate" />
+		    <result column="BALANCE_AMOUNT" property="balanceAmount" />
+		    <result column="DEBT_FLAG" property="debtFlag" />
+		    <result column="DEBT_NO" property="debtNo" />
+		    <result column="DUE_DATE" property="dueDate" />
+		    <result column="GRANT_ACCOUNT" property="grantAccount" />
+		    <result column="GRANT_DATE" property="grantDate" />
+		    <result column="GTANT_AMOUNT" property="gtantAmount" />
+		    <result column="ITEM" property="item" />
+		    <result column="LOAN_NAME" property="loanName" />
+		    <result column="ORG_CODE" property="orgCode" />
+		    <result column="ORG_NAME" property="orgName" />
+		    <result column="PAYOFF_ACCOUNT" property="payoffAccount" />
+		    <result column="PAYOFF_AMOUNT" property="payoffAmount" />
+		    <result column="PAYOFF_DATE" property="payoffDate" />
+		    <result column="PRINCIPAL_STATUS" property="principalStatus" />
+		<result column="LOAN_ACCOUNT" property="loanAccount" />
+		<result column="ACCT_DATE" property="acctDate" />
+		<result column="BORROWER_IDNUM" property="borrowerIdnum" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from LOAN_ACC_BILL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from LOAN_ACC_BILL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select * from LOAN_ACC_BILL t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+        <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+            AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+        </if>
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE in (${e.orgCode})
+		</if>
+		<if test="e.loanName != null and e.loanName != '' ">
+			AND t.LOAN_NAME = #{e.loanName}
+		</if>
+		<if test="e.loanAccount != null and e.loanAccount != '' ">
+			AND t.LOAN_ACCOUNT = #{e.loanAccount}
+		</if>
+		<if test="e.principalStatus != null ">
+			AND t.PRINCIPAL_STATUS = #{e.principalStatus}
+		</if>
+		<if test="e.item != null and e.item != '' ">
+			AND t.ITEM = #{e.item}
+		</if>
+		<if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+			AND ((t.GRANT_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate})
+			or (t.DUE_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate})
+			or (t.PAYOFF_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}))
+		</if>
+		ORDER BY t.LOAN_ACCOUNT ASC
+	</sql>
+
+	<sql id="select_content">	
+				<if test="e.accBillId != null and e.accBillId != '' ">
+					AND t.ACC_BILL_ID = #{e.accBillId}
+				</if>
+				<if test="e.accountStatus != null and e.accountStatus != '' ">
+					AND t.ACCOUNT_STATUS = #{e.accountStatus}
+				</if>
+				<if test="e.actualRate != null and e.actualRate != '' ">
+					AND t.ACTUAL_RATE = #{e.actualRate}
+				</if>
+				<if test="e.balanceAmount != null and e.balanceAmount != '' ">
+					AND t.BALANCE_AMOUNT = #{e.balanceAmount}
+				</if>
+				<if test="e.debtFlag != null and e.debtFlag != '' ">
+					AND t.DEBT_FLAG = #{e.debtFlag}
+				</if>
+				<if test="e.debtNo != null and e.debtNo != '' ">
+					AND t.DEBT_NO = #{e.debtNo}
+				</if>
+				<if test="e.dueDate != null and e.dueDate != '' ">
+					AND t.DUE_DATE = #{e.dueDate}
+				</if>
+				<if test="e.grantAccount != null and e.grantAccount != '' ">
+					AND t.GRANT_ACCOUNT = #{e.grantAccount}
+				</if>
+				<if test="e.grantDate != null and e.grantDate != '' ">
+					AND t.GRANT_DATE = #{e.grantDate}
+				</if>
+				<if test="e.gtantAmount != null and e.gtantAmount != '' ">
+					AND t.GTANT_AMOUNT = #{e.gtantAmount}
+				</if>
+				<if test="e.item != null and e.item != '' ">
+					AND t.ITEM = #{e.item}
+				</if>
+				<if test="e.loanName != null and e.loanName != '' ">
+					AND t.LOAN_NAME = #{e.loanName}
+				</if>
+				<if test="e.orgCode != null and e.orgCode != '' ">
+					AND t.ORG_CODE = #{e.orgCode}
+				</if>
+				<if test="e.orgName != null and e.orgName != '' ">
+					AND t.ORG_NAME = #{e.orgName}
+				</if>
+				<if test="e.payoffAccount != null and e.payoffAccount != '' ">
+					AND t.PAYOFF_ACCOUNT = #{e.payoffAccount}
+				</if>
+				<if test="e.payoffAmount != null and e.payoffAmount != '' ">
+					AND t.PAYOFF_AMOUNT = #{e.payoffAmount}
+				</if>
+				<if test="e.payoffDate != null and e.payoffDate != '' ">
+					AND t.PAYOFF_DATE = #{e.payoffDate}
+				</if>
+				<if test="e.principalStatus != null and e.principalStatus != '' ">
+					AND t.PRINCIPAL_STATUS = #{e.principalStatus}
+				</if>
+	</sql>
+
+</mapper>

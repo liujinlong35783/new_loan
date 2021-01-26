@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.AcctLogDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.AcctLogModel">
+		    <result column="LOG_ID" property="logId" />
+		    <result column="LOG_TYPE" property="logType" />
+		    <result column="CONTENT" property="content" />
+		    <result column="ACCT_DATE" property="acctDate" />
+		    <result column="SERIAL_NO" property="serialNo" />
+		    <result column="CREATE_DATE" property="createDate" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ACCT_LOG t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ACCT_LOG t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.logId != null and e.logId != '' ">
+					AND t.LOG_ID = #{e.logId}
+				</if>
+				<if test="e.logType != null and e.logType != '' ">
+					AND t.LOG_TYPE = #{e.logType}
+				</if>
+				<if test="e.content != null and e.content != '' ">
+					AND t.CONTENT = #{e.content}
+				</if>
+				<if test="e.acctDate != null ">
+					AND t.ACCT_DATE = #{e.acctDate}
+				</if>
+				<if test="e.serialNo != null and e.serialNo != '' ">
+					AND t.SERIAL_NO = #{e.serialNo}
+				</if>
+				<if test="e.createDate != null ">
+					AND t.CREATE_DATE = #{e.createDate}
+				</if>
+	</sql>
+
+</mapper>

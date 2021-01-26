@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.RepayPlanProgressDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.RepayPlanProgressModel">
+		    <result column="REPAY_PLAN_PROGRESS_ID" property="repayPlanProgressId" />
+		    <result column="ASSET_ITEM_NO" property="assetItemNo" />
+		    <result column="REPAY_PLAN_MAIN_NO" property="repayPlanMainNo" />
+		    <result column="REPAY_PLAN_NO" property="repayPlanNo" />
+		    <result column="PROGRESS_REASON" property="progressReason" />
+		    <result column="REPAY_PLAN_PROGRESS_ID_BF" property="repayPlanProgressIdBf" />
+		    <result column="FINANCE_STATUS_BF" property="financeStatusBf" />
+		    <result column="IS_ACCRUED_BF" property="isAccruedBf" />
+		    <result column="OVERDUE_DAYS_BF" property="overdueDaysBf" />
+		    <result column="FINANCE_STATUS_CURR" property="financeStatusCurr" />
+		    <result column="IS_ACCRUED_CURR" property="isAccruedCurr" />
+		    <result column="PRINCIPAL" property="principal" />
+		    <result column="REPAID_PRINCIPAL" property="repaidPrincipal" />
+		    <result column="NO_REPAY_PRINCIPAL" property="noRepayPrincipal" />
+		    <result column="INTEREST" property="interest" />
+		    <result column="REPAID_INTEREST" property="repaidInterest" />
+		    <result column="ONBL_UNTAX_INTEREST" property="onblUntaxInterest" />
+		    <result column="REPAID_ONBL_UNTAX_INTEREST" property="repaidOnblUntaxInterest" />
+		    <result column="EXTEND_INTEREST" property="extendInterest" />
+		    <result column="REPAID_EXTEND_INTEREST" property="repaidExtendInterest" />
+		    <result column="OFFBALANCE_INTEREST" property="offbalanceInterest" />
+		    <result column="REPAID_OFFBALANCE_INTEREST" property="repaidOffbalanceInterest" />
+		    <result column="PENALTY_INTEREST" property="penaltyInterest" />
+		    <result column="REPAID_PENALTY_INTEREST" property="repaidPenaltyInterest" />
+		    <result column="OFFBALANCE_PENALTY_INTEREST" property="offbalancePenaltyInterest" />
+		    <result column="REPAID_OFFBALANCE_PENALTY_INTEREST" property="repaidOffbalancePenaltyInterest" />
+		    <result column="TOTAL_REPAY" property="totalRepay" />
+		    <result column="REPAY_STATUS_CURR" property="repayStatusCurr" />
+		    <result column="CREATE_TIME" property="createTime" />
+		    <result column="UPDATE_CORE_SYSTE_DATE" property="updateCoreSysteDate" />
+		    <result column="UPDATE_TIME" property="updateTime" />
+		    <result column="ACCT_RECORD_NO" property="acctRecordNo" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from REPAY_PLAN_PROGRESS t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from REPAY_PLAN_PROGRESS t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.repayPlanProgressId != null and e.repayPlanProgressId != '' ">
+					AND t.REPAY_PLAN_PROGRESS_ID = #{e.repayPlanProgressId}
+				</if>
+				<if test="e.assetItemNo != null and e.assetItemNo != '' ">
+					AND t.ASSET_ITEM_NO = #{e.assetItemNo}
+				</if>
+				<if test="e.repayPlanMainNo != null and e.repayPlanMainNo != '' ">
+					AND t.REPAY_PLAN_MAIN_NO = #{e.repayPlanMainNo}
+				</if>
+				<if test="e.repayPlanNo != null and e.repayPlanNo != '' ">
+					AND t.REPAY_PLAN_NO = #{e.repayPlanNo}
+				</if>
+				<if test="e.progressReason != null and e.progressReason != '' ">
+					AND t.PROGRESS_REASON = #{e.progressReason}
+				</if>
+				<if test="e.repayPlanProgressIdBf != null and e.repayPlanProgressIdBf != '' ">
+					AND t.REPAY_PLAN_PROGRESS_ID_BF = #{e.repayPlanProgressIdBf}
+				</if>
+				<if test="e.financeStatusBf != null and e.financeStatusBf != '' ">
+					AND t.FINANCE_STATUS_BF = #{e.financeStatusBf}
+				</if>
+				<if test="e.isAccruedBf != null and e.isAccruedBf != '' ">
+					AND t.IS_ACCRUED_BF = #{e.isAccruedBf}
+				</if>
+				<if test="e.overdueDaysBf != null and e.overdueDaysBf != '' ">
+					AND t.OVERDUE_DAYS_BF = #{e.overdueDaysBf}
+				</if>
+				<if test="e.financeStatusCurr != null and e.financeStatusCurr != '' ">
+					AND t.FINANCE_STATUS_CURR = #{e.financeStatusCurr}
+				</if>
+				<if test="e.isAccruedCurr != null and e.isAccruedCurr != '' ">
+					AND t.IS_ACCRUED_CURR = #{e.isAccruedCurr}
+				</if>
+				<if test="e.principal != null and e.principal != '' ">
+					AND t.PRINCIPAL = #{e.principal}
+				</if>
+				<if test="e.repaidPrincipal != null and e.repaidPrincipal != '' ">
+					AND t.REPAID_PRINCIPAL = #{e.repaidPrincipal}
+				</if>
+				<if test="e.noRepayPrincipal != null and e.noRepayPrincipal != '' ">
+					AND t.NO_REPAY_PRINCIPAL = #{e.noRepayPrincipal}
+				</if>
+				<if test="e.interest != null and e.interest != '' ">
+					AND t.INTEREST = #{e.interest}
+				</if>
+				<if test="e.repaidInterest != null and e.repaidInterest != '' ">
+					AND t.REPAID_INTEREST = #{e.repaidInterest}
+				</if>
+				<if test="e.onblUntaxInterest != null and e.onblUntaxInterest != '' ">
+					AND t.ONBL_UNTAX_INTEREST = #{e.onblUntaxInterest}
+				</if>
+				<if test="e.repaidOnblUntaxInterest != null and e.repaidOnblUntaxInterest != '' ">
+					AND t.REPAID_ONBL_UNTAX_INTEREST = #{e.repaidOnblUntaxInterest}
+				</if>
+				<if test="e.extendInterest != null and e.extendInterest != '' ">
+					AND t.EXTEND_INTEREST = #{e.extendInterest}
+				</if>
+				<if test="e.repaidExtendInterest != null and e.repaidExtendInterest != '' ">
+					AND t.REPAID_EXTEND_INTEREST = #{e.repaidExtendInterest}
+				</if>
+				<if test="e.offbalanceInterest != null and e.offbalanceInterest != '' ">
+					AND t.OFFBALANCE_INTEREST = #{e.offbalanceInterest}
+				</if>
+				<if test="e.repaidOffbalanceInterest != null and e.repaidOffbalanceInterest != '' ">
+					AND t.REPAID_OFFBALANCE_INTEREST = #{e.repaidOffbalanceInterest}
+				</if>
+				<if test="e.penaltyInterest != null and e.penaltyInterest != '' ">
+					AND t.PENALTY_INTEREST = #{e.penaltyInterest}
+				</if>
+				<if test="e.repaidPenaltyInterest != null and e.repaidPenaltyInterest != '' ">
+					AND t.REPAID_PENALTY_INTEREST = #{e.repaidPenaltyInterest}
+				</if>
+				<if test="e.offbalancePenaltyInterest != null and e.offbalancePenaltyInterest != '' ">
+					AND t.OFFBALANCE_PENALTY_INTEREST = #{e.offbalancePenaltyInterest}
+				</if>
+				<if test="e.repaidOffbalancePenaltyInterest != null and e.repaidOffbalancePenaltyInterest != '' ">
+					AND t.REPAID_OFFBALANCE_PENALTY_INTEREST = #{e.repaidOffbalancePenaltyInterest}
+				</if>
+				<if test="e.totalRepay != null and e.totalRepay != '' ">
+					AND t.TOTAL_REPAY = #{e.totalRepay}
+				</if>
+				<if test="e.repayStatusCurr != null and e.repayStatusCurr != '' ">
+					AND t.REPAY_STATUS_CURR = #{e.repayStatusCurr}
+				</if>
+				<if test="e.createTime != null and e.createTime != '' ">
+					AND t.CREATE_TIME = #{e.createTime}
+				</if>
+				<if test="e.updateCoreSysteDate != null and e.updateCoreSysteDate != '' ">
+					AND t.UPDATE_CORE_SYSTE_DATE = #{e.updateCoreSysteDate}
+				</if>
+				<if test="e.updateTime != null and e.updateTime != '' ">
+					AND t.UPDATE_TIME = #{e.updateTime}
+				</if>
+				<if test="e.acctRecordNo != null and e.acctRecordNo != '' ">
+					AND t.ACCT_RECORD_NO = #{e.acctRecordNo}
+				</if>
+	</sql>
+
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.InterestBillDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.InterestBillModel">
+		<result column="AMOUNT" property="amount"/>
+		<result column="DEBT_FLAG" property="debtFlag"/>
+		<result column="DEBT_NO" property="debtNo"/>
+		<result column="INTEREST_ID" property="interestId"/>
+		<result column="LOAN_ACCOUNT" property="loanAccount"/>
+		<result column="ORG_CODE" property="orgCode"/>
+		<result column="ORG_NAME" property="orgName"/>
+		<result column="PAYFOFF_OVERDUE_INTEREST" property="payfoffOverdueInterest"/>
+		<result column="PAYOFF_DATE" property="payoffDate"/>
+		<result column="PAYOFF_FLAG" property="payoffFlag"/>
+		<result column="PAYOFF_NORMAL_INTEREST" property="payoffNormalInterest"/>
+		<result column="PAYOFF_PRINCIPAL" property="payoffPrincipal"/>
+		<result column="PAYOFF_SUM" property="payoffSum"/>
+		<result column="SHOULD_NORMAL_INTEREST" property="shouldNormalInterest"/>
+		<result column="SHOULD_OVERDUE_INTEREST" property="shouldOverdueInterest"/>
+		<result column="SHOULD_PRINCIPAL" property="shouldPrincipal"/>
+		<result column="SHOULD_SUM" property="shouldSum"/>
+		<result column="SHOULD_OTHER_SUM" property="shouldOtherSum"/>
+		<result column="PAYOFF_OTHER_SUM" property="payoffOtherSum"/>
+		<result column="ACCT_DATE" property="acctDate"/>
+		<result column="BORROWER_IDNUM" property="borrowerIdnum"/>
+		<result column="LOAN_NAME" property="loanName"/>
+		<result column="CONTRACT_NO" property="contractNo"/>
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from INTEREST_BILL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from INTEREST_BILL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select * from INTEREST_BILL t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE in (${e.orgCode})
+		</if>
+		<if test="e.loanName != null and e.loanName != '' ">
+			AND t.LOAN_NAME = #{e.loanName}
+		</if>
+		<if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+			AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+		</if>
+		<if test="e.loanAccount != null and e.loanAccount != '' ">
+			AND t.LOAN_ACCOUNT = #{e.loanAccount}
+		</if>
+		<if test="e.payoffFlag != null and e.payoffFlag != '' ">
+			AND t.PAYOFF_FLAG = #{e.payoffFlag}
+		</if>
+		<if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+			AND t.ACCT_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+		</if>
+		ORDER BY t.ACCT_DATE ASC, t.LOAN_ACCOUNT ASC
+	</sql>
+
+	<sql id="select_content">	
+				<if test="e.amount != null and e.amount != '' ">
+					AND t.AMOUNT = #{e.amount}
+				</if>
+				<if test="e.debtFlag != null and e.debtFlag != '' ">
+					AND t.DEBT_FLAG = #{e.debtFlag}
+				</if>
+				<if test="e.debtNo != null and e.debtNo != '' ">
+					AND t.DEBT_NO = #{e.debtNo}
+				</if>
+				<if test="e.interestId != null and e.interestId != '' ">
+					AND t.INTEREST_ID = #{e.interestId}
+				</if>
+				<if test="e.loanAccount != null and e.loanAccount != '' ">
+					AND t.LOAN_ACCOUNT = #{e.loanAccount}
+				</if>
+				<if test="e.orgCode != null and e.orgCode != '' ">
+					AND t.ORG_CODE = #{e.orgCode}
+				</if>
+				<if test="e.orgName != null and e.orgName != '' ">
+					AND t.ORG_NAME = #{e.orgName}
+				</if>
+				<if test="e.payfoffOverdueInterest != null and e.payfoffOverdueInterest != '' ">
+					AND t.PAYFOFF_OVERDUE_INTEREST = #{e.payfoffOverdueInterest}
+				</if>
+				<if test="e.payoffDate != null and e.payoffDate != '' ">
+					AND t.PAYOFF_DATE = #{e.payoffDate}
+				</if>
+				<if test="e.payoffFlag != null and e.payoffFlag != '' ">
+					AND t.PAYOFF_FLAG = #{e.payoffFlag}
+				</if>
+				<if test="e.payoffNormalInterest != null and e.payoffNormalInterest != '' ">
+					AND t.PAYOFF_NORMAL_INTEREST = #{e.payoffNormalInterest}
+				</if>
+				<if test="e.payoffPrincipal != null and e.payoffPrincipal != '' ">
+					AND t.PAYOFF_PRINCIPAL = #{e.payoffPrincipal}
+				</if>
+				<if test="e.payoffSum != null and e.payoffSum != '' ">
+					AND t.PAYOFF_SUM = #{e.payoffSum}
+				</if>
+				<if test="e.shouldNormalInterest != null and e.shouldNormalInterest != '' ">
+					AND t.SHOULD_NORMAL_INTEREST = #{e.shouldNormalInterest}
+				</if>
+				<if test="e.shouldOverdueInterest != null and e.shouldOverdueInterest != '' ">
+					AND t.SHOULD_OVERDUE_INTEREST = #{e.shouldOverdueInterest}
+				</if>
+				<if test="e.shouldPrincipal != null and e.shouldPrincipal != '' ">
+					AND t.SHOULD_PRINCIPAL = #{e.shouldPrincipal}
+				</if>
+				<if test="e.shouldSum != null and e.shouldSum != '' ">
+					AND t.SHOULD_SUM = #{e.shouldSum}
+				</if>
+				<if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+					AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+				</if>
+		<if test="e.loanName != null and e.loanName != '' ">
+			AND t.LOAN_NAME = #{e.loanName}
+		</if>
+		<if test="e.contractNo != null and e.contractNo != '' ">
+			AND t.CONTRACT_NO = #{e.contractNo}
+		</if>
+	</sql>
+
+</mapper>

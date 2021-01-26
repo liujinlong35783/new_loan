@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>业务机构轧账单</title>
+</head>
+<body>
+<table #{lineNum=20} align="center" id="table" border="1" style="font-size: 10px;width: 100%;border-collapse: collapse;border:none">
+    <thead style="border: none">
+    <tr>
+        <td colspan="6" style="height: 50px;font-size: 25px;text-align: center;border: none">网贷业务机构轧账单</td>
+    </tr>
+    <tr>
+        <td colspan="6" style="border: none;">
+            <table style="width: 100%;border-collapse: collapse;border:none;">
+                <tr>
+                    <td align="left"><span>机构名称：#{orgName}</span></td>
+                    <td><span>机构号：#{orgCode}</span></td>
+                    <td><span>会计日期：#{acctDate}</span></td>
+                    <td><span>币种:人民币</span></td>
+                    <td><span>单位:元</span></td>
+                    <td align="right"><span>#{pageInfo}</span></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </thead>
+    <tbody style="text-align: center;border: 1px solid black">
+    <tr>
+        <td>科目控制字</td>
+        <td>表内外标识</td>
+        <td>本日借方笔数</td>
+        <td>本日借方发生额</td>
+        <td>本日贷方笔数</td>
+        <td>本日贷方发生额</td>
+    </tr>
+    #{htmlContent}
+    <tr>
+        <td colspan="2">表内合计</td>
+        #{tableTotal}
+    </tr>
+    <tr>
+        <td colspan="2">表外合计</td>
+        #{tableTotalOut}
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="3" style="border: none;">打印柜员：#{printPerson}</td>
+        <td colspan="3" style="border: none;text-align: right">日期：#{printDate}</td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>

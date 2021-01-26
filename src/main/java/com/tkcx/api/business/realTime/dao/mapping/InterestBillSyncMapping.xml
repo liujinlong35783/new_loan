@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.realTime.dao.InterestBillSyncDao">
+
+    <resultMap id="BaseResultMap" type="com.tkcx.api.business.realTime.model.InterestBillSyncModel">
+        <result column="DEBT_FLAG" property="debtFlag"/>
+        <result column="DEBT_NO" property="debtNo"/>
+        <result column="LOAN_ACCOUNT" property="loanAccount"/>
+        <result column="ORG_CODE" property="orgCode"/>
+        <result column="PAYOFF_DATE" property="payoffDate"/>
+        <result column="PAYOFF_FLAG" property="payoffFlag"/>
+        <result column="ACCT_DATE" property="acctDate"/>
+        <result column="BORROWER_IDNUM" property="borrowerIdnum"/>
+        <result column="LOAN_NAME" property="loanName"/>
+        <result column="SETTLE_TYPE" property="settleType"/>
+        <result column="ASSET_NO" property="assetNo"/>
+        <result column="REPAY_PLAN_NO" property="repayPlanNo"/>
+        <result column="ASSEMBLY_ID" property="assemblyId"/>
+    </resultMap>
+
+    <select id="selectListByRealTimeQuery" resultMap="BaseResultMap">
+        SELECT
+        1 AS DEBT_FLAG,
+        ins.SETTLE_TYPE AS SETTLE_TYPE,
+        ins.REPAY_PLAN_NO AS REPAY_PLAN_NO,
+        0 AS ASSEMBLY_ID,
+        NULL AS PAYOFF_DATE,
+        ins.CREATE_CORE_SYSTE_DATE AS ACCT_DATE,
+        ast.ORGID AS ORG_CODE,
+        ast.ASSET_LOAN_ACCOUNT AS LOAN_ACCOUNT,
+        ast.ASSET_DEBT_NO AS DEBT_NO,
+        ast.ASSET_BORROWER_IDNUM AS BORROWER_IDNUM,
+        0 AS PAYOFF_FLAG,
+        cii.CARDII_NAME AS LOAN_NAME,
+        ast.ASSET_ITEM_NO AS ASSET_NO
+        FROM
+        (
+        SELECT
+        t.ASSET_ITEM_NO,
+        MAX( t.REPAY_PLAN_NO ) AS REPAY_PLAN_NO,
+        ANY_VALUE ( t.SETTLE_TYPE ) AS SETTLE_TYPE,
+        ANY_VALUE ( t.CREATE_CORE_SYSTE_DATE ) AS CREATE_CORE_SYSTE_DATE
+        FROM
+        QN_DB_BIZ.INTEREST_SETTLE t,
+        QN_DB_BIZ.REPAY_PLAN r
+        WHERE
+        t.REPAY_PLAN_NO = r.REPAY_PLAN_NO
+        AND r.REPAY_PLAN_DUE_AT &lt;= TO_DATE(#{e.timeSegment.startDate}, 'yyyy-MM-dd' )
+        AND t.CREATE_CORE_SYSTE_DATE = TO_DATE(#{e.timeSegment.startDate}, 'yyyy-MM-dd' )
+        GROUP BY
+        t.ASSET_ITEM_NO
+        ) ins,
+        QN_DB_BIZ.ASSET ast,
+        QN_DB_BIZ.CARDII cii
+        <where>
+            ins.ASSET_ITEM_NO = ast.ASSET_ITEM_NO
+            AND ast.ASSET_BORROWER_IDNUM = cii.CARDII_IDNUM
+
+            <if test="e.orgCode != null and e.orgCode != '' ">
+                AND ast.ORGID in (${e.orgCode})
+            </if>
+            <if test="e.loanName != null and e.loanName != '' ">
+                AND cii.CARDII_NAME = #{e.loanName}
+            </if>
+            <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+                AND ast.ASSET_BORROWER_IDNUM = #{e.borrowerIdnum}
+            </if>
+            <if test="e.loanAccount != null and e.loanAccount != '' ">
+                AND ast.ASSET_LOAN_ACCOUNT = #{e.loanAccount}
+            </if>
+            <if test="e.payoffFlag != null and e.payoffFlag != '' ">
+                AND 0 = #{e.payoffFlag}
+            </if>
+            <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+                AND ins.CREATE_CORE_SYSTE_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+            </if>
+
+        </where>
+
+        union all
+
+        SELECT
+        2 AS DEBT_FLAG,
+        NULL AS SETTLE_TYPE,
+        NULL AS REPAY_PLAN_NO,
+        rar.REPAY_ASSEMBLY_ID AS ASSEMBLY_ID,
+        rar.REPAY_FINISH_TIME AS PAYOFF_DATE,
+        rar.CORE_SYS_DATE AS ACCT_DATE,
+        ast.ORGID AS ORG_CODE,
+        ast.ASSET_LOAN_ACCOUNT AS LOAN_ACCOUNT,
+        ast.ASSET_DEBT_NO AS DEBT_NO,
+        ast.ASSET_BORROWER_IDNUM AS BORROWER_IDNUM,
+        CASE his.ASSET_STATUS_AF
+        WHEN TO_NCHAR('payoff') THEN 2
+        ELSE
+          CASE rar.REPAY_RESULT
+          WHEN TO_NCHAR('Full') THEN 1
+          ELSE 0
+          END
+        END AS PAYOFF_FLAG,
+        cii.CARDII_NAME AS LOAN_NAME,
+        ast.ASSET_ITEM_NO AS ASSET_NO
+        FROM
+        QN_DB_BIZ.REPAY_ASSEMBLY_RECORD rar,
+        QN_DB_BIZ.ASSET ast,
+        QN_DB_BIZ.CARDII cii,
+        QN_DB_BIZ.ASSET_HISTORY his
+        <where>
+            rar.ASSET_NO = ast.ASSET_ITEM_NO
+            AND ast.ASSET_BORROWER_IDNUM = cii.CARDII_IDNUM
+            AND rar.ASSET_HISTORY_ID = his.ASSET_HISTORY_ID
+
+            <if test="e.orgCode != null and e.orgCode != '' ">
+                AND ast.ORGID in (#{e.orgCode})
+            </if>
+            <if test="e.loanName != null and e.loanName != '' ">
+                AND cii.CARDII_NAME = #{e.loanName}
+            </if>
+            <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+                AND ast.ASSET_BORROWER_IDNUM = #{e.borrowerIdnum}
+            </if>
+            <if test="e.loanAccount != null and e.loanAccount != '' ">
+                AND ast.ASSET_LOAN_ACCOUNT = #{e.loanAccount}
+            </if>
+            <if test="e.payoffFlag != null and e.payoffFlag == 0 ">
+                AND rar.REPAY_RESULT != 'Full' AND his.ASSET_STATUS_AF != 'payoff'
+            </if>
+            <if test="e.payoffFlag != null and e.payoffFlag == 1 ">
+                AND rar.REPAY_RESULT = 'Full' AND his.ASSET_STATUS_AF != 'payoff'
+            </if>
+            <if test="e.payoffFlag != null and e.payoffFlag == 2 ">
+                AND his.ASSET_STATUS_AF = 'payoff'
+            </if>
+            <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+                AND rar.CORE_SYS_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+            </if>
+
+        </where>
+
+        order by ASSET_NO asc, ACCT_DATE asc, PAYOFF_DATE nulls first
+
+    </select>
+
+</mapper>

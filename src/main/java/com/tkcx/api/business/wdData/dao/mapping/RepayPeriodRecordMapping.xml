@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.RepayPeriodRecordDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.RepayPeriodRecordModel">
+		    <result column="REPAY_RECORD_ID" property="repayRecordId" />
+		    <result column="ASSEMBLY_ID" property="assemblyId" />
+		    <result column="ASSET_NO" property="assetNo" />
+		    <result column="REPAY_PERIOD" property="repayPeriod" />
+		    <result column="REPAY_PLAN_ID" property="repayPlanId" />
+		    <result column="REPAY_PLAN_NO" property="repayPlanNo" />
+		    <result column="INDIVIDUAL_IDNUM" property="individualIdnum" />
+		    <result column="REPAY_RESULT" property="repayResult" />
+		    <result column="CURR_REPAY_AMOUNT" property="currRepayAmount" />
+		    <result column="PRINCIPAL_AMOUNT" property="principalAmount" />
+		    <result column="PRINCIPAL_REPAY_HISTORY" property="principalRepayHistory" />
+		    <result column="PRINCIPAL_REPAY_AMOUNT" property="principalRepayAmount" />
+		    <result column="INTEREST_AMOUNT" property="interestAmount" />
+		    <result column="INTEREST_REPAY_HISTORY" property="interestRepayHistory" />
+		    <result column="INTEREST_REPAY_AMOUNT" property="interestRepayAmount" />
+		    <result column="OFFBL_INTEREST_REPAY_AMOUNT" property="offblInterestRepayAmount" />
+		    <result column="EXTEND_INTEREST" property="extendInterest" />
+		    <result column="EXTEND_INTEREST_REPAY_HISTORY" property="extendInterestRepayHistory" />
+		    <result column="EXTEND_INTEREST_REPAY_AMOUNT" property="extendInterestRepayAmount" />
+		    <result column="FINED_AMOUNT" property="finedAmount" />
+		    <result column="FINED_REPAY_HISTORY" property="finedRepayHistory" />
+		    <result column="FINED_REPAY_AMOUNT" property="finedRepayAmount" />
+		    <result column="OFFBL_FINED_REPAY_AMOUNT" property="offblFinedRepayAmount" />
+		    <result column="ONBL_UNTAX_INTEREST" property="onblUntaxInterest" />
+		    <result column="ONBL_UNTAX_INTEREST_REPAY_AMOUNT" property="onblUntaxInterestRepayAmount" />
+		    <result column="TAX_REPAY_AMOUNT" property="taxRepayAmount" />
+		    <result column="OFFBL_TAX_REPAY_AMOUNT" property="offblTaxRepayAmount" />
+		    <result column="COUPON_HISTORY" property="couponHistory" />
+		    <result column="COUPON_AMOUNT" property="couponAmount" />
+		    <result column="COUPON_AMOUNT_ONBALANCE" property="couponAmountOnbalance" />
+		    <result column="COUPON_AMOUNT_OFFBANLANCE" property="couponAmountOffbanlance" />
+		    <result column="COUPON_AMOUNT_ONBL_UNTAX" property="couponAmountOnblUntax" />
+		    <result column="REPAY_PLAN_PROGRESS_ID_BF" property="repayPlanProgressIdBf" />
+		    <result column="REPAY_PLAN_PROGRESS_ID_AF" property="repayPlanProgressIdAf" />
+		    <result column="OVERDUE_DAYS_BF" property="overdueDaysBf" />
+		    <result column="OVERDUE_DAYS_AF" property="overdueDaysAf" />
+		    <result column="FINANCE_STATUS_BF" property="financeStatusBf" />
+		    <result column="FINANCE_STATUS_AF" property="financeStatusAf" />
+		    <result column="IS_ACCRUED_BF" property="isAccruedBf" />
+		    <result column="IS_ACCRUED_AF" property="isAccruedAf" />
+		    <result column="REPAY_REMARK" property="repayRemark" />
+		    <result column="ACCT_RECORD_NO" property="acctRecordNo" />
+		    <result column="REPAY_CREATE_DATE" property="repayCreateDate" />
+		    <result column="REPAY_UPDATE_DATE" property="repayUpdateDate" />
+		    <result column="CORE_SYS_DATE" property="coreSysDate" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from REPAY_PERIOD_RECORD t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from REPAY_PERIOD_RECORD t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.repayRecordId != null and e.repayRecordId != '' ">
+					AND t.REPAY_RECORD_ID = #{e.repayRecordId}
+				</if>
+				<if test="e.assemblyId != null and e.assemblyId != '' ">
+					AND t.ASSEMBLY_ID = #{e.assemblyId}
+				</if>
+				<if test="e.assetNo != null and e.assetNo != '' ">
+					AND t.ASSET_NO = #{e.assetNo}
+				</if>
+				<if test="e.repayPeriod != null and e.repayPeriod != '' ">
+					AND t.REPAY_PERIOD = #{e.repayPeriod}
+				</if>
+				<if test="e.repayPlanId != null and e.repayPlanId != '' ">
+					AND t.REPAY_PLAN_ID = #{e.repayPlanId}
+				</if>
+				<if test="e.repayPlanNo != null and e.repayPlanNo != '' ">
+					AND t.REPAY_PLAN_NO = #{e.repayPlanNo}
+				</if>
+				<if test="e.individualIdnum != null and e.individualIdnum != '' ">
+					AND t.INDIVIDUAL_IDNUM = #{e.individualIdnum}
+				</if>
+				<if test="e.repayResult != null and e.repayResult != '' ">
+					AND t.REPAY_RESULT = #{e.repayResult}
+				</if>
+				<if test="e.currRepayAmount != null and e.currRepayAmount != '' ">
+					AND t.CURR_REPAY_AMOUNT = #{e.currRepayAmount}
+				</if>
+				<if test="e.principalAmount != null and e.principalAmount != '' ">
+					AND t.PRINCIPAL_AMOUNT = #{e.principalAmount}
+				</if>
+				<if test="e.principalRepayHistory != null and e.principalRepayHistory != '' ">
+					AND t.PRINCIPAL_REPAY_HISTORY = #{e.principalRepayHistory}
+				</if>
+				<if test="e.principalRepayAmount != null and e.principalRepayAmount != '' ">
+					AND t.PRINCIPAL_REPAY_AMOUNT = #{e.principalRepayAmount}
+				</if>
+				<if test="e.interestAmount != null and e.interestAmount != '' ">
+					AND t.INTEREST_AMOUNT = #{e.interestAmount}
+				</if>
+				<if test="e.interestRepayHistory != null and e.interestRepayHistory != '' ">
+					AND t.INTEREST_REPAY_HISTORY = #{e.interestRepayHistory}
+				</if>
+				<if test="e.interestRepayAmount != null and e.interestRepayAmount != '' ">
+					AND t.INTEREST_REPAY_AMOUNT = #{e.interestRepayAmount}
+				</if>
+				<if test="e.offblInterestRepayAmount != null and e.offblInterestRepayAmount != '' ">
+					AND t.OFFBL_INTEREST_REPAY_AMOUNT = #{e.offblInterestRepayAmount}
+				</if>
+				<if test="e.extendInterest != null and e.extendInterest != '' ">
+					AND t.EXTEND_INTEREST = #{e.extendInterest}
+				</if>
+				<if test="e.extendInterestRepayHistory != null and e.extendInterestRepayHistory != '' ">
+					AND t.EXTEND_INTEREST_REPAY_HISTORY = #{e.extendInterestRepayHistory}
+				</if>
+				<if test="e.extendInterestRepayAmount != null and e.extendInterestRepayAmount != '' ">
+					AND t.EXTEND_INTEREST_REPAY_AMOUNT = #{e.extendInterestRepayAmount}
+				</if>
+				<if test="e.finedAmount != null and e.finedAmount != '' ">
+					AND t.FINED_AMOUNT = #{e.finedAmount}
+				</if>
+				<if test="e.finedRepayHistory != null and e.finedRepayHistory != '' ">
+					AND t.FINED_REPAY_HISTORY = #{e.finedRepayHistory}
+				</if>
+				<if test="e.finedRepayAmount != null and e.finedRepayAmount != '' ">
+					AND t.FINED_REPAY_AMOUNT = #{e.finedRepayAmount}
+				</if>
+				<if test="e.offblFinedRepayAmount != null and e.offblFinedRepayAmount != '' ">
+					AND t.OFFBL_FINED_REPAY_AMOUNT = #{e.offblFinedRepayAmount}
+				</if>
+				<if test="e.onblUntaxInterest != null and e.onblUntaxInterest != '' ">
+					AND t.ONBL_UNTAX_INTEREST = #{e.onblUntaxInterest}
+				</if>
+				<if test="e.onblUntaxInterestRepayAmount != null and e.onblUntaxInterestRepayAmount != '' ">
+					AND t.ONBL_UNTAX_INTEREST_REPAY_AMOUNT = #{e.onblUntaxInterestRepayAmount}
+				</if>
+				<if test="e.taxRepayAmount != null and e.taxRepayAmount != '' ">
+					AND t.TAX_REPAY_AMOUNT = #{e.taxRepayAmount}
+				</if>
+				<if test="e.offblTaxRepayAmount != null and e.offblTaxRepayAmount != '' ">
+					AND t.OFFBL_TAX_REPAY_AMOUNT = #{e.offblTaxRepayAmount}
+				</if>
+				<if test="e.couponHistory != null and e.couponHistory != '' ">
+					AND t.COUPON_HISTORY = #{e.couponHistory}
+				</if>
+				<if test="e.couponAmount != null and e.couponAmount != '' ">
+					AND t.COUPON_AMOUNT = #{e.couponAmount}
+				</if>
+				<if test="e.couponAmountOnbalance != null and e.couponAmountOnbalance != '' ">
+					AND t.COUPON_AMOUNT_ONBALANCE = #{e.couponAmountOnbalance}
+				</if>
+				<if test="e.couponAmountOffbanlance != null and e.couponAmountOffbanlance != '' ">
+					AND t.COUPON_AMOUNT_OFFBANLANCE = #{e.couponAmountOffbanlance}
+				</if>
+				<if test="e.couponAmountOnblUntax != null and e.couponAmountOnblUntax != '' ">
+					AND t.COUPON_AMOUNT_ONBL_UNTAX = #{e.couponAmountOnblUntax}
+				</if>
+				<if test="e.repayPlanProgressIdBf != null and e.repayPlanProgressIdBf != '' ">
+					AND t.REPAY_PLAN_PROGRESS_ID_BF = #{e.repayPlanProgressIdBf}
+				</if>
+				<if test="e.repayPlanProgressIdAf != null and e.repayPlanProgressIdAf != '' ">
+					AND t.REPAY_PLAN_PROGRESS_ID_AF = #{e.repayPlanProgressIdAf}
+				</if>
+				<if test="e.overdueDaysBf != null and e.overdueDaysBf != '' ">
+					AND t.OVERDUE_DAYS_BF = #{e.overdueDaysBf}
+				</if>
+				<if test="e.overdueDaysAf != null and e.overdueDaysAf != '' ">
+					AND t.OVERDUE_DAYS_AF = #{e.overdueDaysAf}
+				</if>
+				<if test="e.financeStatusBf != null and e.financeStatusBf != '' ">
+					AND t.FINANCE_STATUS_BF = #{e.financeStatusBf}
+				</if>
+				<if test="e.financeStatusAf != null and e.financeStatusAf != '' ">
+					AND t.FINANCE_STATUS_AF = #{e.financeStatusAf}
+				</if>
+				<if test="e.isAccruedBf != null and e.isAccruedBf != '' ">
+					AND t.IS_ACCRUED_BF = #{e.isAccruedBf}
+				</if>
+				<if test="e.isAccruedAf != null and e.isAccruedAf != '' ">
+					AND t.IS_ACCRUED_AF = #{e.isAccruedAf}
+				</if>
+				<if test="e.repayRemark != null and e.repayRemark != '' ">
+					AND t.REPAY_REMARK = #{e.repayRemark}
+				</if>
+				<if test="e.acctRecordNo != null and e.acctRecordNo != '' ">
+					AND t.ACCT_RECORD_NO = #{e.acctRecordNo}
+				</if>
+				<if test="e.repayCreateDate != null and e.repayCreateDate != '' ">
+					AND t.REPAY_CREATE_DATE = #{e.repayCreateDate}
+				</if>
+				<if test="e.repayUpdateDate != null and e.repayUpdateDate != '' ">
+					AND t.REPAY_UPDATE_DATE = #{e.repayUpdateDate}
+				</if>
+				<if test="e.coreSysDate != null and e.coreSysDate != '' ">
+					AND t.CORE_SYS_DATE = #{e.coreSysDate}
+				</if>
+	</sql>
+
+</mapper>

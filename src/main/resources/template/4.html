@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table align="center" id="table4" border="1" style="font-size: 10px;width: 100%;border-collapse: collapse;border:none;font-size: 12px;">
+    <thead style="border: none">
+    <tr>
+        <td colspan="10" style="height: 50px;font-size: 25px;text-align: center;border: none">网贷机构流水</td>
+    </tr>
+    <tr>
+        <td colspan="18" style="border: none;">
+            <table style="width: 100%;border-collapse: collapse;border:none;">
+                <tr>
+                    <td align="left"><span>机构名称：#{orgName}</span></td>
+                    <td><span>机构号：#{orgCode}</span></td>
+                    <td><span>会计日期：#{acctDate}</span></td>
+                    <td><span>币种:人民币</span></td>
+                    <td><span>单位:元</span></td>
+                    <td align="right"><span>#{pageInfo}</span></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </thead>
+    <tbody style="text-align: center;border: 1px solid black">
+    <tr>
+        <td>流水号</td>
+        <td>借据号</td>
+        <td>贷款账号</td>
+        <td>摘要</td>
+        <td>借贷标识</td>
+        <td>科目控制字</td>
+        <td>发生额</td>
+        <td>交易类型</td>
+        <td>机构号</td>
+        <td>柜员号</td>
+    </tr>
+    #{htmlContent}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="5" style="border: none;">打印柜员：#{printPerson}</td>
+        <td colspan="5" style="border: none;text-align: right">日期：#{printDate}</td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>

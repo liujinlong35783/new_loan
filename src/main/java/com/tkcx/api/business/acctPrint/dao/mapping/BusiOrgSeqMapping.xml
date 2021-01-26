@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.BusiOrgSeqDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.BusiOrgSeqModel">
+		    <result column="ABSTRACT" property="abstracts" />
+		    <result column="AMOUNT" property="amount" />
+		    <result column="BUSI_DATE" property="busiDate" />
+		    <result column="BUSI_ID" property="busiId" />
+		    <result column="BUSI_TYPE" property="busiType" />
+		    <result column="DEBT_FLAG" property="debtFlag" />
+		    <result column="DEBT_NO" property="debtNo" />
+		    <result column="BIZ_TRACK_NO" property="bizTrackNo" />
+		    <result column="ITEM_CTRL" property="itemCtrl" />
+		    <result column="ORG_CODE" property="orgCode" />
+		    <result column="ORG_NAME" property="orgName" />
+		    <result column="TRANS_SEQ_NO" property="transSeqNo" />
+		<result column="LOAN_ACCOUNT" property="loanAccount" />
+		<result column="ACCT_DATE" property="acctDate" />
+		<result column="OPERATOR" property="operator" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from BUSI_ORG_SEQ t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from BUSI_ORG_SEQ t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select * from BUSI_ORG_SEQ t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE = #{e.orgCode}
+		</if>
+		<if test="e.acctDate != null">
+			AND t.ACCT_DATE = TO_DATE(#{e.acctDate}, 'yyyy-MM-dd')
+		</if>
+		ORDER BY t.BUSI_DATE ASC
+	</sql>
+
+	<sql id="select_content">
+		<if test="e.abstracts != null and e.abstracts != '' ">
+			AND t.ABSTRACT = #{e.abstracts}
+		</if>
+		<if test="e.amount != null and e.amount != '' ">
+			AND t.AMOUNT = #{e.amount}
+		</if>
+		<if test="e.busiDate != null and e.busiDate != '' ">
+			AND t.BUSI_DATE = #{e.busiDate}
+		</if>
+		<if test="e.busiId != null and e.busiId != '' ">
+			AND t.BUSI_ID = #{e.busiId}
+		</if>
+		<if test="e.busiType != null and e.busiType != '' ">
+			AND t.BUSI_TYPE = #{e.busiType}
+		</if>
+		<if test="e.debtFlag != null and e.debtFlag != '' ">
+			AND t.DEBT_FLAG = #{e.debtFlag}
+		</if>
+		<if test="e.debtNo != null and e.debtNo != '' ">
+			AND t.DEBT_NO = #{e.debtNo}
+		</if>
+		<if test="e.bizTrackNo != null and e.bizTrackNo != '' ">
+			AND t.BIZ_TRACK_NO = #{e.bizTrackNo}
+		</if>
+		<if test="e.itemCtrl != null and e.itemCtrl != '' ">
+			AND t.ITEM_CTRL = #{e.itemCtrl}
+		</if>
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE = #{e.orgCode}
+		</if>
+		<if test="e.orgName != null and e.orgName != '' ">
+			AND t.ORG_NAME = #{e.orgName}
+		</if>
+		<if test="e.transSeqNo != null and e.transSeqNo != '' ">
+			AND t.TRANS_SEQ_NO = #{e.transSeqNo}
+		</if>
+		<if test="e.operator != null and e.operator != '' ">
+			AND t.OPERATOR = #{e.operator}
+		</if>
+	</sql>
+
+</mapper>

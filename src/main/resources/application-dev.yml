@@ -1,0 +1,48 @@
+server:
+  port: 11244
+  max-http-header-size: 10240
+
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@//6.106.4.53:1521/qinnong
+    username: QN_DB_ACCT
+    password: 123456
+    filters: wall,mergeStat
+    druid:
+      initial-size: 5
+      max-active: 50
+      min-idle: 5
+      max-wait: 60000
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+      max-open-prepared-statements: 20
+      validation-query-timeout: 30000
+      test-on-borrow: true
+      test-on-return: false
+      test-while-idle: false
+  data-source-name: acctPrintdb
+
+storage:
+  tempUpload:
+    path: /data/acct_print/fileserver/upload/
+  tempDownload:
+    path: /data/acct_print/fileserver/download/
+  remote:
+    path: /file/
+  configPath: /ftpClientConfig.properties
+  qnUploadtranCode: 100030
+  accDowntranCode: 100024
+
+
+xxl:
+  job:
+    admin:
+      addresses: http://6.106.4.23:8080/xxl-job-admin/
+    executor:
+      appname: acctPrint
+      ip: 6.106.4.15
+      port: 8098
+      #accessToken:
+      logpath: /data/logs/acctPrint/xxl-job/
+      logretentiondays: -1

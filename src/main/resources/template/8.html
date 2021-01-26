@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>网贷电子凭证</title>
+</head>
+<body style="font-family: SimSun">
+<table align="center" id="table8" border="1" style="width: 100%;border-collapse: collapse;border:none">
+    <thead>
+    <tr>
+        <td colspan="7" style="height: 50px;font-size: 25px;text-align: center;border: none">网贷电子凭证</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td style="border: none">
+            <table style="width: 100%;">
+                <tr>
+                    <td align="left"><span>机构名称：#{orgName}</span></td>
+                    <td><span>机构号：#{orgCode}</span></td>
+                    <td><span>交易日期时间：#{busiDate}</span></td>
+                    <td><span>传票号：#{voucherNo}</span></td>
+                </tr>
+                <tr>
+                    <td align="left"><span>交易类型：#{busiType}</span></td>
+                    <td><span>现转标志：#{transferFlag}</span></td>
+                    <td><span>流水号：#{serialNo}</span></td>
+                    <td><span>操作员：#{operator}</span></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="border: none">
+            <table #{lineNum=20} style="width: 100%;">
+                <tr>
+                    <td>账号和户名</td>
+                    <td>科目控制字</td>
+                    <td>币种</td>
+                    <td>发生额</td>
+                    <td>借贷标识</td>
+                    <td>备注</td>
+                    <td>摘要</td>
+                </tr>
+                #{htmlContent}
+            </table>
+        </td>
+    </tr>
+    </tbody>
+
+    <tfoot>
+    <tr><td style="border: none;height: 200px"></td></tr>
+    <tr>
+        <td style="border: none">
+            <table style="width: 100%;">
+                <tr>
+                    <td align="center">打印柜员：#{printPerson}</td>
+                    <td align="right">打印日期：#{printDate}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>

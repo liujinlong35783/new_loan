@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.LoanReceiptDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.LoanReceiptModel">
+		<result column="BORROWER_ADDR" property="borrowerAddr"/>
+		<result column="BORROWER_IDNUM" property="borrowerIdnum"/>
+		<result column="BORROWER_NAME" property="borrowerName"/>
+		<result column="CONTRACT_NO" property="contractNo"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="DUE_DATE" property="dueDate"/>
+		<result column="INTEREST_RATE" property="interestRate"/>
+		<result column="LOAN_ACCOUNT" property="loanAccount"/>
+		<result column="LOAN_AMOUNT" property="loanAmount"/>
+		<result column="LOAN_DATE" property="loanDate"/>
+		<result column="LOAN_TYPE" property="loanType"/>
+		<result column="LOAN_USAGE" property="loanUsage"/>
+		<result column="LRECEIPT_ID" property="lreceiptId"/>
+		<result column="PAYOFF_TYPE" property="payoffType"/>
+		<result column="RECEIVER_ACCOUNT" property="receiverAccount"/>
+		<result column="ACCT_DATE" property="acctDate"/>
+		<result column="ORG_CODE" property="orgCode" />
+		<result column="ORG_NAME" property="orgName" />
+		<result column="PRINT_COUNT" property="printCount" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from LOAN_RECEIPT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from LOAN_RECEIPT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select t.*,  (select v.PRINT_COUNT from VOUCHER_PRINT v where v.SERIAL_NO = t.CONTRACT_NO and v.BUSI_TYPE=1) as PRINT_COUNT  from LOAN_RECEIPT t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+		<if test="e.borrowerName != null and e.borrowerName != '' ">
+			AND t.BORROWER_NAME = #{e.borrowerName}
+		</if>
+		<if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+			AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+		</if>
+		<if test="e.contractNo != null and e.contractNo != '' ">
+			AND t.CONTRACT_NO = #{e.contractNo}
+		</if>
+		<if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+			AND t.LOAN_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+		</if>
+		ORDER BY t.LOAN_DATE ASC
+	</sql>
+
+	<sql id="select_content">
+		<if test="e.borrowerAddr != null and e.borrowerAddr != '' ">
+			AND t.BORROWER_ADDR = #{e.borrowerAddr}
+		</if>
+		<if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+			AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+		</if>
+		<if test="e.borrowerName != null and e.borrowerName != '' ">
+			AND t.BORROWER_NAME = #{e.borrowerName}
+		</if>
+		<if test="e.contractNo != null and e.contractNo != '' ">
+			AND t.CONTRACT_NO = #{e.contractNo}
+		</if>
+		<if test="e.createDate != null and e.createDate != '' ">
+			AND t.CREATE_DATE = #{e.createDate}
+		</if>
+		<if test="e.dueDate != null and e.dueDate != '' ">
+			AND t.DUE_DATE = #{e.dueDate}
+		</if>
+		<if test="e.interestRate != null and e.interestRate != '' ">
+			AND t.INTEREST_RATE = #{e.interestRate}
+		</if>
+		<if test="e.loanAccount != null and e.loanAccount != '' ">
+			AND t.LOAN_ACCOUNT = #{e.loanAccount}
+		</if>
+		<if test="e.loanAmount != null and e.loanAmount != '' ">
+			AND t.LOAN_AMOUNT = #{e.loanAmount}
+		</if>
+		<if test="e.loanDate != null and e.loanDate != '' ">
+			AND t.LOAN_DATE = #{e.loanDate}
+		</if>
+		<if test="e.loanType != null and e.loanType != '' ">
+			AND t.LOAN_TYPE = #{e.loanType}
+		</if>
+		<if test="e.loanUsage != null and e.loanUsage != '' ">
+			AND t.LOAN_USAGE = #{e.loanUsage}
+		</if>
+		<if test="e.lreceiptId != null and e.lreceiptId != '' ">
+			AND t.LRECEIPT_ID = #{e.lreceiptId}
+		</if>
+		<if test="e.payoffType != null and e.payoffType != '' ">
+			AND t.PAYOFF_TYPE = #{e.payoffType}
+		</if>
+		<if test="e.receiverAccount != null and e.receiverAccount != '' ">
+			AND t.RECEIVER_ACCOUNT = #{e.receiverAccount}
+		</if>
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE = #{e.orgCode}
+		</if>
+		<if test="e.orgName != null and e.orgName != '' ">
+			AND t.ORG_NAME = #{e.orgName}
+		</if>
+	</sql>
+
+</mapper>

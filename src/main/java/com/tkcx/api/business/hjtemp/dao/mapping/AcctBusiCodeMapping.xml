@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.hjtemp.dao.AcctBusiCodeDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.hjtemp.model.AcctBusiCodeModel">
+		    <result column="IDENTIFIER" property="identifier" />
+			<result column="BALANCE_IDENTIFIER" property="balanceIdentifier" />
+		    <result column="BALANCE_NAME" property="balanceName" />
+		    <result column="BUSI_CODE" property="busiCode" />
+		    <result column="BUSI_NAME" property="busiName" />
+		    <result column="CODE_ID" property="codeId" />
+		    <result column="CREATE_DATE" property="createDate" />
+		    <result column="ITEM_CTRL" property="itemCtrl" />
+			<result column="ITEM_NAME" property="itemName" />
+		    <result column="STATUS" property="status" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ACCT_BUSI_CODE t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ACCT_BUSI_CODE t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<sql id="select_content">	
+				<if test="e.balanceIdentifier != null and e.balanceIdentifier != '' ">
+					AND t.BALANCE_IDENTIFIER = #{e.balanceIdentifier}
+				</if>
+				<if test="e.balanceName != null and e.balanceName != '' ">
+					AND t.BALANCE_NAME = #{e.balanceName}
+				</if>
+				<if test="e.busiCode != null and e.busiCode != '' ">
+					AND t.BUSI_CODE = #{e.busiCode}
+				</if>
+				<if test="e.busiName != null and e.busiName != '' ">
+					AND t.BUSI_NAME = #{e.busiName}
+				</if>
+				<if test="e.codeId != null and e.codeId != '' ">
+					AND t.CODE_ID = #{e.codeId}
+				</if>
+				<if test="e.createDate != null and e.createDate != '' ">
+					AND t.CREATE_DATE = #{e.createDate}
+				</if>
+				<if test="e.itemCtrl != null and e.itemCtrl != '' ">
+					AND t.ITEM_CTRL = #{e.itemCtrl}
+				</if>
+				<if test="e.status != null and e.status != '' ">
+					AND t.STATUS = #{e.status}
+				</if>
+	</sql>
+
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.VoucherPrintDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.VoucherPrintModel">
+		    <result column="PRINT_ID" property="printId" />
+		    <result column="QUERY_NO" property="queryNo" />
+		    <result column="SERIAL_NO" property="serialNo" />
+		    <result column="BUSI_TYPE" property="busiType" />
+		    <result column="PRINT_COUNT" property="printCount" />
+		    <result column="CREATE_DATE" property="createDate" />
+		    <result column="UPDATE_DATE" property="updateDate" />
+		    <result column="SPARE1" property="spare1" />
+		    <result column="SPARE2" property="spare2" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from VOUCHER_PRINT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from VOUCHER_PRINT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.printId != null and e.printId != '' ">
+					AND t.PRINT_ID = #{e.printId}
+				</if>
+				<if test="e.queryNo != null and e.queryNo != '' ">
+					AND t.QUERY_NO = #{e.queryNo}
+				</if>
+				<if test="e.serialNo != null and e.serialNo != '' ">
+					AND t.SERIAL_NO = #{e.serialNo}
+				</if>
+				<if test="e.busiType != null and e.busiType != '' ">
+					AND t.BUSI_TYPE = #{e.busiType}
+				</if>
+				<if test="e.printCount != null and e.printCount != '' ">
+					AND t.PRINT_COUNT = #{e.printCount}
+				</if>
+				<if test="e.createDate != null and e.createDate != '' ">
+					AND t.CREATE_DATE = #{e.createDate}
+				</if>
+				<if test="e.updateDate != null and e.updateDate != '' ">
+					AND t.UPDATE_DATE = #{e.updateDate}
+				</if>
+				<if test="e.spare1 != null and e.spare1 != '' ">
+					AND t.SPARE1 = #{e.spare1}
+				</if>
+				<if test="e.spare2 != null and e.spare2 != '' ">
+					AND t.SPARE2 = #{e.spare2}
+				</if>
+	</sql>
+
+</mapper>

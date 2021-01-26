@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.AccountVoucherDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.AccountVoucherModel">
+		    <result column="ABSTRACT" property="abstracts" />
+		    <result column="ACCOUNT_CODE" property="accountCode" />
+		    <result column="ACCOUNT_ENTRY" property="accountEntry" />
+		    <result column="ACCOUNT_NAME" property="accountName" />
+		    <result column="AMOUNT" property="amount" />
+		    <result column="BUSI_DATE" property="busiDate" />
+		    <result column="BUSI_TYPE" property="busiType" />
+		    <result column="CONTRACT_NO" property="contractNo" />
+		    <result column="CURRENCY" property="currency" />
+		    <result column="DEBT_FLAG" property="debtFlag" />
+		    <result column="DEBT_NO" property="debtNo" />
+		    <result column="ITEM_CTRL" property="itemCtrl" />
+		    <result column="LOAN_ACCOUNT" property="loanAccount" />
+		    <result column="OPERATOR" property="operator" />
+		    <result column="ORG_CODE" property="orgCode" />
+		    <result column="REMARK" property="remark" />
+		    <result column="SERIAL_NO" property="serialNo" />
+		    <result column="TRANSFER_FLAG" property="transferFlag" />
+		    <result column="VOUCHER_ID" property="voucherId" />
+		    <result column="VOUCHER_NO" property="voucherNo" />
+			<result column="ACCT_DATE" property="acctDate" />
+			<result column="ORG_NAME" property="orgName" />
+			<result column="PRINT_COUNT" property="printCount" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ACCOUNT_VOUCHER t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select t.* from ACCOUNT_VOUCHER t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select t.*,  (select v.PRINT_COUNT from VOUCHER_PRINT v where v.SERIAL_NO = t.SERIAL_NO and v.BUSI_TYPE=8) as PRINT_COUNT  from ACCOUNT_VOUCHER t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE = #{e.orgCode}
+		</if>
+
+		<if test="e.serialNo != null and e.serialNo != '' ">
+			AND t.SERIAL_NO = #{e.serialNo}
+		</if>
+		<if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+			AND t.BUSI_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+		</if>
+		ORDER BY t.BUSI_DATE ASC, t.VOUCHER_NO ASC
+	</sql>
+
+	<sql id="select_content">	
+				<if test="e.abstracts != null and e.abstracts != '' ">
+					AND t.ABSTRACT = #{e.abstracts}
+				</if>
+				<if test="e.accountCode != null and e.accountCode != '' ">
+					AND t.ACCOUNT_CODE = #{e.accountCode}
+				</if>
+				<if test="e.accountEntry != null and e.accountEntry != '' ">
+					AND t.ACCOUNT_ENTRY = #{e.accountEntry}
+				</if>
+				<if test="e.accountName != null and e.accountName != '' ">
+					AND t.ACCOUNT_NAME = #{e.accountName}
+				</if>
+				<if test="e.amount != null and e.amount != '' ">
+					AND t.AMOUNT = #{e.amount}
+				</if>
+				<if test="e.busiDate != null and e.busiDate != '' ">
+					AND t.BUSI_DATE = #{e.busiDate}
+				</if>
+				<if test="e.busiType != null and e.busiType != '' ">
+					AND t.BUSI_TYPE = #{e.busiType}
+				</if>
+				<if test="e.contractNo != null and e.contractNo != '' ">
+					AND t.CONTRACT_NO = #{e.contractNo}
+				</if>
+				<if test="e.currency != null and e.currency != '' ">
+					AND t.CURRENCY = #{e.currency}
+				</if>
+				<if test="e.debtFlag != null and e.debtFlag != '' ">
+					AND t.DEBT_FLAG = #{e.debtFlag}
+				</if>
+				<if test="e.debtNo != null and e.debtNo != '' ">
+					AND t.DEBT_NO = #{e.debtNo}
+				</if>
+				<if test="e.itemCtrl != null and e.itemCtrl != '' ">
+					AND t.ITEM_CTRL = #{e.itemCtrl}
+				</if>
+				<if test="e.loanAccount != null and e.loanAccount != '' ">
+					AND t.LOAN_ACCOUNT = #{e.loanAccount}
+				</if>
+				<if test="e.operator != null and e.operator != '' ">
+					AND t.OPERATOR = #{e.operator}
+				</if>
+				<if test="e.orgCode != null and e.orgCode != '' ">
+					AND t.ORG_CODE = #{e.orgCode}
+				</if>
+				<if test="e.remark != null and e.remark != '' ">
+					AND t.REMARK = #{e.remark}
+				</if>
+				<if test="e.serialNo != null and e.serialNo != '' ">
+					AND t.SERIAL_NO = #{e.serialNo}
+				</if>
+				<if test="e.transferFlag != null and e.transferFlag != '' ">
+					AND t.TRANSFER_FLAG = #{e.transferFlag}
+				</if>
+				<if test="e.voucherId != null and e.voucherId != '' ">
+					AND t.VOUCHER_ID = #{e.voucherId}
+				</if>
+				<if test="e.voucherNo != null and e.voucherNo != '' ">
+					AND t.VOUCHER_NO = #{e.voucherNo}
+				</if>
+				<if test="e.orgName != null and e.orgName != '' ">
+					AND t.ORG_NAME = #{e.orgName}
+				</if>
+	</sql>
+
+</mapper>

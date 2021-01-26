@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.realTime.dao.LoanReceiptSyncDao">
+
+    <resultMap id="BaseResultMap" type="com.tkcx.api.business.realTime.model.LoanReceiptSyncModel">
+        <result column="BORROWER_ADDR" property="borrowerAddr"/>
+        <result column="BORROWER_IDNUM" property="borrowerIdnum"/>
+        <result column="BORROWER_NAME" property="borrowerName"/>
+        <result column="DUE_DATE" property="dueDate"/>
+        <result column="INTEREST_RATE" property="interestRate"/>
+        <result column="LOAN_ACCOUNT" property="loanAccount"/>
+        <result column="LOAN_AMOUNT" property="loanAmount"/>
+        <result column="LOAN_DATE" property="loanDate"/>
+        <result column="LOAN_TYPE" property="loanType"/>
+        <result column="LOAN_USAGE" property="loanUsage"/>
+        <result column="PAYOFF_TYPE" property="payoffType"/>
+        <result column="ACCT_DATE" property="acctDate"/>
+        <result column="ORG_CODE" property="orgCode" />
+        <result column="ASSET_NO" property="assetNo" />
+        <result column="CONTRACT_NO" property="contractNo"/>
+
+    </resultMap>
+
+
+    <select id="selectListByRealTimeQuery" resultMap="BaseResultMap">
+        SELECT
+        0 as LOAN_TYPE,
+        grt.ASSET_GRANT_RECORD_ASSET_ITEM_NO AS ASSET_NO,
+        grt.ASSET_GRANT_RECORD_START_DATE as LOAN_DATE,
+        grt.ASSET_GRANT_RECORD_END_DATE as DUE_DATE,
+        grt.ASSET_GRANT_RECORD_AMOUNT as LOAN_AMOUNT,
+        grt.CORE_SYS_DATE as ACCT_DATE,
+        ast.ASSET_LOAN_ACCOUNT as LOAN_ACCOUNT,
+        ast.ASSET_BORROWER_IDNUM as BORROWER_IDNUM,
+        ast.ASSET_LOAN_USAGE as LOAN_USAGE,
+        ast.ASSET_INTEREST_RATE as INTEREST_RATE,
+        ast.ORGID as ORG_CODE,
+        case ast.ASSET_INTEREST_TYPE
+        when TO_NCHAR('eq_loan_pmt') then 1
+        when TO_NCHAR('eq_principal_pmt') then 2
+        end
+        as PAYOFF_TYPE,
+        inv.ASSET_INDIVIDUAL_NAME as BORROWER_NAME,
+        inv.ASSET_INDIVIDUAL_ID_ADDR as BORROWER_ADDR,
+        att.ASSET_ATTACHMENT_CONTRACT_CODE AS CONTRACT_NO
+        FROM
+        QN_DB_BIZ.ASSET_GRANT_RECORD grt,
+        QN_DB_BIZ.ASSET ast,
+        QN_DB_BIZ.ASSET_INDIVIDUAL inv,
+        QN_DB_BIZ.ASSET_ATTACHMENT att
+        <where>
+            grt.ASSET_GRANT_RECORD_ASSET_ITEM_NO = ast.ASSET_ITEM_NO
+            AND ast.ASSET_ITEM_NO = inv.ASSET_INDIVIDUAL_ASSET_ITEM_NO
+            AND ast.ASSET_ITEM_NO = att.ASSET_ATTACHMENT_ASSET_ITEM_NO
+            AND att.ASSET_ATTACHMENT_TYPE = 'bank_loan_contract'
+            AND inv.ASSET_INDIVIDUAL_TYPE = 'borrow'
+
+            <if test="e.borrowerName != null and e.borrowerName != '' ">
+                AND inv.ASSET_INDIVIDUAL_NAME = #{e.borrowerName}
+            </if>
+            <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+                AND ast.ASSET_BORROWER_IDNUM = #{e.borrowerIdnum}
+            </if>
+            <if test="e.contractNo != null and e.contractNo != '' ">
+                AND att.ASSET_ATTACHMENT_CONTRACT_CODE = #{e.contractNo}
+            </if>
+            <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+                AND grt.ASSET_GRANT_RECORD_START_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+            </if>
+            ORDER BY grt.ASSET_GRANT_RECORD_START_DATE ASC
+
+        </where>
+    </select>
+
+</mapper>

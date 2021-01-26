@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.realTime.dao.LoanDetailBillSyncDao">
+
+    <resultMap id="BaseResultMap" type="com.tkcx.api.business.realTime.model.LoanDetailBillSyncModel">
+        <result column="AMOUNT" property="amount"/>
+        <result column="DEBT_FLAG" property="debtFlag"/>
+        <result column="DEBT_NO" property="debtNo"/>
+        <result column="GRANT_DATE" property="grantDate"/>
+        <result column="GTANT_AMOUNT" property="gtantAmount"/>
+        <result column="LOAN_ACCOUNT" property="loanAccount"/>
+        <result column="ORG_CODE" property="orgCode"/>
+        <result column="PAYOFF_DATE" property="payoffDate"/>
+        <result column="PAYOFF_INTEREST" property="payoffInterest"/>
+        <result column="PAYOFF_PRINCIPAL" property="payoffPrincipal"/>
+        <result column="PAYOFF_TYPE" property="payoffType"/>
+        <result column="PRINCIPAL_BALANCE" property="principalBalance"/>
+        <result column="VALID_DATE" property="validDate"/>
+        <result column="ACCT_DATE" property="acctDate"/>
+        <result column="BORROWER_IDNUM" property="borrowerIdnum"/>
+        <result column="LOAN_NAME" property="loanName"/>
+        <result column="ASSEMBLY_ID" property="assemblyId"/>
+        <result column="ASSET_NO" property="assetNo"/>
+    </resultMap>
+
+
+    <select id="selectListByRealTimeQuery" resultMap="BaseResultMap">
+        SELECT
+	    0 AS PAYOFF_PRINCIPAL,
+	    0 AS PAYOFF_INTEREST,
+	    0 AS AMOUNT,
+	    0 AS ASSEMBLY_ID,
+	    NULL AS PAYOFF_DATE,
+	    grt.ASSET_GRANT_RECORD_CREATE_AT AS VALID_DATE,
+	    grt.ASSET_GRANT_RECORD_AMOUNT AS GTANT_AMOUNT,
+	    grt.ASSET_GRANT_RECORD_AMOUNT AS PRINCIPAL_BALANCE,
+	    grt.CORE_SYS_DATE AS ACCT_DATE,
+	    1 AS DEBT_FLAG,
+	    ast.ASSET_ITEM_NO AS ASSET_NO,
+	    ast.ORGID AS ORG_CODE,
+	    ast.ASSET_ACTUAL_GRANT_AT AS GRANT_DATE,
+	    ast.ASSET_DEBT_NO AS DEBT_NO,
+	    ast.ASSET_LOAN_ACCOUNT AS LOAN_ACCOUNT,
+	    ast.ASSET_BORROWER_IDNUM AS BORROWER_IDNUM,
+	    cii.CARDII_NAME AS LOAN_NAME
+        FROM
+	    QN_DB_BIZ.ASSET_GRANT_RECORD grt,
+	    QN_DB_BIZ.ASSET ast,
+	    QN_DB_BIZ.CARDII cii
+        <where>
+            grt.ASSET_GRANT_RECORD_ASSET_ITEM_NO = ast.ASSET_ITEM_NO
+            AND ast.ASSET_BORROWER_IDNUM = cii.CARDII_IDNUM
+
+            <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+                AND ast.ASSET_BORROWER_IDNUM = #{e.borrowerIdnum}
+            </if>
+            <if test="e.orgCode != null and e.orgCode != '' ">
+                AND ast.ORGID = #{e.orgCode}
+            </if>
+            <if test="e.loanName != null and e.loanName != '' ">
+                AND cii.CARDII_NAME = #{e.loanName}
+            </if>
+            <if test="e.loanAccount != null and e.loanAccount != '' ">
+                AND ast.ASSET_LOAN_ACCOUNT = #{e.loanAccount}
+            </if>
+            <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+                AND (ast.ASSET_ACTUAL_GRANT_AT BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate})
+            </if>
+
+        </where>
+
+        UNION ALL
+        SELECT
+        0 AS PAYOFF_PRINCIPAL,
+        0 AS PAYOFF_INTEREST,
+        0 AS AMOUNT,
+        rar.REPAY_ASSEMBLY_ID AS ASSEMBLY_ID,
+        rar.REPAY_FINISH_TIME AS PAYOFF_DATE,
+        rar.CORE_SYS_DATE AS VALID_DATE,
+        ast.ASSET_GRANTED_PRINCIPAL_AMOUNT AS GTANT_AMOUNT,
+        0 AS PRINCIPAL_BALANCE,
+        rar.CORE_SYS_DATE AS ACCT_DATE,
+        1 AS DEBT_FLAG,
+        ast.ASSET_ITEM_NO AS ASSET_NO,
+        ast.ORGID AS ORG_CODE,
+        ast.ASSET_ACTUAL_GRANT_AT AS GRANT_DATE,
+        ast.ASSET_DEBT_NO AS DEBT_NO,
+        ast.ASSET_LOAN_ACCOUNT AS LOAN_ACCOUNT,
+        ast.ASSET_BORROWER_IDNUM AS BORROWER_IDNUM,
+        cii.CARDII_NAME AS LOAN_NAME
+        FROM
+        QN_DB_BIZ.REPAY_ASSEMBLY_RECORD rar,
+        QN_DB_BIZ.ASSET ast,
+        QN_DB_BIZ.CARDII cii
+        <where>
+            rar.ASSET_NO = ast.ASSET_ITEM_NO
+            AND ast.ASSET_BORROWER_IDNUM = cii.CARDII_IDNUM
+
+            <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+                AND ast.ASSET_BORROWER_IDNUM = #{e.borrowerIdnum}
+            </if>
+            <if test="e.orgCode != null and e.orgCode != '' ">
+                AND ast.ORGID in #{e.orgCode}
+            </if>
+            <if test="e.loanName != null and e.loanName != '' ">
+                AND cii.CARDII_NAME = #{e.loanName}
+            </if>
+            <if test="e.loanAccount != null and e.loanAccount != '' ">
+                AND ast.ASSET_LOAN_ACCOUNT = #{e.loanAccount}
+            </if>
+            <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+                AND ((ast.ASSET_ACTUAL_GRANT_AT BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate})
+                or (rar.REPAY_FINISH_TIME BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}))
+            </if>
+
+        </where>
+        ORDER BY ASSET_NO ASC, PAYOFF_DATE ASC NULLS first
+    </select>
+
+</mapper>

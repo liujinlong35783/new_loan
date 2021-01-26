@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.RepayPlanDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.RepayPlanModel">
+		    <result column="REPAY_PLAN_REPAID_PRINCIPAL" property="repayPlanRepaidPrincipal" />
+		    <result column="REPAY_PLAN_NO_REPAY_PRINCIPAL" property="repayPlanNoRepayPrincipal" />
+		    <result column="REPAY_PLAN_ACTUAL_INTEREST" property="repayPlanActualInterest" />
+		    <result column="REPAY_PLAN_INTEREST" property="repayPlanInterest" />
+		    <result column="REPAY_PLAN_REPAID_INTEREST" property="repayPlanRepaidInterest" />
+		    <result column="REPAY_PLAN_NO_REPAY_INTEREST" property="repayPlanNoRepayInterest" />
+		    <result column="REPAY_PLAN_UNSETTLE_INTEREST" property="repayPlanUnsettleInterest" />
+		    <result column="REPAY_PLAN_EXTEND_INTEREST" property="repayPlanExtendInterest" />
+		    <result column="REPAY_PLAN_REPAID_EXTEND_INTEREST" property="repayPlanRepaidExtendInterest" />
+		    <result column="REPAY_PLAN_NO_REPAY_EXTEND_INTEREST" property="repayPlanNoRepayExtendInterest" />
+		    <result column="REPAY_PLAN_UNSETTLE_EXTEND_INTEREST" property="repayPlanUnsettleExtendInterest" />
+		    <result column="REPAY_PLAN_PENALTY_INTEREST" property="repayPlanPenaltyInterest" />
+		    <result column="REPAY_PLAN_REPAID_PENALTY_INTEREST" property="repayPlanRepaidPenaltyInterest" />
+		    <result column="REPAY_PLAN_NO_REPAY_PENALTY_INTEREST" property="repayPlanNoRepayPenaltyInterest" />
+		    <result column="REPAY_PLAN_UNSETTLE_PENALTY_INTEREST" property="repayPlanUnsettlePenaltyInterest" />
+		    <result column="REPAY_PLAN_STATUS" property="repayPlanStatus" />
+		    <result column="OVERDUE_DAYS" property="overdueDays" />
+		    <result column="REPAY_PLAN_CREATE_AT" property="repayPlanCreateAt" />
+		    <result column="REPAY_PLAN_FINISH_AT" property="repayPlanFinishAt" />
+		    <result column="REPAY_PLAN_UPDATE_AT" property="repayPlanUpdateAt" />
+		    <result column="REPAY_PLAN_REMARK" property="repayPlanRemark" />
+		    <result column="REPAY_PLAN_TRADE_AT" property="repayPlanTradeAt" />
+		    <result column="REPAY_PLAN_CORE_SYS_DATE" property="repayPlanCoreSysDate" />
+		    <result column="REPAY_PLAN_COUPON" property="repayPlanCoupon" />
+		    <result column="REPAY_PLAN_PROGRESS_ID" property="repayPlanProgressId" />
+		    <result column="IS_VALID" property="isValid" />
+		    <result column="TOTAL_INTEREST_ACCRUAL" property="totalInterestAccrual" />
+		    <result column="TOTAL_INTEREST_ACCRUAL_TAX" property="totalInterestAccrualTax" />
+		    <result column="TOTAL_INTEREST_SETTLE" property="totalInterestSettle" />
+		    <result column="TOTAL_INTEREST_SETTLE_TAX" property="totalInterestSettleTax" />
+		    <result column="ACCUM_INTEREST" property="accumInterest" />
+		    <result column="ACCUM_EXTEND_INTEREST" property="accumExtendInterest" />
+		    <result column="ACCUM_PENALTY_INTEREST" property="accumPenaltyInterest" />
+		    <result column="IS_ACCRUED" property="isAccrued" />
+		    <result column="REPAY_PLAN_ID" property="repayPlanId" />
+		    <result column="REPAY_PLAN_MAIN_NO" property="repayPlanMainNo" />
+		    <result column="REPAY_PLAN_NO" property="repayPlanNo" />
+		    <result column="REPAY_PLAN_ASSET_ITEM_NO" property="repayPlanAssetItemNo" />
+		    <result column="REPAY_PLAN_PERIOD" property="repayPlanPeriod" />
+		    <result column="REPAY_PLAN_START_AT" property="repayPlanStartAt" />
+		    <result column="REPAY_PLAN_DUE_AT" property="repayPlanDueAt" />
+		    <result column="REPAY_PLAN_EXTEND_DATE" property="repayPlanExtendDate" />
+		    <result column="REPAY_PLAN_TOTAL_AMOUNT" property="repayPlanTotalAmount" />
+		    <result column="REPAY_PLAN_ACTUAL_TOTAL_AMOUNT" property="repayPlanActualTotalAmount" />
+		    <result column="REPAY_PLAN_PRINCIPAL" property="repayPlanPrincipal" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from REPAY_PLAN t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from REPAY_PLAN t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.repayPlanRepaidPrincipal != null and e.repayPlanRepaidPrincipal != '' ">
+					AND t.REPAY_PLAN_REPAID_PRINCIPAL = #{e.repayPlanRepaidPrincipal}
+				</if>
+				<if test="e.repayPlanNoRepayPrincipal != null and e.repayPlanNoRepayPrincipal != '' ">
+					AND t.REPAY_PLAN_NO_REPAY_PRINCIPAL = #{e.repayPlanNoRepayPrincipal}
+				</if>
+				<if test="e.repayPlanActualInterest != null and e.repayPlanActualInterest != '' ">
+					AND t.REPAY_PLAN_ACTUAL_INTEREST = #{e.repayPlanActualInterest}
+				</if>
+				<if test="e.repayPlanInterest != null and e.repayPlanInterest != '' ">
+					AND t.REPAY_PLAN_INTEREST = #{e.repayPlanInterest}
+				</if>
+				<if test="e.repayPlanRepaidInterest != null and e.repayPlanRepaidInterest != '' ">
+					AND t.REPAY_PLAN_REPAID_INTEREST = #{e.repayPlanRepaidInterest}
+				</if>
+				<if test="e.repayPlanNoRepayInterest != null and e.repayPlanNoRepayInterest != '' ">
+					AND t.REPAY_PLAN_NO_REPAY_INTEREST = #{e.repayPlanNoRepayInterest}
+				</if>
+				<if test="e.repayPlanUnsettleInterest != null and e.repayPlanUnsettleInterest != '' ">
+					AND t.REPAY_PLAN_UNSETTLE_INTEREST = #{e.repayPlanUnsettleInterest}
+				</if>
+				<if test="e.repayPlanExtendInterest != null and e.repayPlanExtendInterest != '' ">
+					AND t.REPAY_PLAN_EXTEND_INTEREST = #{e.repayPlanExtendInterest}
+				</if>
+				<if test="e.repayPlanRepaidExtendInterest != null and e.repayPlanRepaidExtendInterest != '' ">
+					AND t.REPAY_PLAN_REPAID_EXTEND_INTEREST = #{e.repayPlanRepaidExtendInterest}
+				</if>
+				<if test="e.repayPlanNoRepayExtendInterest != null and e.repayPlanNoRepayExtendInterest != '' ">
+					AND t.REPAY_PLAN_NO_REPAY_EXTEND_INTEREST = #{e.repayPlanNoRepayExtendInterest}
+				</if>
+				<if test="e.repayPlanUnsettleExtendInterest != null and e.repayPlanUnsettleExtendInterest != '' ">
+					AND t.REPAY_PLAN_UNSETTLE_EXTEND_INTEREST = #{e.repayPlanUnsettleExtendInterest}
+				</if>
+				<if test="e.repayPlanPenaltyInterest != null and e.repayPlanPenaltyInterest != '' ">
+					AND t.REPAY_PLAN_PENALTY_INTEREST = #{e.repayPlanPenaltyInterest}
+				</if>
+				<if test="e.repayPlanRepaidPenaltyInterest != null and e.repayPlanRepaidPenaltyInterest != '' ">
+					AND t.REPAY_PLAN_REPAID_PENALTY_INTEREST = #{e.repayPlanRepaidPenaltyInterest}
+				</if>
+				<if test="e.repayPlanNoRepayPenaltyInterest != null and e.repayPlanNoRepayPenaltyInterest != '' ">
+					AND t.REPAY_PLAN_NO_REPAY_PENALTY_INTEREST = #{e.repayPlanNoRepayPenaltyInterest}
+				</if>
+				<if test="e.repayPlanUnsettlePenaltyInterest != null and e.repayPlanUnsettlePenaltyInterest != '' ">
+					AND t.REPAY_PLAN_UNSETTLE_PENALTY_INTEREST = #{e.repayPlanUnsettlePenaltyInterest}
+				</if>
+				<if test="e.repayPlanStatus != null and e.repayPlanStatus != '' ">
+					AND t.REPAY_PLAN_STATUS = #{e.repayPlanStatus}
+				</if>
+				<if test="e.overdueDays != null and e.overdueDays != '' ">
+					AND t.OVERDUE_DAYS = #{e.overdueDays}
+				</if>
+				<if test="e.repayPlanCreateAt != null and e.repayPlanCreateAt != '' ">
+					AND t.REPAY_PLAN_CREATE_AT = #{e.repayPlanCreateAt}
+				</if>
+				<if test="e.repayPlanFinishAt != null and e.repayPlanFinishAt != '' ">
+					AND t.REPAY_PLAN_FINISH_AT = #{e.repayPlanFinishAt}
+				</if>
+				<if test="e.repayPlanUpdateAt != null and e.repayPlanUpdateAt != '' ">
+					AND t.REPAY_PLAN_UPDATE_AT = #{e.repayPlanUpdateAt}
+				</if>
+				<if test="e.repayPlanRemark != null and e.repayPlanRemark != '' ">
+					AND t.REPAY_PLAN_REMARK = #{e.repayPlanRemark}
+				</if>
+				<if test="e.repayPlanTradeAt != null and e.repayPlanTradeAt != '' ">
+					AND t.REPAY_PLAN_TRADE_AT = #{e.repayPlanTradeAt}
+				</if>
+				<if test="e.repayPlanCoreSysDate != null and e.repayPlanCoreSysDate != '' ">
+					AND t.REPAY_PLAN_CORE_SYS_DATE = #{e.repayPlanCoreSysDate}
+				</if>
+				<if test="e.repayPlanCoupon != null and e.repayPlanCoupon != '' ">
+					AND t.REPAY_PLAN_COUPON = #{e.repayPlanCoupon}
+				</if>
+				<if test="e.repayPlanProgressId != null and e.repayPlanProgressId != '' ">
+					AND t.REPAY_PLAN_PROGRESS_ID = #{e.repayPlanProgressId}
+				</if>
+				<if test="e.isValid != null and e.isValid != '' ">
+					AND t.IS_VALID = #{e.isValid}
+				</if>
+				<if test="e.totalInterestAccrual != null and e.totalInterestAccrual != '' ">
+					AND t.TOTAL_INTEREST_ACCRUAL = #{e.totalInterestAccrual}
+				</if>
+				<if test="e.totalInterestAccrualTax != null and e.totalInterestAccrualTax != '' ">
+					AND t.TOTAL_INTEREST_ACCRUAL_TAX = #{e.totalInterestAccrualTax}
+				</if>
+				<if test="e.totalInterestSettle != null and e.totalInterestSettle != '' ">
+					AND t.TOTAL_INTEREST_SETTLE = #{e.totalInterestSettle}
+				</if>
+				<if test="e.totalInterestSettleTax != null and e.totalInterestSettleTax != '' ">
+					AND t.TOTAL_INTEREST_SETTLE_TAX = #{e.totalInterestSettleTax}
+				</if>
+				<if test="e.accumInterest != null and e.accumInterest != '' ">
+					AND t.ACCUM_INTEREST = #{e.accumInterest}
+				</if>
+				<if test="e.accumExtendInterest != null and e.accumExtendInterest != '' ">
+					AND t.ACCUM_EXTEND_INTEREST = #{e.accumExtendInterest}
+				</if>
+				<if test="e.accumPenaltyInterest != null and e.accumPenaltyInterest != '' ">
+					AND t.ACCUM_PENALTY_INTEREST = #{e.accumPenaltyInterest}
+				</if>
+				<if test="e.isAccrued != null and e.isAccrued != '' ">
+					AND t.IS_ACCRUED = #{e.isAccrued}
+				</if>
+				<if test="e.repayPlanId != null and e.repayPlanId != '' ">
+					AND t.REPAY_PLAN_ID = #{e.repayPlanId}
+				</if>
+				<if test="e.repayPlanMainNo != null and e.repayPlanMainNo != '' ">
+					AND t.REPAY_PLAN_MAIN_NO = #{e.repayPlanMainNo}
+				</if>
+				<if test="e.repayPlanNo != null and e.repayPlanNo != '' ">
+					AND t.REPAY_PLAN_NO = #{e.repayPlanNo}
+				</if>
+				<if test="e.repayPlanAssetItemNo != null and e.repayPlanAssetItemNo != '' ">
+					AND t.REPAY_PLAN_ASSET_ITEM_NO = #{e.repayPlanAssetItemNo}
+				</if>
+				<if test="e.repayPlanPeriod != null and e.repayPlanPeriod != '' ">
+					AND t.REPAY_PLAN_PERIOD = #{e.repayPlanPeriod}
+				</if>
+				<if test="e.repayPlanStartAt != null and e.repayPlanStartAt != '' ">
+					AND t.REPAY_PLAN_START_AT = #{e.repayPlanStartAt}
+				</if>
+				<if test="e.repayPlanDueAt != null and e.repayPlanDueAt != '' ">
+					AND t.REPAY_PLAN_DUE_AT = #{e.repayPlanDueAt}
+				</if>
+				<if test="e.repayPlanExtendDate != null and e.repayPlanExtendDate != '' ">
+					AND t.REPAY_PLAN_EXTEND_DATE = #{e.repayPlanExtendDate}
+				</if>
+				<if test="e.repayPlanTotalAmount != null and e.repayPlanTotalAmount != '' ">
+					AND t.REPAY_PLAN_TOTAL_AMOUNT = #{e.repayPlanTotalAmount}
+				</if>
+				<if test="e.repayPlanActualTotalAmount != null and e.repayPlanActualTotalAmount != '' ">
+					AND t.REPAY_PLAN_ACTUAL_TOTAL_AMOUNT = #{e.repayPlanActualTotalAmount}
+				</if>
+				<if test="e.repayPlanPrincipal != null and e.repayPlanPrincipal != '' ">
+					AND t.REPAY_PLAN_PRINCIPAL = #{e.repayPlanPrincipal}
+				</if>
+	</sql>
+
+</mapper>

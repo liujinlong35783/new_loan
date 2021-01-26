@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.AssetIndividualDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.AssetIndividualModel">
+		    <result column="ASSET_INDIVIDUAL_SECOND_RELATIVE_RELATION" property="assetIndividualSecondRelativeRelation" />
+		    <result column="ASSET_INDIVIDUAL_SECOND_RELATIVE_TEL" property="assetIndividualSecondRelativeTel" />
+		    <result column="ASSET_INDIVIDUAL_ASSET_ITEM_NO" property="assetIndividualAssetItemNo" />
+		    <result column="ASSET_INDIVIDUAL_ID" property="assetIndividualId" />
+		    <result column="OAUTH_USER_ID" property="oauthUserId" />
+		    <result column="ASSET_INDIVIDUAL_TYPE" property="assetIndividualType" />
+		    <result column="ASSET_INDIVIDUAL_NAME" property="assetIndividualName" />
+		    <result column="ASSET_INDIVIDUAL_IDNUM" property="assetIndividualIdnum" />
+		    <result column="ASSET_INDIVIDUAL_ID_VERIFY_TO" property="assetIndividualIdVerifyTo" />
+		    <result column="ASSET_INDIVIDUAL_BIRTHDAY" property="assetIndividualBirthday" />
+		    <result column="ASSET_INDIVIDUAL_ID_ADDR" property="assetIndividualIdAddr" />
+		    <result column="ASSET_INDIVIDUAL_ID_TYPE" property="assetIndividualIdType" />
+		    <result column="ASSET_INDIVIDUAL_ID_POST_CODE" property="assetIndividualIdPostCode" />
+		    <result column="ASSET_INDIVIDUAL_GENDER" property="assetIndividualGender" />
+		    <result column="ASSET_INDIVIDUAL_EDUCATION" property="assetIndividualEducation" />
+		    <result column="ASSET_INDIVIDUAL_INCOME_LFT" property="assetIndividualIncomeLft" />
+		    <result column="ASSET_INDIVIDUAL_INCOME_RGT" property="assetIndividualIncomeRgt" />
+		    <result column="ASSET_INDIVIDUAL_CREDIT_TYPE" property="assetIndividualCreditType" />
+		    <result column="ASSET_INDIVIDUAL_CREDIT_SCORE" property="assetIndividualCreditScore" />
+		    <result column="ASSET_INDIVIDUAL_RESIDENCE" property="assetIndividualResidence" />
+		    <result column="ASSET_INDIVIDUAL_CORP_NAME" property="assetIndividualCorpName" />
+		    <result column="ASSET_INDIVIDUAL_CORP_TEL" property="assetIndividualCorpTel" />
+		    <result column="ASSET_INDIVIDUAL_CORP_TRADE" property="assetIndividualCorpTrade" />
+		    <result column="ASSET_INDIVIDUAL_RESIDENCE_TEL" property="assetIndividualResidenceTel" />
+		    <result column="ASSET_INDIVIDUAL_RESIDENCE_STATUS" property="assetIndividualResidenceStatus" />
+		    <result column="ASSET_INDIVIDUAL_WORKPLACE" property="assetIndividualWorkplace" />
+		    <result column="ASSET_INDIVIDUAL_TEL" property="assetIndividualTel" />
+		    <result column="ASSET_INDIVIDUAL_MARRIAGE" property="assetIndividualMarriage" />
+		    <result column="ASSET_INDIVIDUAL_DUTY" property="assetIndividualDuty" />
+		    <result column="ASSET_INDIVIDUAL_MATE_NAME" property="assetIndividualMateName" />
+		    <result column="ASSET_INDIVIDUAL_MATE_TEL" property="assetIndividualMateTel" />
+		    <result column="ASSET_INDIVIDUAL_RELATIVE_NAME" property="assetIndividualRelativeName" />
+		    <result column="ASSET_INDIVIDUAL_RELATIVE_RELATION" property="assetIndividualRelativeRelation" />
+		    <result column="ASSET_INDIVIDUAL_RELATIVE_TEL" property="assetIndividualRelativeTel" />
+		    <result column="ASSET_INDIVIDUAL_WORKMATE_NAME" property="assetIndividualWorkmateName" />
+		    <result column="ASSET_INDIVIDUAL_WORKMATE_TEL" property="assetIndividualWorkmateTel" />
+		    <result column="ASSET_INDIVIDUAL_ENROLLMENT_TIME" property="assetIndividualEnrollmentTime" />
+		    <result column="ASSET_INDIVIDUAL_SCHOOL_PLACE" property="assetIndividualSchoolPlace" />
+		    <result column="ASSET_INDIVIDUAL_SCHOOL_NAME" property="assetIndividualSchoolName" />
+		    <result column="ASSET_INDIVIDUAL_ACCOUNT_NAME" property="assetIndividualAccountName" />
+		    <result column="ASSET_INDIVIDUAL_CREATE_AT" property="assetIndividualCreateAt" />
+		    <result column="ASSET_INDIVIDUAL_CREATE_USER_NAME" property="assetIndividualCreateUserName" />
+		    <result column="ASSET_INDIVIDUAL_UPDATE_AT" property="assetIndividualUpdateAt" />
+		    <result column="ASSET_INDIVIDUAL_UPDATE_USER_NAME" property="assetIndividualUpdateUserName" />
+		    <result column="ASSET_INDIVIDUAL_SECOND_RELATIVE_NAME" property="assetIndividualSecondRelativeName" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ASSET_INDIVIDUAL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ASSET_INDIVIDUAL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.assetIndividualSecondRelativeRelation != null and e.assetIndividualSecondRelativeRelation != '' ">
+					AND t.ASSET_INDIVIDUAL_SECOND_RELATIVE_RELATION = #{e.assetIndividualSecondRelativeRelation}
+				</if>
+				<if test="e.assetIndividualSecondRelativeTel != null and e.assetIndividualSecondRelativeTel != '' ">
+					AND t.ASSET_INDIVIDUAL_SECOND_RELATIVE_TEL = #{e.assetIndividualSecondRelativeTel}
+				</if>
+				<if test="e.assetIndividualAssetItemNo != null and e.assetIndividualAssetItemNo != '' ">
+					AND t.ASSET_INDIVIDUAL_ASSET_ITEM_NO = #{e.assetIndividualAssetItemNo}
+				</if>
+				<if test="e.assetIndividualId != null and e.assetIndividualId != '' ">
+					AND t.ASSET_INDIVIDUAL_ID = #{e.assetIndividualId}
+				</if>
+				<if test="e.oauthUserId != null and e.oauthUserId != '' ">
+					AND t.OAUTH_USER_ID = #{e.oauthUserId}
+				</if>
+				<if test="e.assetIndividualType != null and e.assetIndividualType != '' ">
+					AND t.ASSET_INDIVIDUAL_TYPE = #{e.assetIndividualType}
+				</if>
+				<if test="e.assetIndividualName != null and e.assetIndividualName != '' ">
+					AND t.ASSET_INDIVIDUAL_NAME = #{e.assetIndividualName}
+				</if>
+				<if test="e.assetIndividualIdnum != null and e.assetIndividualIdnum != '' ">
+					AND t.ASSET_INDIVIDUAL_IDNUM = #{e.assetIndividualIdnum}
+				</if>
+				<if test="e.assetIndividualIdVerifyTo != null and e.assetIndividualIdVerifyTo != '' ">
+					AND t.ASSET_INDIVIDUAL_ID_VERIFY_TO = #{e.assetIndividualIdVerifyTo}
+				</if>
+				<if test="e.assetIndividualBirthday != null and e.assetIndividualBirthday != '' ">
+					AND t.ASSET_INDIVIDUAL_BIRTHDAY = #{e.assetIndividualBirthday}
+				</if>
+				<if test="e.assetIndividualIdAddr != null and e.assetIndividualIdAddr != '' ">
+					AND t.ASSET_INDIVIDUAL_ID_ADDR = #{e.assetIndividualIdAddr}
+				</if>
+				<if test="e.assetIndividualIdType != null and e.assetIndividualIdType != '' ">
+					AND t.ASSET_INDIVIDUAL_ID_TYPE = #{e.assetIndividualIdType}
+				</if>
+				<if test="e.assetIndividualIdPostCode != null and e.assetIndividualIdPostCode != '' ">
+					AND t.ASSET_INDIVIDUAL_ID_POST_CODE = #{e.assetIndividualIdPostCode}
+				</if>
+				<if test="e.assetIndividualGender != null and e.assetIndividualGender != '' ">
+					AND t.ASSET_INDIVIDUAL_GENDER = #{e.assetIndividualGender}
+				</if>
+				<if test="e.assetIndividualEducation != null and e.assetIndividualEducation != '' ">
+					AND t.ASSET_INDIVIDUAL_EDUCATION = #{e.assetIndividualEducation}
+				</if>
+				<if test="e.assetIndividualIncomeLft != null and e.assetIndividualIncomeLft != '' ">
+					AND t.ASSET_INDIVIDUAL_INCOME_LFT = #{e.assetIndividualIncomeLft}
+				</if>
+				<if test="e.assetIndividualIncomeRgt != null and e.assetIndividualIncomeRgt != '' ">
+					AND t.ASSET_INDIVIDUAL_INCOME_RGT = #{e.assetIndividualIncomeRgt}
+				</if>
+				<if test="e.assetIndividualCreditType != null and e.assetIndividualCreditType != '' ">
+					AND t.ASSET_INDIVIDUAL_CREDIT_TYPE = #{e.assetIndividualCreditType}
+				</if>
+				<if test="e.assetIndividualCreditScore != null and e.assetIndividualCreditScore != '' ">
+					AND t.ASSET_INDIVIDUAL_CREDIT_SCORE = #{e.assetIndividualCreditScore}
+				</if>
+				<if test="e.assetIndividualResidence != null and e.assetIndividualResidence != '' ">
+					AND t.ASSET_INDIVIDUAL_RESIDENCE = #{e.assetIndividualResidence}
+				</if>
+				<if test="e.assetIndividualCorpName != null and e.assetIndividualCorpName != '' ">
+					AND t.ASSET_INDIVIDUAL_CORP_NAME = #{e.assetIndividualCorpName}
+				</if>
+				<if test="e.assetIndividualCorpTel != null and e.assetIndividualCorpTel != '' ">
+					AND t.ASSET_INDIVIDUAL_CORP_TEL = #{e.assetIndividualCorpTel}
+				</if>
+				<if test="e.assetIndividualCorpTrade != null and e.assetIndividualCorpTrade != '' ">
+					AND t.ASSET_INDIVIDUAL_CORP_TRADE = #{e.assetIndividualCorpTrade}
+				</if>
+				<if test="e.assetIndividualResidenceTel != null and e.assetIndividualResidenceTel != '' ">
+					AND t.ASSET_INDIVIDUAL_RESIDENCE_TEL = #{e.assetIndividualResidenceTel}
+				</if>
+				<if test="e.assetIndividualResidenceStatus != null and e.assetIndividualResidenceStatus != '' ">
+					AND t.ASSET_INDIVIDUAL_RESIDENCE_STATUS = #{e.assetIndividualResidenceStatus}
+				</if>
+				<if test="e.assetIndividualWorkplace != null and e.assetIndividualWorkplace != '' ">
+					AND t.ASSET_INDIVIDUAL_WORKPLACE = #{e.assetIndividualWorkplace}
+				</if>
+				<if test="e.assetIndividualTel != null and e.assetIndividualTel != '' ">
+					AND t.ASSET_INDIVIDUAL_TEL = #{e.assetIndividualTel}
+				</if>
+				<if test="e.assetIndividualMarriage != null and e.assetIndividualMarriage != '' ">
+					AND t.ASSET_INDIVIDUAL_MARRIAGE = #{e.assetIndividualMarriage}
+				</if>
+				<if test="e.assetIndividualDuty != null and e.assetIndividualDuty != '' ">
+					AND t.ASSET_INDIVIDUAL_DUTY = #{e.assetIndividualDuty}
+				</if>
+				<if test="e.assetIndividualMateName != null and e.assetIndividualMateName != '' ">
+					AND t.ASSET_INDIVIDUAL_MATE_NAME = #{e.assetIndividualMateName}
+				</if>
+				<if test="e.assetIndividualMateTel != null and e.assetIndividualMateTel != '' ">
+					AND t.ASSET_INDIVIDUAL_MATE_TEL = #{e.assetIndividualMateTel}
+				</if>
+				<if test="e.assetIndividualRelativeName != null and e.assetIndividualRelativeName != '' ">
+					AND t.ASSET_INDIVIDUAL_RELATIVE_NAME = #{e.assetIndividualRelativeName}
+				</if>
+				<if test="e.assetIndividualRelativeRelation != null and e.assetIndividualRelativeRelation != '' ">
+					AND t.ASSET_INDIVIDUAL_RELATIVE_RELATION = #{e.assetIndividualRelativeRelation}
+				</if>
+				<if test="e.assetIndividualRelativeTel != null and e.assetIndividualRelativeTel != '' ">
+					AND t.ASSET_INDIVIDUAL_RELATIVE_TEL = #{e.assetIndividualRelativeTel}
+				</if>
+				<if test="e.assetIndividualWorkmateName != null and e.assetIndividualWorkmateName != '' ">
+					AND t.ASSET_INDIVIDUAL_WORKMATE_NAME = #{e.assetIndividualWorkmateName}
+				</if>
+				<if test="e.assetIndividualWorkmateTel != null and e.assetIndividualWorkmateTel != '' ">
+					AND t.ASSET_INDIVIDUAL_WORKMATE_TEL = #{e.assetIndividualWorkmateTel}
+				</if>
+				<if test="e.assetIndividualEnrollmentTime != null and e.assetIndividualEnrollmentTime != '' ">
+					AND t.ASSET_INDIVIDUAL_ENROLLMENT_TIME = #{e.assetIndividualEnrollmentTime}
+				</if>
+				<if test="e.assetIndividualSchoolPlace != null and e.assetIndividualSchoolPlace != '' ">
+					AND t.ASSET_INDIVIDUAL_SCHOOL_PLACE = #{e.assetIndividualSchoolPlace}
+				</if>
+				<if test="e.assetIndividualSchoolName != null and e.assetIndividualSchoolName != '' ">
+					AND t.ASSET_INDIVIDUAL_SCHOOL_NAME = #{e.assetIndividualSchoolName}
+				</if>
+				<if test="e.assetIndividualAccountName != null and e.assetIndividualAccountName != '' ">
+					AND t.ASSET_INDIVIDUAL_ACCOUNT_NAME = #{e.assetIndividualAccountName}
+				</if>
+				<if test="e.assetIndividualCreateAt != null and e.assetIndividualCreateAt != '' ">
+					AND t.ASSET_INDIVIDUAL_CREATE_AT = #{e.assetIndividualCreateAt}
+				</if>
+				<if test="e.assetIndividualCreateUserName != null and e.assetIndividualCreateUserName != '' ">
+					AND t.ASSET_INDIVIDUAL_CREATE_USER_NAME = #{e.assetIndividualCreateUserName}
+				</if>
+				<if test="e.assetIndividualUpdateAt != null and e.assetIndividualUpdateAt != '' ">
+					AND t.ASSET_INDIVIDUAL_UPDATE_AT = #{e.assetIndividualUpdateAt}
+				</if>
+				<if test="e.assetIndividualUpdateUserName != null and e.assetIndividualUpdateUserName != '' ">
+					AND t.ASSET_INDIVIDUAL_UPDATE_USER_NAME = #{e.assetIndividualUpdateUserName}
+				</if>
+				<if test="e.assetIndividualSecondRelativeName != null and e.assetIndividualSecondRelativeName != '' ">
+					AND t.ASSET_INDIVIDUAL_SECOND_RELATIVE_NAME = #{e.assetIndividualSecondRelativeName}
+				</if>
+	</sql>
+
+</mapper>

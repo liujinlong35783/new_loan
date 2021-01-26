@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.BusiOrgBillDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.BusiOrgBillModel">
+		    <result column="BILL_ID" property="billId" />
+		    <result column="BUSI_DATE" property="busiDate" />
+		    <result column="CREDIT_AMOUNT" property="creditAmount" />
+		    <result column="CREDIT_NUM" property="creditNum" />
+		    <result column="DEBT_AMOUNT" property="debtAmount" />
+		    <result column="DEBT_NUM" property="debtNum" />
+		    <result column="FLAG" property="flag" />
+		    <result column="ITEM_CODE" property="itemCode" />
+		    <result column="ORG_CODE" property="orgCode" />
+		    <result column="ORG_NAME" property="orgName" />
+		<result column="ACCT_DATE" property="acctDate" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from BUSI_ORG_BILL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from BUSI_ORG_BILL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select * from BUSI_ORG_BILL t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE = #{e.orgCode}
+		</if>
+		<if test="e.acctDate != null">
+			AND t.ACCT_DATE = TO_DATE(#{e.acctDate}, 'yyyy-MM-dd')
+		</if>
+		ORDER BY t.FLAG, t.ITEM_CODE ASC
+	</sql>
+
+	<sql id="select_content">	
+				<if test="e.billId != null and e.billId != '' ">
+					AND t.BILL_ID = #{e.billId}
+				</if>
+				<if test="e.busiDate != null and e.busiDate != '' ">
+					AND t.BUSI_DATE = #{e.busiDate}
+				</if>
+				<if test="e.creditAmount != null and e.creditAmount != '' ">
+					AND t.CREDIT_AMOUNT = #{e.creditAmount}
+				</if>
+				<if test="e.creditNum != null and e.creditNum != '' ">
+					AND t.CREDIT_NUM = #{e.creditNum}
+				</if>
+				<if test="e.debtAmount != null and e.debtAmount != '' ">
+					AND t.DEBT_AMOUNT = #{e.debtAmount}
+				</if>
+				<if test="e.debtNum != null and e.debtNum != '' ">
+					AND t.DEBT_NUM = #{e.debtNum}
+				</if>
+				<if test="e.flag != null and e.flag != '' ">
+					AND t.FLAG = #{e.flag}
+				</if>
+				<if test="e.itemCode != null and e.itemCode != '' ">
+					AND t.ITEM_CODE = #{e.itemCode}
+				</if>
+				<if test="e.orgCode != null and e.orgCode != '' ">
+					AND t.ORG_CODE = #{e.orgCode}
+				</if>
+				<if test="e.orgName != null and e.orgName != '' ">
+					AND t.ORG_NAME = #{e.orgName}
+				</if>
+	</sql>
+
+</mapper>

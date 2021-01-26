@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table align="center"  id="table2" border="1" style="width: 100%;border-collapse: collapse;border:none">
+    <thead style="border: none">
+    <tr><td colspan="5" style="height: 50px;font-size: 25px;text-align: center;border: none">网贷客户借款信息</td></tr>
+    <tr><td colspan="5" style="border: none;" >
+        <table style="width: 100%;border-collapse: collapse;border:none;">
+            <tr>
+                <td align="left"><span>机构名称：#{orgName}</span></td>
+                <td><span>机构号：#{orgCode}</span></td>
+                <td><span>贷款日期：#{loanDate}</span></td>
+                <td><span>币种:人民币</span></td>
+                <td><span>单位:元</span></td>
+            </tr>
+        </table>
+    </td></tr>
+    </thead>
+    <tbody style="border: 1px solid black">
+    #{htmlContent}
+    </tbody>
+    <tfoot>
+    <tr><td colspan="2" style="border: none;">打印柜员：#{printPerson}</td><td colspan="2" style="border: none;text-align: right">日期：#{printDate}</td></tr>
+    </tfoot>
+</table>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.LoanAdjustDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.LoanAdjustModel">
+		    <result column="ADJUST_DATE" property="adjustDate" />
+		    <result column="ADJUST_ID" property="adjustId" />
+		    <result column="BALANCE_AMOUNT" property="balanceAmount" />
+		    <result column="DEBT_NO" property="debtNo" />
+		    <result column="DUE_DATE" property="dueDate" />
+		    <result column="GRANT_DATE" property="grantDate" />
+		    <result column="LOAN_NAME" property="loanName" />
+		    <result column="NEW_ITEM_CODE" property="newItemCode" />
+		    <result column="NEW_ITEM_NAME" property="newItemName" />
+		    <result column="ORIGINAL_ITEM_CODE" property="originalItemCode" />
+		    <result column="ORIGINAL_ITEM_NAME" property="originalItemName" />
+			<result column="ORG_CODE" property="orgCode" />
+			<result column="ORG_NAME" property="orgName" />
+			<result column="ACCT_DATE" property="acctDate" />
+		<result column="LOAN_ACCOUNT" property="loanAccount" />
+		<result column="CONTRACT_NO" property="contractNo" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from LOAN_ADJUST t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from LOAN_ADJUST t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select * from LOAN_ADJUST t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE in (${e.orgCode})
+		</if>
+		<if test="e.loanName != null and e.loanName != '' ">
+			AND t.LOAN_NAME = #{e.loanName}
+		</if>
+		<if test="e.loanAccount != null and e.loanAccount != '' ">
+			AND t.LOAN_ACCOUNT = #{e.loanAccount}
+		</if>
+		<if test="e.item != null and e.item != '' ">
+			AND t.NEW_ITEM_CODE = #{e.item}
+		</if>
+		<if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+			AND t.ADJUST_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+		</if>
+		ORDER BY t.ADJUST_DATE ASC, t.LOAN_ACCOUNT ASC
+	</sql>
+
+	<sql id="select_content">	
+				<if test="e.adjustDate != null and e.adjustDate != '' ">
+					AND t.ADJUST_DATE = #{e.adjustDate}
+				</if>
+				<if test="e.adjustId != null and e.adjustId != '' ">
+					AND t.ADJUST_ID = #{e.adjustId}
+				</if>
+				<if test="e.balanceAmount != null and e.balanceAmount != '' ">
+					AND t.BALANCE_AMOUNT = #{e.balanceAmount}
+				</if>
+				<if test="e.debtNo != null and e.debtNo != '' ">
+					AND t.DEBT_NO = #{e.debtNo}
+				</if>
+				<if test="e.dueDate != null and e.dueDate != '' ">
+					AND t.DUE_DATE = #{e.dueDate}
+				</if>
+				<if test="e.grantDate != null and e.grantDate != '' ">
+					AND t.GRANT_DATE = #{e.grantDate}
+				</if>
+				<if test="e.itemCtrl != null and e.itemCtrl != '' ">
+					AND t.ITEM_CTRL = #{e.itemCtrl}
+				</if>
+				<if test="e.loanName != null and e.loanName != '' ">
+					AND t.LOAN_NAME = #{e.loanName}
+				</if>
+				<if test="e.newItemCode != null and e.newItemCode != '' ">
+					AND t.NEW_ITEM_CODE = #{e.newItemCode}
+				</if>
+				<if test="e.newItemName != null and e.newItemName != '' ">
+					AND t.NEW_ITEM_NAME = #{e.newItemName}
+				</if>
+				<if test="e.originalItemCode != null and e.originalItemCode != '' ">
+					AND t.ORIGINAL_ITEM_CODE = #{e.originalItemCode}
+				</if>
+				<if test="e.originalItemName != null and e.originalItemName != '' ">
+					AND t.ORIGINAL_ITEM_NAME = #{e.originalItemName}
+				</if>
+				<if test="e.orgCode != null and e.orgCode != '' ">
+					AND t.ORG_CODE = #{e.orgCode}
+				</if>
+				<if test="e.orgName != null and e.orgName != '' ">
+					AND t.ORG_NAME = #{e.orgName}
+				</if>
+	</sql>
+
+</mapper>

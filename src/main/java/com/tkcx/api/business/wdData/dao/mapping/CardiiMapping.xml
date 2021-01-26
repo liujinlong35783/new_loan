@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.CardiiDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.CardiiModel">
+		    <result column="CARDII_ID" property="cardiiId" />
+		    <result column="CARDII_IDNUM" property="cardiiIdnum" />
+		    <result column="CARDII_NAME" property="cardiiName" />
+		    <result column="CARDII_ACCOUNT" property="cardiiAccount" />
+		    <result column="CARDII_CORE_ACCOUNT_NO" property="cardiiCoreAccountNo" />
+		    <result column="CARDII_BIND_CARD" property="cardiiBindCard" />
+		    <result column="CARDII_MOBILE" property="cardiiMobile" />
+		    <result column="CARDII_NODE_NO" property="cardiiNodeNo" />
+		    <result column="CARDII_FROZEN_AMOUNT" property="cardiiFrozenAmount" />
+		    <result column="CARDII_VERSION" property="cardiiVersion" />
+		    <result column="CARDII_CREATE_TIME" property="cardiiCreateTime" />
+		    <result column="CARDII_UPDATE_TIME" property="cardiiUpdateTime" />
+		    <result column="CARDII_ORGID" property="cardiiOrgid" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from CARDII t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from CARDII t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.cardiiId != null and e.cardiiId != '' ">
+					AND t.CARDII_ID = #{e.cardiiId}
+				</if>
+				<if test="e.cardiiIdnum != null and e.cardiiIdnum != '' ">
+					AND t.CARDII_IDNUM = #{e.cardiiIdnum}
+				</if>
+				<if test="e.cardiiName != null and e.cardiiName != '' ">
+					AND t.CARDII_NAME = #{e.cardiiName}
+				</if>
+				<if test="e.cardiiAccount != null and e.cardiiAccount != '' ">
+					AND t.CARDII_ACCOUNT = #{e.cardiiAccount}
+				</if>
+				<if test="e.cardiiCoreAccountNo != null and e.cardiiCoreAccountNo != '' ">
+					AND t.CARDII_CORE_ACCOUNT_NO = #{e.cardiiCoreAccountNo}
+				</if>
+				<if test="e.cardiiBindCard != null and e.cardiiBindCard != '' ">
+					AND t.CARDII_BIND_CARD = #{e.cardiiBindCard}
+				</if>
+				<if test="e.cardiiMobile != null and e.cardiiMobile != '' ">
+					AND t.CARDII_MOBILE = #{e.cardiiMobile}
+				</if>
+				<if test="e.cardiiNodeNo != null and e.cardiiNodeNo != '' ">
+					AND t.CARDII_NODE_NO = #{e.cardiiNodeNo}
+				</if>
+				<if test="e.cardiiFrozenAmount != null and e.cardiiFrozenAmount != '' ">
+					AND t.CARDII_FROZEN_AMOUNT = #{e.cardiiFrozenAmount}
+				</if>
+				<if test="e.cardiiVersion != null and e.cardiiVersion != '' ">
+					AND t.CARDII_VERSION = #{e.cardiiVersion}
+				</if>
+				<if test="e.cardiiCreateTime != null and e.cardiiCreateTime != '' ">
+					AND t.CARDII_CREATE_TIME = #{e.cardiiCreateTime}
+				</if>
+				<if test="e.cardiiUpdateTime != null and e.cardiiUpdateTime != '' ">
+					AND t.CARDII_UPDATE_TIME = #{e.cardiiUpdateTime}
+				</if>
+				<if test="e.cardiiOrgid != null and e.cardiiOrgid != '' ">
+					AND t.CARDII_ORGID = #{e.cardiiOrgid}
+				</if>
+	</sql>
+
+</mapper>

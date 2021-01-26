@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.RefundReceiptDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.RefundReceiptModel">
+		    <result column="CONTRACT_NO" property="contractNo" />
+		    <result column="CREATE_DATE" property="createDate" />
+		    <result column="DEBT_NO" property="debtNo" />
+		    <result column="DUE_DATE" property="dueDate" />
+		    <result column="GRANT_DATE" property="grantDate" />
+		    <result column="INTEREST_RATE" property="interestRate" />
+		    <result column="LOAN_ACCOUNT" property="loanAccount" />
+		    <result column="LOAN_AMOUNT" property="loanAmount" />
+		    <result column="OVERDUE_INTEREST_RATE" property="overdueInterestRate" />
+		    <result column="PAY_ACCOUNT" property="payAccount" />
+		    <result column="PAYOFF_DATE" property="payoffDate" />
+		    <result column="REFUND_NAME" property="refundName" />
+		    <result column="REPAID_INTEREST_AMOUNT" property="repaidInterestAmount" />
+		    <result column="REPAID_PRINCIPAL_AMOUNT" property="repaidPrincipalAmount" />
+		    <result column="REPAID_SUM_AMOUNT" property="repaidSumAmount" />
+		    <result column="RRECEIPT_ID" property="rreceiptId" />
+		    <result column="UNSETTLE_INTEREST_AMOUNT" property="unsettleInterestAmount" />
+		    <result column="UNSETTLE_PRINCIPAL_AMOUNT" property="unsettlePrincipalAmount" />
+		    <result column="UNSETTLE_SUM_AMOUNT" property="unsettleSumAmount" />
+			<result column="ACCT_DATE" property="acctDate" />
+			<result column="BORROWER_IDNUM" property="borrowerIdnum" />
+			<result column="ORG_CODE" property="orgCode" />
+			<result column="ORG_NAME" property="orgName" />
+		<result column="PRINT_COUNT" property="printCount" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from REFUND_RECEIPT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from REFUND_RECEIPT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<select id="selectListByQuery" resultMap="BaseResultMap">
+		select t.*,  (select v.PRINT_COUNT from VOUCHER_PRINT v where v.SERIAL_NO = CONCAT(t.CONTRACT_NO,to_char(t.PAYOFF_DATE,'yyyyMMddHH24miss')) and v.BUSI_TYPE=2) as PRINT_COUNT  from REFUND_RECEIPT t
+		<where>
+			<include refid="select_query"/>
+		</where>
+	</select>
+
+	<sql id="select_query">
+		<if test="e.refundName != null and e.refundName != '' ">
+			AND t.REFUND_NAME = #{e.refundName}
+		</if>
+		<if test="e.loanAccount != null and e.loanAccount != '' ">
+			AND t.LOAN_ACCOUNT = #{e.loanAccount}
+		</if>
+		<if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
+			AND t.PAYOFF_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}
+		</if>
+		ORDER BY t.PAYOFF_DATE ASC
+	</sql>
+
+
+	<sql id="select_content">
+		<if test="e.contractNo != null and e.contractNo != '' ">
+			AND t.CONTRACT_NO = #{e.contractNo}
+		</if>
+		<if test="e.createDate != null and e.createDate != '' ">
+			AND t.CREATE_DATE = #{e.createDate}
+		</if>
+		<if test="e.debtNo != null and e.debtNo != '' ">
+			AND t.DEBT_NO = #{e.debtNo}
+		</if>
+		<if test="e.dueDate != null and e.dueDate != '' ">
+			AND t.DUE_DATE = #{e.dueDate}
+		</if>
+		<if test="e.grantDate != null and e.grantDate != '' ">
+			AND t.GRANT_DATE = #{e.grantDate}
+		</if>
+		<if test="e.interestRate != null and e.interestRate != '' ">
+			AND t.INTEREST_RATE = #{e.interestRate}
+		</if>
+		<if test="e.loanAccount != null and e.loanAccount != '' ">
+			AND t.LOAN_ACCOUNT = #{e.loanAccount}
+		</if>
+		<if test="e.loanAmount != null and e.loanAmount != '' ">
+			AND t.LOAN_AMOUNT = #{e.loanAmount}
+		</if>
+		<if test="e.overdueInterestRate != null and e.overdueInterestRate != '' ">
+			AND t.OVERDUE_INTEREST_RATE = #{e.overdueInterestRate}
+		</if>
+		<if test="e.payAccount != null and e.payAccount != '' ">
+			AND t.PAY_ACCOUNT = #{e.payAccount}
+		</if>
+		<if test="e.payoffDate != null and e.payoffDate != '' ">
+			AND t.PAYOFF_DATE = #{e.payoffDate}
+		</if>
+		<if test="e.refundName != null and e.refundName != '' ">
+			AND t.REFUND_NAME = #{e.refundName}
+		</if>
+		<if test="e.repaidInterestAmount != null and e.repaidInterestAmount != '' ">
+			AND t.REPAID_INTEREST_AMOUNT = #{e.repaidInterestAmount}
+		</if>
+		<if test="e.repaidPrincipalAmount != null and e.repaidPrincipalAmount != '' ">
+			AND t.REPAID_PRINCIPAL_AMOUNT = #{e.repaidPrincipalAmount}
+		</if>
+		<if test="e.repaidSumAmount != null and e.repaidSumAmount != '' ">
+			AND t.REPAID_SUM_AMOUNT = #{e.repaidSumAmount}
+		</if>
+		<if test="e.rreceiptId != null and e.rreceiptId != '' ">
+			AND t.RRECEIPT_ID = #{e.rreceiptId}
+		</if>
+		<if test="e.unsettleInterestAmount != null and e.unsettleInterestAmount != '' ">
+			AND t.UNSETTLE_INTEREST_AMOUNT = #{e.unsettleInterestAmount}
+		</if>
+		<if test="e.unsettlePrincipalAmount != null and e.unsettlePrincipalAmount != '' ">
+			AND t.UNSETTLE_PRINCIPAL_AMOUNT = #{e.unsettlePrincipalAmount}
+		</if>
+		<if test="e.unsettleSumAmount != null and e.unsettleSumAmount != '' ">
+			AND t.UNSETTLE_SUM_AMOUNT = #{e.unsettleSumAmount}
+		</if>
+		<if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+			AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+		</if>
+		<if test="e.orgCode != null and e.orgCode != '' ">
+			AND t.ORG_CODE = #{e.orgCode}
+		</if>
+		<if test="e.orgName != null and e.orgName != '' ">
+			AND t.ORG_NAME = #{e.orgName}
+		</if>
+	</sql>
+
+</mapper>

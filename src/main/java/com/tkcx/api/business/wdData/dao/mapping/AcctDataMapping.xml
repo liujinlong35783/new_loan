@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.AcctDataDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.AcctDataModel">
+		    <result column="UPDATE_AT" property="updateAt" />
+		    <result column="CREATE_AT" property="createAt" />
+		    <result column="MESSAGE" property="message" />
+		    <result column="ORGID" property="orgid" />
+		    <result column="ID" property="id" />
+		    <result column="RET_STATUS" property="retStatus" />
+		    <result column="BIZ_TRACK_NO" property="bizTrackNo" />
+		    <result column="TRANS_SEQ_NO" property="transSeqNo" />
+		    <result column="ACG_DT" property="acgDt" />
+		    <result column="ASSET_ITEM_NO" property="assetItemNo" />
+		    <result column="REPAY_PLAN_NO" property="repayPlanNo" />
+		    <result column="SCENE" property="scene" />
+		    <result column="PRODUCT_CODE" property="productCode" />
+		    <result column="NORMAL_PRINCIPAL" property="normalPrincipal" />
+		    <result column="OVERDUE_PRINCIPAL" property="overduePrincipal" />
+		    <result column="IDLE_PRINCIPAL" property="idlePrincipal" />
+		    <result column="BAD_PRINCIPAL" property="badPrincipal" />
+		    <result column="WRITEOFF_PRINCIPAL" property="writeoffPrincipal" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ACCT_DATA t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ACCT_DATA t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<sql id="select_content">	
+				<if test="e.updateAt != null and e.updateAt != '' ">
+					AND t.UPDATE_AT = #{e.updateAt}
+				</if>
+				<if test="e.createAt != null and e.createAt != '' ">
+					AND CREATE_DATE >= #{e.createAt}
+				</if>
+				<if test="e.message != null and e.message != '' ">
+					AND t.MESSAGE = #{e.message}
+				</if>
+				<if test="e.orgid != null and e.orgid != '' ">
+					AND t.ORGID = #{e.orgid}
+				</if>
+				<if test="e.id != null and e.id != '' ">
+					AND t.ID = #{e.id}
+				</if>
+				<if test="e.retStatus != null and e.retStatus != '' ">
+					AND t.RET_STATUS = #{e.retStatus}
+				</if>
+				<if test="e.bizTrackNo != null and e.bizTrackNo != '' ">
+					AND t.BIZ_TRACK_NO = #{e.bizTrackNo}
+				</if>
+				<if test="e.transSeqNo != null and e.transSeqNo != '' ">
+					AND t.TRANS_SEQ_NO = #{e.transSeqNo}
+				</if>
+				<if test="e.acgDt != null and e.acgDt != '' ">
+					AND t.ACG_DT = #{e.acgDt}
+				</if>
+				<if test="e.assetItemNo != null and e.assetItemNo != '' ">
+					AND t.ASSET_ITEM_NO = #{e.assetItemNo}
+				</if>
+				<if test="e.repayPlanNo != null and e.repayPlanNo != '' ">
+					AND t.REPAY_PLAN_NO = #{e.repayPlanNo}
+				</if>
+				<if test="e.scene != null and e.scene != '' ">
+					AND t.SCENE = #{e.scene}
+				</if>
+				<if test="e.productCode != null and e.productCode != '' ">
+					AND t.PRODUCT_CODE = #{e.productCode}
+				</if>
+				<if test="e.normalPrincipal != null and e.normalPrincipal != '' ">
+					AND t.NORMAL_PRINCIPAL = #{e.normalPrincipal}
+				</if>
+				<if test="e.overduePrincipal != null and e.overduePrincipal != '' ">
+					AND t.OVERDUE_PRINCIPAL = #{e.overduePrincipal}
+				</if>
+				<if test="e.idlePrincipal != null and e.idlePrincipal != '' ">
+					AND t.IDLE_PRINCIPAL = #{e.idlePrincipal}
+				</if>
+				<if test="e.badPrincipal != null and e.badPrincipal != '' ">
+					AND t.BAD_PRINCIPAL = #{e.badPrincipal}
+				</if>
+				<if test="e.writeoffPrincipal != null and e.writeoffPrincipal != '' ">
+					AND t.WRITEOFF_PRINCIPAL = #{e.writeoffPrincipal}
+				</if>
+	</sql>
+
+</mapper>

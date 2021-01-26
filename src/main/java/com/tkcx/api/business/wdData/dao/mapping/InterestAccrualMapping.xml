@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.InterestAccrualDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.InterestAccrualModel">
+		    <result column="INTEREST_ACCRUAL_ID" property="interestAccrualId" />
+		    <result column="ASSET_TYPE" property="assetType" />
+		    <result column="ASSET_ITEM_NO" property="assetItemNo" />
+		    <result column="REPAY_PLAN_MAIN_NO" property="repayPlanMainNo" />
+		    <result column="REPAY_PLAN_NO" property="repayPlanNo" />
+		    <result column="ACCRUAL_TYPE" property="accrualType" />
+		    <result column="CREATE_CORE_SYSTE_DATE" property="createCoreSysteDate" />
+		    <result column="ASSET_IS_ACCRUED" property="assetIsAccrued" />
+		    <result column="REPAY_PLAN_IS_ACCRUED" property="repayPlanIsAccrued" />
+		    <result column="ASSET_OVERDUE_STATUS" property="assetOverdueStatus" />
+		    <result column="ASSET_OVERDUE_DAYS" property="assetOverdueDays" />
+		    <result column="REPAY_PLAN_OVERDUE_DAYS" property="repayPlanOverdueDays" />
+		    <result column="CURR_ACCUM" property="currAccum" />
+		    <result column="CURR_INTEREST_RATE" property="currInterestRate" />
+		    <result column="ACCRUAL_SUM_BF" property="accrualSumBf" />
+		    <result column="CURR_ACCRUAL_AMOUNT" property="currAccrualAmount" />
+		    <result column="ACCRUAL_SUM_AF" property="accrualSumAf" />
+		    <result column="IS_INTEREST_SETTLE" property="isInterestSettle" />
+		    <result column="ACCT_RECORD_NO" property="acctRecordNo" />
+		    <result column="CREATE_TIME" property="createTime" />
+		    <result column="UPDATE_CORE_SYSTE_DATE" property="updateCoreSysteDate" />
+		    <result column="UPDATE_TIME" property="updateTime" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from INTEREST_ACCRUAL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from INTEREST_ACCRUAL t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.interestAccrualId != null and e.interestAccrualId != '' ">
+					AND t.INTEREST_ACCRUAL_ID = #{e.interestAccrualId}
+				</if>
+				<if test="e.assetType != null and e.assetType != '' ">
+					AND t.ASSET_TYPE = #{e.assetType}
+				</if>
+				<if test="e.assetItemNo != null and e.assetItemNo != '' ">
+					AND t.ASSET_ITEM_NO = #{e.assetItemNo}
+				</if>
+				<if test="e.repayPlanMainNo != null and e.repayPlanMainNo != '' ">
+					AND t.REPAY_PLAN_MAIN_NO = #{e.repayPlanMainNo}
+				</if>
+				<if test="e.repayPlanNo != null and e.repayPlanNo != '' ">
+					AND t.REPAY_PLAN_NO = #{e.repayPlanNo}
+				</if>
+				<if test="e.accrualType != null and e.accrualType != '' ">
+					AND t.ACCRUAL_TYPE = #{e.accrualType}
+				</if>
+				<if test="e.createCoreSysteDate != null and e.createCoreSysteDate != '' ">
+					AND t.CREATE_CORE_SYSTE_DATE = #{e.createCoreSysteDate}
+				</if>
+				<if test="e.assetIsAccrued != null and e.assetIsAccrued != '' ">
+					AND t.ASSET_IS_ACCRUED = #{e.assetIsAccrued}
+				</if>
+				<if test="e.repayPlanIsAccrued != null and e.repayPlanIsAccrued != '' ">
+					AND t.REPAY_PLAN_IS_ACCRUED = #{e.repayPlanIsAccrued}
+				</if>
+				<if test="e.assetOverdueStatus != null and e.assetOverdueStatus != '' ">
+					AND t.ASSET_OVERDUE_STATUS = #{e.assetOverdueStatus}
+				</if>
+				<if test="e.assetOverdueDays != null and e.assetOverdueDays != '' ">
+					AND t.ASSET_OVERDUE_DAYS = #{e.assetOverdueDays}
+				</if>
+				<if test="e.repayPlanOverdueDays != null and e.repayPlanOverdueDays != '' ">
+					AND t.REPAY_PLAN_OVERDUE_DAYS = #{e.repayPlanOverdueDays}
+				</if>
+				<if test="e.currAccum != null and e.currAccum != '' ">
+					AND t.CURR_ACCUM = #{e.currAccum}
+				</if>
+				<if test="e.currInterestRate != null and e.currInterestRate != '' ">
+					AND t.CURR_INTEREST_RATE = #{e.currInterestRate}
+				</if>
+				<if test="e.accrualSumBf != null and e.accrualSumBf != '' ">
+					AND t.ACCRUAL_SUM_BF = #{e.accrualSumBf}
+				</if>
+				<if test="e.currAccrualAmount != null and e.currAccrualAmount != '' ">
+					AND t.CURR_ACCRUAL_AMOUNT = #{e.currAccrualAmount}
+				</if>
+				<if test="e.accrualSumAf != null and e.accrualSumAf != '' ">
+					AND t.ACCRUAL_SUM_AF = #{e.accrualSumAf}
+				</if>
+				<if test="e.isInterestSettle != null and e.isInterestSettle != '' ">
+					AND t.IS_INTEREST_SETTLE = #{e.isInterestSettle}
+				</if>
+				<if test="e.acctRecordNo != null and e.acctRecordNo != '' ">
+					AND t.ACCT_RECORD_NO = #{e.acctRecordNo}
+				</if>
+				<if test="e.createTime != null and e.createTime != '' ">
+					AND t.CREATE_TIME = #{e.createTime}
+				</if>
+				<if test="e.updateCoreSysteDate != null and e.updateCoreSysteDate != '' ">
+					AND t.UPDATE_CORE_SYSTE_DATE = #{e.updateCoreSysteDate}
+				</if>
+				<if test="e.updateTime != null and e.updateTime != '' ">
+					AND t.UPDATE_TIME = #{e.updateTime}
+				</if>
+	</sql>
+
+</mapper>

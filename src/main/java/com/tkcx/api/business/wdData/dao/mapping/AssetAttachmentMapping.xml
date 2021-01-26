@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.AssetAttachmentDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.AssetAttachmentModel">
+		    <result column="ASSET_ATTACHMENT_ID" property="assetAttachmentId" />
+		    <result column="ASSET_ATTACHMENT_TYPE" property="assetAttachmentType" />
+		    <result column="ASSET_ATTACHMENT_TYPE_TEXT" property="assetAttachmentTypeText" />
+		    <result column="ASSET_ATTACHMENT_NAME" property="assetAttachmentName" />
+		    <result column="ASSET_ATTACHMENT_URL" property="assetAttachmentUrl" />
+		    <result column="ASSET_ATTACHMENT_STATUS" property="assetAttachmentStatus" />
+		    <result column="ASSET_ATTACHMENT_CREATE_AT" property="assetAttachmentCreateAt" />
+		    <result column="ASSET_ATTACHMENT_UPDATE_AT" property="assetAttachmentUpdateAt" />
+		    <result column="ASSET_ATTACHMENT_CONTRACT_CODE" property="assetAttachmentContractCode" />
+		    <result column="ASSET_ATTACHMENT_CONTRACT_SIGN_AT" property="assetAttachmentContractSignAt" />
+		    <result column="ASSET_ATTACHMENT_ASSET_ITEM_NO" property="assetAttachmentAssetItemNo" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ASSET_ATTACHMENT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ASSET_ATTACHMENT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.assetAttachmentId != null and e.assetAttachmentId != '' ">
+					AND t.ASSET_ATTACHMENT_ID = #{e.assetAttachmentId}
+				</if>
+				<if test="e.assetAttachmentType != null and e.assetAttachmentType != '' ">
+					AND t.ASSET_ATTACHMENT_TYPE = #{e.assetAttachmentType}
+				</if>
+				<if test="e.assetAttachmentTypeText != null and e.assetAttachmentTypeText != '' ">
+					AND t.ASSET_ATTACHMENT_TYPE_TEXT = #{e.assetAttachmentTypeText}
+				</if>
+				<if test="e.assetAttachmentName != null and e.assetAttachmentName != '' ">
+					AND t.ASSET_ATTACHMENT_NAME = #{e.assetAttachmentName}
+				</if>
+				<if test="e.assetAttachmentUrl != null and e.assetAttachmentUrl != '' ">
+					AND t.ASSET_ATTACHMENT_URL = #{e.assetAttachmentUrl}
+				</if>
+				<if test="e.assetAttachmentStatus != null and e.assetAttachmentStatus != '' ">
+					AND t.ASSET_ATTACHMENT_STATUS = #{e.assetAttachmentStatus}
+				</if>
+				<if test="e.assetAttachmentCreateAt != null and e.assetAttachmentCreateAt != '' ">
+					AND t.ASSET_ATTACHMENT_CREATE_AT = #{e.assetAttachmentCreateAt}
+				</if>
+				<if test="e.assetAttachmentUpdateAt != null and e.assetAttachmentUpdateAt != '' ">
+					AND t.ASSET_ATTACHMENT_UPDATE_AT = #{e.assetAttachmentUpdateAt}
+				</if>
+				<if test="e.assetAttachmentContractCode != null and e.assetAttachmentContractCode != '' ">
+					AND t.ASSET_ATTACHMENT_CONTRACT_CODE = #{e.assetAttachmentContractCode}
+				</if>
+				<if test="e.assetAttachmentContractSignAt != null and e.assetAttachmentContractSignAt != '' ">
+					AND t.ASSET_ATTACHMENT_CONTRACT_SIGN_AT = #{e.assetAttachmentContractSignAt}
+				</if>
+				<if test="e.assetAttachmentAssetItemNo != null and e.assetAttachmentAssetItemNo != '' ">
+					AND t.ASSET_ATTACHMENT_ASSET_ITEM_NO = #{e.assetAttachmentAssetItemNo}
+				</if>
+	</sql>
+
+</mapper>

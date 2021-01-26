@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.hjtemp.dao.AcctOrgTempDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.hjtemp.model.AcctOrgTempModel">
+		<result column="ORG_ID" property="orgId"/>
+		<result column="IDENTIFIER" property="identifier"/>
+		<result column="ORG_CODE" property="orgCode"/>
+		<result column="ORG_NAME" property="orgName"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="STATUS" property="status"/>
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ACCT_ORG_TEMP t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ACCT_ORG_TEMP t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.orgId != null and e.orgId != '' ">
+					AND t.ORG_ID = #{e.orgId}
+				</if>
+				<if test="e.orgCode != null and e.orgCode != '' ">
+					AND t.ORG_CODE = #{e.orgCode}
+				</if>
+				<if test="e.orgName != null and e.orgName != '' ">
+					AND t.ORG_NAME = #{e.orgName}
+				</if>
+				<if test="e.createDate != null and e.createDate != '' ">
+					AND t.CREATE_DATE = #{e.createDate}
+				</if>
+	</sql>
+
+</mapper>

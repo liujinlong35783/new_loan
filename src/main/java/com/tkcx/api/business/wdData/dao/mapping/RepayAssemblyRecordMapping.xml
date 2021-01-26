@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.RepayAssemblyRecordDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.RepayAssemblyRecordModel">
+		    <result column="REPAY_ASSEMBLY_ID" property="repayAssemblyId" />
+		    <result column="REPAY_SERIAL_NO" property="repaySerialNo" />
+		    <result column="ASSET_NO" property="assetNo" />
+		    <result column="ASSET_TYPE" property="assetType" />
+		    <result column="INDIVIDUAL_IDNUM" property="individualIdnum" />
+		    <result column="REPAY_CARD" property="repayCard" />
+		    <result column="REPAY_CARD_CODE" property="repayCardCode" />
+		    <result column="REPAY_STATUS" property="repayStatus" />
+		    <result column="REPAY_RESULT" property="repayResult" />
+		    <result column="REPAY_TYPE" property="repayType" />
+		    <result column="REPAY_WAY" property="repayWay" />
+		    <result column="REPAY_AMOUNT" property="repayAmount" />
+		    <result column="REPAY_REPAID_AMOUNT" property="repayRepaidAmount" />
+		    <result column="REPAY_NOT_PAY_AMOUNT" property="repayNotPayAmount" />
+		    <result column="FINED_AMOUNT" property="finedAmount" />
+		    <result column="FINED_REPAID_AMOUNT" property="finedRepaidAmount" />
+		    <result column="FINED_NOT_PAY_AMOUNT" property="finedNotPayAmount" />
+		    <result column="COUPON_ITEM_NO" property="couponItemNo" />
+		    <result column="COUPON_AMOUNT" property="couponAmount" />
+		    <result column="COUPON_INIT_AMOUNT" property="couponInitAmount" />
+		    <result column="REPAY_BANK_SERIAL_NO" property="repayBankSerialNo" />
+		    <result column="REPAY_REQ_BANK_SERIAL_NO" property="repayReqBankSerialNo" />
+		    <result column="WITHHOLD_SERIAL_NO" property="withholdSerialNo" />
+		    <result column="REPAY_FINISH_TIME" property="repayFinishTime" />
+		    <result column="REPAY_REMARK" property="repayRemark" />
+		    <result column="CREATE_TIME" property="createTime" />
+		    <result column="UPDATE_TIME" property="updateTime" />
+		    <result column="ASSET_HISTORY_ID" property="assetHistoryId" />
+		    <result column="CORE_SYS_DATE" property="coreSysDate" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from REPAY_ASSEMBLY_RECORD t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from REPAY_ASSEMBLY_RECORD t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.repayAssemblyId != null and e.repayAssemblyId != '' ">
+					AND t.REPAY_ASSEMBLY_ID = #{e.repayAssemblyId}
+				</if>
+				<if test="e.repaySerialNo != null and e.repaySerialNo != '' ">
+					AND t.REPAY_SERIAL_NO = #{e.repaySerialNo}
+				</if>
+				<if test="e.assetNo != null and e.assetNo != '' ">
+					AND t.ASSET_NO = #{e.assetNo}
+				</if>
+				<if test="e.assetType != null and e.assetType != '' ">
+					AND t.ASSET_TYPE = #{e.assetType}
+				</if>
+				<if test="e.individualIdnum != null and e.individualIdnum != '' ">
+					AND t.INDIVIDUAL_IDNUM = #{e.individualIdnum}
+				</if>
+				<if test="e.repayCard != null and e.repayCard != '' ">
+					AND t.REPAY_CARD = #{e.repayCard}
+				</if>
+				<if test="e.repayCardCode != null and e.repayCardCode != '' ">
+					AND t.REPAY_CARD_CODE = #{e.repayCardCode}
+				</if>
+				<if test="e.repayStatus != null and e.repayStatus != '' ">
+					AND t.REPAY_STATUS = #{e.repayStatus}
+				</if>
+				<if test="e.repayResult != null and e.repayResult != '' ">
+					AND t.REPAY_RESULT = #{e.repayResult}
+				</if>
+				<if test="e.repayType != null and e.repayType != '' ">
+					AND t.REPAY_TYPE = #{e.repayType}
+				</if>
+				<if test="e.repayWay != null and e.repayWay != '' ">
+					AND t.REPAY_WAY = #{e.repayWay}
+				</if>
+				<if test="e.repayAmount != null and e.repayAmount != '' ">
+					AND t.REPAY_AMOUNT = #{e.repayAmount}
+				</if>
+				<if test="e.repayRepaidAmount != null and e.repayRepaidAmount != '' ">
+					AND t.REPAY_REPAID_AMOUNT = #{e.repayRepaidAmount}
+				</if>
+				<if test="e.repayNotPayAmount != null and e.repayNotPayAmount != '' ">
+					AND t.REPAY_NOT_PAY_AMOUNT = #{e.repayNotPayAmount}
+				</if>
+				<if test="e.finedAmount != null and e.finedAmount != '' ">
+					AND t.FINED_AMOUNT = #{e.finedAmount}
+				</if>
+				<if test="e.finedRepaidAmount != null and e.finedRepaidAmount != '' ">
+					AND t.FINED_REPAID_AMOUNT = #{e.finedRepaidAmount}
+				</if>
+				<if test="e.finedNotPayAmount != null and e.finedNotPayAmount != '' ">
+					AND t.FINED_NOT_PAY_AMOUNT = #{e.finedNotPayAmount}
+				</if>
+				<if test="e.couponItemNo != null and e.couponItemNo != '' ">
+					AND t.COUPON_ITEM_NO = #{e.couponItemNo}
+				</if>
+				<if test="e.couponAmount != null and e.couponAmount != '' ">
+					AND t.COUPON_AMOUNT = #{e.couponAmount}
+				</if>
+				<if test="e.couponInitAmount != null and e.couponInitAmount != '' ">
+					AND t.COUPON_INIT_AMOUNT = #{e.couponInitAmount}
+				</if>
+				<if test="e.repayBankSerialNo != null and e.repayBankSerialNo != '' ">
+					AND t.REPAY_BANK_SERIAL_NO = #{e.repayBankSerialNo}
+				</if>
+				<if test="e.repayReqBankSerialNo != null and e.repayReqBankSerialNo != '' ">
+					AND t.REPAY_REQ_BANK_SERIAL_NO = #{e.repayReqBankSerialNo}
+				</if>
+				<if test="e.withholdSerialNo != null and e.withholdSerialNo != '' ">
+					AND t.WITHHOLD_SERIAL_NO = #{e.withholdSerialNo}
+				</if>
+				<if test="e.repayFinishTime != null and e.repayFinishTime != '' ">
+					AND t.REPAY_FINISH_TIME = #{e.repayFinishTime}
+				</if>
+				<if test="e.repayRemark != null and e.repayRemark != '' ">
+					AND t.REPAY_REMARK = #{e.repayRemark}
+				</if>
+				<if test="e.createTime != null and e.createTime != '' ">
+					AND t.CREATE_TIME >= #{e.createTime}
+				</if>
+				<if test="e.updateTime != null and e.updateTime != '' ">
+					AND t.UPDATE_TIME = #{e.updateTime}
+				</if>
+				<if test="e.assetHistoryId != null and e.assetHistoryId != '' ">
+					AND t.ASSET_HISTORY_ID = #{e.assetHistoryId}
+				</if>
+				<if test="e.coreSysDate != null and e.coreSysDate != '' ">
+					AND t.CORE_SYS_DATE = #{e.coreSysDate}
+				</if>
+	</sql>
+
+</mapper>

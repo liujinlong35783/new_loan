@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.wdData.dao.AssetDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.wdData.model.AssetModel">
+		    <result column="ASSET_FINANCE_STATUS" property="assetFinanceStatus" />
+		    <result column="IS_ACCRUED" property="isAccrued" />
+		    <result column="IS_CLEAN_ADVANCE" property="isCleanAdvance" />
+		    <result column="IS_REBUILD_PLAN" property="isRebuildPlan" />
+		    <result column="REBUILD_PLAN_TYPE" property="rebuildPlanType" />
+		    <result column="ASSET_VERSION" property="assetVersion" />
+		    <result column="LAST_ACCRUAL_DATE" property="lastAccrualDate" />
+		    <result column="MONTH_STATES" property="monthStates" />
+		    <result column="ORGID" property="orgid" />
+		    <result column="ASSET_ID" property="assetId" />
+		    <result column="ASSET_ITEM_NO" property="assetItemNo" />
+		    <result column="ASSET_TYPE" property="assetType" />
+		    <result column="ASSET_INTEREST_TYPE" property="assetInterestType" />
+		    <result column="ASSET_PERIOD_TYPE" property="assetPeriodType" />
+		    <result column="ASSET_PERIOD_COUNT" property="assetPeriodCount" />
+		    <result column="ASSET_REAL_PERIOD_COUNT" property="assetRealPeriodCount" />
+		    <result column="ASSET_PRODUCT_CATEGORY" property="assetProductCategory" />
+		    <result column="ASSET_BIZ_ORDER" property="assetBizOrder" />
+		    <result column="ASSET_CAPITAL_ORDER" property="assetCapitalOrder" />
+		    <result column="ASSET_LOAN_ACCOUNT" property="assetLoanAccount" />
+		    <result column="ASSET_CREATE_AT" property="assetCreateAt" />
+		    <result column="ASSET_APPLY_AT" property="assetApplyAt" />
+		    <result column="ASSET_EFFECT_AT" property="assetEffectAt" />
+		    <result column="ASSET_ACTUAL_GRANT_AT" property="assetActualGrantAt" />
+		    <result column="ASSET_DUE_AT" property="assetDueAt" />
+		    <result column="ASSET_PAYOFF_AT" property="assetPayoffAt" />
+		    <result column="ASSET_UPDATE_AT" property="assetUpdateAt" />
+		    <result column="ASSET_FROM_SYSTEM" property="assetFromSystem" />
+		    <result column="ASSET_LOAN_CHANNEL" property="assetLoanChannel" />
+		    <result column="ASSET_STATUS" property="assetStatus" />
+		    <result column="ASSET_TOTAL_AMOUNT" property="assetTotalAmount" />
+		    <result column="ASSET_ACTUAL_TOTAL_AMOUNT" property="assetActualTotalAmount" />
+		    <result column="ASSET_BALANCE_AMOUNT" property="assetBalanceAmount" />
+		    <result column="ASSET_REPAID_AMOUNT" property="assetRepaidAmount" />
+		    <result column="ASSET_PRINCIPAL_AMOUNT" property="assetPrincipalAmount" />
+		    <result column="ASSET_REAL_PRINCIPAL_AMOUNT" property="assetRealPrincipalAmount" />
+		    <result column="ASSET_GRANTED_PRINCIPAL_AMOUNT" property="assetGrantedPrincipalAmount" />
+		    <result column="ASSET_REPAID_PRINCIPAL_AMOUNT" property="assetRepaidPrincipalAmount" />
+		    <result column="ASSET_ACTUAL_INTEREST" property="assetActualInterest" />
+		    <result column="ASSET_INTEREST_AMOUNT" property="assetInterestAmount" />
+		    <result column="ASSET_REPAID_INTEREST_AMOUNT" property="assetRepaidInterestAmount" />
+		    <result column="ASSET_UNSETTLE_INTEREST_AMOUNT" property="assetUnsettleInterestAmount" />
+		    <result column="ASSET_EXTEND_INTEREST" property="assetExtendInterest" />
+		    <result column="ASSET_REPAID_EXTEND_INTEREST" property="assetRepaidExtendInterest" />
+		    <result column="ASSET_UNSETTLE_EXTEND_INTEREST" property="assetUnsettleExtendInterest" />
+		    <result column="ASSET_PENALTY_INTEREST" property="assetPenaltyInterest" />
+		    <result column="ASSET_REPAID_PENALTY_INTEREST" property="assetRepaidPenaltyInterest" />
+		    <result column="ASSET_UNSETTLE_PENALTY_INTEREST" property="assetUnsettlePenaltyInterest" />
+		    <result column="ASSET_INTEREST_RATE" property="assetInterestRate" />
+		    <result column="ASSET_INTEREST_DAY_RATE" property="assetInterestDayRate" />
+		    <result column="ASSET_PENALTY_INTEREST_RATE" property="assetPenaltyInterestRate" />
+		    <result column="ASSET_PENALTY_INTEREST_DAY_RATE" property="assetPenaltyInterestDayRate" />
+		    <result column="INTEREST_YEAR_TYPE" property="interestYearType" />
+		    <result column="ASSET_LOAN_USAGE" property="assetLoanUsage" />
+		    <result column="ASSET_EXTEND_TYPE" property="assetExtendType" />
+		    <result column="ASSET_EXTEND_DAY" property="assetExtendDay" />
+		    <result column="ASSET_OVERDUE_STATUS" property="assetOverdueStatus" />
+		    <result column="ASSET_OVERDUE_DAYS" property="assetOverdueDays" />
+		    <result column="ASSET_BORROWER_IDNUM" property="assetBorrowerIdnum" />
+		    <result column="ASSET_REPAYER_IDNUM" property="assetRepayerIdnum" />
+		    <result column="ASSET_DEBT_NO" property="assetDebtNo" />
+		    <result column="ASSET_COUPON" property="assetCoupon" />
+		    <result column="ASSET_PRODUCT_BAD_DEBT_DAYS" property="assetProductBadDebtDays" />
+		    <result column="INTEREST_ACCRUAL_TYPE" property="interestAccrualType" />
+		    <result column="INTEREST_SETTLE_TYPE" property="interestSettleType" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ASSET t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ASSET t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+				<if test="e.assetFinanceStatus != null and e.assetFinanceStatus != '' ">
+					AND t.ASSET_FINANCE_STATUS = #{e.assetFinanceStatus}
+				</if>
+				<if test="e.isAccrued != null and e.isAccrued != '' ">
+					AND t.IS_ACCRUED = #{e.isAccrued}
+				</if>
+				<if test="e.isCleanAdvance != null and e.isCleanAdvance != '' ">
+					AND t.IS_CLEAN_ADVANCE = #{e.isCleanAdvance}
+				</if>
+				<if test="e.isRebuildPlan != null and e.isRebuildPlan != '' ">
+					AND t.IS_REBUILD_PLAN = #{e.isRebuildPlan}
+				</if>
+				<if test="e.rebuildPlanType != null and e.rebuildPlanType != '' ">
+					AND t.REBUILD_PLAN_TYPE = #{e.rebuildPlanType}
+				</if>
+				<if test="e.assetVersion != null and e.assetVersion != '' ">
+					AND t.ASSET_VERSION = #{e.assetVersion}
+				</if>
+				<if test="e.lastAccrualDate != null and e.lastAccrualDate != '' ">
+					AND t.LAST_ACCRUAL_DATE = #{e.lastAccrualDate}
+				</if>
+				<if test="e.monthStates != null and e.monthStates != '' ">
+					AND t.MONTH_STATES = #{e.monthStates}
+				</if>
+				<if test="e.orgid != null and e.orgid != '' ">
+					AND t.ORGID = #{e.orgid}
+				</if>
+				<if test="e.assetId != null and e.assetId != '' ">
+					AND t.ASSET_ID = #{e.assetId}
+				</if>
+				<if test="e.assetItemNo != null and e.assetItemNo != '' ">
+					AND t.ASSET_ITEM_NO = #{e.assetItemNo}
+				</if>
+				<if test="e.assetType != null and e.assetType != '' ">
+					AND t.ASSET_TYPE = #{e.assetType}
+				</if>
+				<if test="e.assetInterestType != null and e.assetInterestType != '' ">
+					AND t.ASSET_INTEREST_TYPE = #{e.assetInterestType}
+				</if>
+				<if test="e.assetPeriodType != null and e.assetPeriodType != '' ">
+					AND t.ASSET_PERIOD_TYPE = #{e.assetPeriodType}
+				</if>
+				<if test="e.assetPeriodCount != null and e.assetPeriodCount != '' ">
+					AND t.ASSET_PERIOD_COUNT = #{e.assetPeriodCount}
+				</if>
+				<if test="e.assetRealPeriodCount != null and e.assetRealPeriodCount != '' ">
+					AND t.ASSET_REAL_PERIOD_COUNT = #{e.assetRealPeriodCount}
+				</if>
+				<if test="e.assetProductCategory != null and e.assetProductCategory != '' ">
+					AND t.ASSET_PRODUCT_CATEGORY = #{e.assetProductCategory}
+				</if>
+				<if test="e.assetBizOrder != null and e.assetBizOrder != '' ">
+					AND t.ASSET_BIZ_ORDER = #{e.assetBizOrder}
+				</if>
+				<if test="e.assetCapitalOrder != null and e.assetCapitalOrder != '' ">
+					AND t.ASSET_CAPITAL_ORDER = #{e.assetCapitalOrder}
+				</if>
+				<if test="e.assetLoanAccount != null and e.assetLoanAccount != '' ">
+					AND t.ASSET_LOAN_ACCOUNT = #{e.assetLoanAccount}
+				</if>
+				<if test="e.assetCreateAt != null and e.assetCreateAt != '' ">
+					AND t.ASSET_CREATE_AT = #{e.assetCreateAt}
+				</if>
+				<if test="e.assetApplyAt != null and e.assetApplyAt != '' ">
+					AND t.ASSET_APPLY_AT = #{e.assetApplyAt}
+				</if>
+				<if test="e.assetEffectAt != null and e.assetEffectAt != '' ">
+					AND t.ASSET_EFFECT_AT = #{e.assetEffectAt}
+				</if>
+				<if test="e.assetActualGrantAt != null and e.assetActualGrantAt != '' ">
+					AND t.ASSET_ACTUAL_GRANT_AT = #{e.assetActualGrantAt}
+				</if>
+				<if test="e.assetDueAt != null and e.assetDueAt != '' ">
+					AND t.ASSET_DUE_AT = #{e.assetDueAt}
+				</if>
+				<if test="e.assetPayoffAt != null and e.assetPayoffAt != '' ">
+					AND t.ASSET_PAYOFF_AT = #{e.assetPayoffAt}
+				</if>
+				<if test="e.assetUpdateAt != null and e.assetUpdateAt != '' ">
+					AND t.ASSET_UPDATE_AT = #{e.assetUpdateAt}
+				</if>
+				<if test="e.assetFromSystem != null and e.assetFromSystem != '' ">
+					AND t.ASSET_FROM_SYSTEM = #{e.assetFromSystem}
+				</if>
+				<if test="e.assetLoanChannel != null and e.assetLoanChannel != '' ">
+					AND t.ASSET_LOAN_CHANNEL = #{e.assetLoanChannel}
+				</if>
+				<if test="e.assetStatus != null and e.assetStatus != '' ">
+					AND t.ASSET_STATUS = #{e.assetStatus}
+				</if>
+				<if test="e.assetTotalAmount != null and e.assetTotalAmount != '' ">
+					AND t.ASSET_TOTAL_AMOUNT = #{e.assetTotalAmount}
+				</if>
+				<if test="e.assetActualTotalAmount != null and e.assetActualTotalAmount != '' ">
+					AND t.ASSET_ACTUAL_TOTAL_AMOUNT = #{e.assetActualTotalAmount}
+				</if>
+				<if test="e.assetBalanceAmount != null and e.assetBalanceAmount != '' ">
+					AND t.ASSET_BALANCE_AMOUNT = #{e.assetBalanceAmount}
+				</if>
+				<if test="e.assetRepaidAmount != null and e.assetRepaidAmount != '' ">
+					AND t.ASSET_REPAID_AMOUNT = #{e.assetRepaidAmount}
+				</if>
+				<if test="e.assetPrincipalAmount != null and e.assetPrincipalAmount != '' ">
+					AND t.ASSET_PRINCIPAL_AMOUNT = #{e.assetPrincipalAmount}
+				</if>
+				<if test="e.assetRealPrincipalAmount != null and e.assetRealPrincipalAmount != '' ">
+					AND t.ASSET_REAL_PRINCIPAL_AMOUNT = #{e.assetRealPrincipalAmount}
+				</if>
+				<if test="e.assetGrantedPrincipalAmount != null and e.assetGrantedPrincipalAmount != '' ">
+					AND t.ASSET_GRANTED_PRINCIPAL_AMOUNT = #{e.assetGrantedPrincipalAmount}
+				</if>
+				<if test="e.assetRepaidPrincipalAmount != null and e.assetRepaidPrincipalAmount != '' ">
+					AND t.ASSET_REPAID_PRINCIPAL_AMOUNT = #{e.assetRepaidPrincipalAmount}
+				</if>
+				<if test="e.assetActualInterest != null and e.assetActualInterest != '' ">
+					AND t.ASSET_ACTUAL_INTEREST = #{e.assetActualInterest}
+				</if>
+				<if test="e.assetInterestAmount != null and e.assetInterestAmount != '' ">
+					AND t.ASSET_INTEREST_AMOUNT = #{e.assetInterestAmount}
+				</if>
+				<if test="e.assetRepaidInterestAmount != null and e.assetRepaidInterestAmount != '' ">
+					AND t.ASSET_REPAID_INTEREST_AMOUNT = #{e.assetRepaidInterestAmount}
+				</if>
+				<if test="e.assetUnsettleInterestAmount != null and e.assetUnsettleInterestAmount != '' ">
+					AND t.ASSET_UNSETTLE_INTEREST_AMOUNT = #{e.assetUnsettleInterestAmount}
+				</if>
+				<if test="e.assetExtendInterest != null and e.assetExtendInterest != '' ">
+					AND t.ASSET_EXTEND_INTEREST = #{e.assetExtendInterest}
+				</if>
+				<if test="e.assetRepaidExtendInterest != null and e.assetRepaidExtendInterest != '' ">
+					AND t.ASSET_REPAID_EXTEND_INTEREST = #{e.assetRepaidExtendInterest}
+				</if>
+				<if test="e.assetUnsettleExtendInterest != null and e.assetUnsettleExtendInterest != '' ">
+					AND t.ASSET_UNSETTLE_EXTEND_INTEREST = #{e.assetUnsettleExtendInterest}
+				</if>
+				<if test="e.assetPenaltyInterest != null and e.assetPenaltyInterest != '' ">
+					AND t.ASSET_PENALTY_INTEREST = #{e.assetPenaltyInterest}
+				</if>
+				<if test="e.assetRepaidPenaltyInterest != null and e.assetRepaidPenaltyInterest != '' ">
+					AND t.ASSET_REPAID_PENALTY_INTEREST = #{e.assetRepaidPenaltyInterest}
+				</if>
+				<if test="e.assetUnsettlePenaltyInterest != null and e.assetUnsettlePenaltyInterest != '' ">
+					AND t.ASSET_UNSETTLE_PENALTY_INTEREST = #{e.assetUnsettlePenaltyInterest}
+				</if>
+				<if test="e.assetInterestRate != null and e.assetInterestRate != '' ">
+					AND t.ASSET_INTEREST_RATE = #{e.assetInterestRate}
+				</if>
+				<if test="e.assetInterestDayRate != null and e.assetInterestDayRate != '' ">
+					AND t.ASSET_INTEREST_DAY_RATE = #{e.assetInterestDayRate}
+				</if>
+				<if test="e.assetPenaltyInterestRate != null and e.assetPenaltyInterestRate != '' ">
+					AND t.ASSET_PENALTY_INTEREST_RATE = #{e.assetPenaltyInterestRate}
+				</if>
+				<if test="e.assetPenaltyInterestDayRate != null and e.assetPenaltyInterestDayRate != '' ">
+					AND t.ASSET_PENALTY_INTEREST_DAY_RATE = #{e.assetPenaltyInterestDayRate}
+				</if>
+				<if test="e.interestYearType != null and e.interestYearType != '' ">
+					AND t.INTEREST_YEAR_TYPE = #{e.interestYearType}
+				</if>
+				<if test="e.assetLoanUsage != null and e.assetLoanUsage != '' ">
+					AND t.ASSET_LOAN_USAGE = #{e.assetLoanUsage}
+				</if>
+				<if test="e.assetExtendType != null and e.assetExtendType != '' ">
+					AND t.ASSET_EXTEND_TYPE = #{e.assetExtendType}
+				</if>
+				<if test="e.assetExtendDay != null and e.assetExtendDay != '' ">
+					AND t.ASSET_EXTEND_DAY = #{e.assetExtendDay}
+				</if>
+				<if test="e.assetOverdueStatus != null and e.assetOverdueStatus != '' ">
+					AND t.ASSET_OVERDUE_STATUS = #{e.assetOverdueStatus}
+				</if>
+				<if test="e.assetOverdueDays != null and e.assetOverdueDays != '' ">
+					AND t.ASSET_OVERDUE_DAYS = #{e.assetOverdueDays}
+				</if>
+				<if test="e.assetBorrowerIdnum != null and e.assetBorrowerIdnum != '' ">
+					AND t.ASSET_BORROWER_IDNUM = #{e.assetBorrowerIdnum}
+				</if>
+				<if test="e.assetRepayerIdnum != null and e.assetRepayerIdnum != '' ">
+					AND t.ASSET_REPAYER_IDNUM = #{e.assetRepayerIdnum}
+				</if>
+				<if test="e.assetDebtNo != null and e.assetDebtNo != '' ">
+					AND t.ASSET_DEBT_NO = #{e.assetDebtNo}
+				</if>
+				<if test="e.assetCoupon != null and e.assetCoupon != '' ">
+					AND t.ASSET_COUPON = #{e.assetCoupon}
+				</if>
+				<if test="e.assetProductBadDebtDays != null and e.assetProductBadDebtDays != '' ">
+					AND t.ASSET_PRODUCT_BAD_DEBT_DAYS = #{e.assetProductBadDebtDays}
+				</if>
+				<if test="e.interestAccrualType != null and e.interestAccrualType != '' ">
+					AND t.INTEREST_ACCRUAL_TYPE = #{e.interestAccrualType}
+				</if>
+				<if test="e.interestSettleType != null and e.interestSettleType != '' ">
+					AND t.INTEREST_SETTLE_TYPE = #{e.interestSettleType}
+				</if>
+	</sql>
+
+</mapper>

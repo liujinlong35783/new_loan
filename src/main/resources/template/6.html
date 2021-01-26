@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table align="center"  id="table6" border="1"  style="width: 100%;border-collapse: collapse;border:none;font-size: 10px;">
+    <thead style="border: none">
+    <tr><td colspan="16" style="height: 50px;font-size: 25px;text-align: center;border: none">网贷贷款明细账</td></tr>
+    <tr><td colspan="16" style="border: none;" >
+        <table style="width: 100%;border-collapse: collapse;border:none;">
+            <tr>
+                <td align="left"><span>机构名称：#{orgName}</span></td>
+                <td align="center"><span>机构号：#{orgCode}</span></td>
+                <td><span>币种:人民币</span></td>
+                <td><span>单位:元</span></td>
+                <td align="right"><span>#{pageInfo}</span></td>
+            </tr>
+        </table>
+    </td></tr>
+    </thead>
+    <tbody style="text-align: center;border: 1px solid black" >
+    <tr><td>贷款机构号</td><td>贷款机构名称</td><td>户名</td><td>贷款账号</td><td>借据号</td><td>合同号</td><td>发放日期</td><td>发放金额</td><td>还款日期</td><td>生效金额</td><td>借贷标识</td><td>还本金额</td><td>还息金额</td><td>全部金额</td><td>本金余额</td><td>身份证号</td></tr>
+    #{htmlContent}
+    </tbody>
+    <tfoot>
+    <tr><td colspan="8" style="border: none;">打印柜员：#{printPerson}</td><td colspan="8" style="border: none;text-align: right">日期：#{printDate}</td></tr>
+    </tfoot>
+</table>
+</body>
+</html>

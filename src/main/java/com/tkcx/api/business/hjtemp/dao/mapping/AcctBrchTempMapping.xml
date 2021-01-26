@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.hjtemp.dao.AcctBrchTempDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.hjtemp.model.AcctBrchTempModel">
+		    <result column="ACCT_DATE" property="acctDate" />
+		    <result column="ACCT_ORG" property="acctOrg" />
+		    <result column="CREATE_DATE" property="createDate" />
+		    <result column="CURRENCY" property="currency" />
+		    <result column="DEBT_FLAG" property="debtFlag" />
+		    <result column="ID" property="id" />
+		    <result column="ITEM_CODE" property="itemCode" />
+		    <result column="ITEM_CTRL" property="itemCtrl" />
+		    <result column="ITEM_NAME" property="itemName" />
+		    <result column="OFF_BALANCE_FLAG" property="offBalanceFlag" />
+		    <result column="STATUS" property="status" />
+		    <result column="TODAY_DEBIT_AMOUNT" property="todayDebitAmount" />
+		    <result column="TODAY_DEBIT_BALANCE" property="todayDebitBalance" />
+		    <result column="TODAY_DEBIT_QUANTITIES" property="todayDebitQuantities" />
+		    <result column="TODAY_LOAN_AMOUNT" property="todayLoanAmount" />
+		    <result column="TODAY_LOAN_BALANCE" property="todayLoanBalance" />
+		    <result column="TODAY_LOAN_QUANTITIES" property="todayLoanQuantities" />
+		    <result column="YEST_DEBIT_BALANCE" property="yestDebitBalance" />
+		    <result column="YEST_LOAN_BALANCE" property="yestLoanBalance" />
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from ACCT_BRCH_TEMP t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from ACCT_BRCH_TEMP t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<sql id="select_content">	
+				<if test="e.acctDate != null and e.acctDate != '' ">
+					AND t.ACCT_DATE = #{e.acctDate}
+				</if>
+				<if test="e.acctOrg != null and e.acctOrg != '' ">
+					AND t.ACCT_ORG = #{e.acctOrg}
+				</if>
+				<if test="e.createDate != null and e.createDate != '' ">
+					AND t.CREATE_DATE = #{e.createDate}
+				</if>
+				<if test="e.currency != null and e.currency != '' ">
+					AND t.CURRENCY = #{e.currency}
+				</if>
+				<if test="e.debtFlag != null and e.debtFlag != '' ">
+					AND t.DEBT_FLAG = #{e.debtFlag}
+				</if>
+				<if test="e.id != null and e.id != '' ">
+					AND t.ID = #{e.id}
+				</if>
+				<if test="e.itemCode != null and e.itemCode != '' ">
+					AND t.ITEM_CODE = #{e.itemCode}
+				</if>
+				<if test="e.itemCtrl != null and e.itemCtrl != '' ">
+					AND t.ITEM_CTRL = #{e.itemCtrl}
+				</if>
+				<if test="e.itemName != null and e.itemName != '' ">
+					AND t.ITEM_NAME = #{e.itemName}
+				</if>
+				<if test="e.offBalanceFlag != null and e.offBalanceFlag != '' ">
+					AND t.OFF_BALANCE_FLAG = #{e.offBalanceFlag}
+				</if>
+				<if test="e.status != null and e.status != '' ">
+					AND t.STATUS = #{e.status}
+				</if>
+				<if test="e.todayDebitAmount != null and e.todayDebitAmount != '' ">
+					AND t.TODAY_DEBIT_AMOUNT = #{e.todayDebitAmount}
+				</if>
+				<if test="e.todayDebitBalance != null and e.todayDebitBalance != '' ">
+					AND t.TODAY_DEBIT_BALANCE = #{e.todayDebitBalance}
+				</if>
+				<if test="e.todayDebitQuantities != null and e.todayDebitQuantities != '' ">
+					AND t.TODAY_DEBIT_QUANTITIES = #{e.todayDebitQuantities}
+				</if>
+				<if test="e.todayLoanAmount != null and e.todayLoanAmount != '' ">
+					AND t.TODAY_LOAN_AMOUNT = #{e.todayLoanAmount}
+				</if>
+				<if test="e.todayLoanBalance != null and e.todayLoanBalance != '' ">
+					AND t.TODAY_LOAN_BALANCE = #{e.todayLoanBalance}
+				</if>
+				<if test="e.todayLoanQuantities != null and e.todayLoanQuantities != '' ">
+					AND t.TODAY_LOAN_QUANTITIES = #{e.todayLoanQuantities}
+				</if>
+				<if test="e.yestDebitBalance != null and e.yestDebitBalance != '' ">
+					AND t.YEST_DEBIT_BALANCE = #{e.yestDebitBalance}
+				</if>
+				<if test="e.yestLoanBalance != null and e.yestLoanBalance != '' ">
+					AND t.YEST_LOAN_BALANCE = #{e.yestLoanBalance}
+				</if>
+	</sql>
+
+</mapper>
