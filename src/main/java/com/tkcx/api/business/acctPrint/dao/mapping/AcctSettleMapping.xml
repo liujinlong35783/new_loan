@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.AcctLogDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.AcctSettleModel">
+		    <result column="ID" property="id" />
+		    <result column="SYS_DATE" property="sysDate" />
+		    <result column="UPDATE_DATE" property="updateDate" />
+		    <result column="SYSTEM_STATUS" property="systemStatus" />
+	</resultMap>
+
+	
+	<select id="selectModelInfo" resultMap="BaseResultMap">
+		select SYS_DATE from ACCT_SETTLE where SYSTEM_STATUS = 'running'
+	</select>
+
+</mapper>
