@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.hjtemp.dao.HjFileInfoDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.hjtemp.model.HjFileInfoModel">
+
+	</resultMap>
+
+	
+	<select id="selectModelCount" resultMap="BaseResultMap">
+			select count(1) from HJ_FILE_INFO t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<select id="selectModelList" resultMap="BaseResultMap">
+			select * from HJ_FILE_INFO t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+	
+	<sql id="select_content">	
+		<if test="e.fileDate != null and e.fileDate != '' ">
+			AND t.FILE_DATE = #{e.fileDate}
+		</if>
+		<if test="e.deleteFlag != null and e.deleteFlag != '' ">
+			AND t.DELETE_FLAG = #{e.deleteFlag}
+		</if>
+	</sql>
+
+</mapper>

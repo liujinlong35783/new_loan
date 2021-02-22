@@ -45,8 +45,11 @@ public class TestController {
      * @return
      */
     @RequestMapping(value = "/testMakeData", method = RequestMethod.POST)
-    public String testMakeData(@RequestBody FileDownloadReqVo fileVo){
-        return handleService.startHandle(fileVo);
+    public void testMakeData(@RequestBody FileDownloadReqVo fileVo){
+
+        String fileType = fileVo.getFilePath();
+        String filePath = fileVo.getDownloadTranCode();
+        handleService.startHandle(filePath, fileType);
     }
 
     /**

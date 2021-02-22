@@ -19,7 +19,7 @@ public class ServerController {
     @RequestMapping(value = "/acctNotice", method = RequestMethod.POST)
     public String singleSend(@RequestBody String message) {
         try {
-            return bankApiService.hjHotice(message);
+            return bankApiService.hjNotice(message);
         } catch (ApplicationException e) {
             e.printStackTrace();
         }

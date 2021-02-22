@@ -3,12 +3,19 @@ package com.acct.job.jobhandler;
 import cn.hutool.core.date.DateUtil;
 import com.acct.job.thread.*;
 import com.dcfs.esb.ftp.utils.ThreadSleepUtil;
+import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
+import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
 import com.tkcx.api.common.BeanContext;
 import com.tkcx.api.common.BusiCommonService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
-import java.util.concurrent.*;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 会计凭证数据获取执行类
@@ -22,34 +29,40 @@ public class ScheduleRunnable implements Runnable {
     private int count = 0;
     private BusiCommonService busiCommonService = BeanContext.getBean(BusiCommonService.class);
 
+    @Autowired
+    private HjFileInfoService hjFileInfoService;
+
     @Override
     public void run() {
 
         Date startDate = new Date();
         log.info("ScheduleRunnable start ..." + startDate);
-
         // 获取会计日期
         Date selectDate = busiCommonService.getCoreSysDate();
         if(selectDate!=null){
             selectDate = DateUtil.parse(DateUtil.formatDate(selectDate),"yyyy-MM-dd");
         }
         // 判断互金数据是否已接入
+        HjFileInfoModel queryInfo = new HjFileInfoModel();
+        queryInfo.setFileDate(selectDate);
+        queryInfo.setDeleteFlag("0");
+        List<HjFileInfoModel> hjData = hjFileInfoService.selectModelList(queryInfo);
+
         if(count < 10){
-            if(selectDate == null || !busiCommonService.existHjData(selectDate)){
+            // !busiCommonService.existHjData(selectDate)
+            if(selectDate == null || hjData.size() == 0){
                 count ++;
                 ScheduledExecutorService scheduleThreadPool = Executors.newScheduledThreadPool(1);
                 scheduleThreadPool.schedule(this, 10, TimeUnit.MINUTES);
                 scheduleThreadPool.shutdown();
             }
-        } else if (!busiCommonService.existHjData(selectDate) && count >= 10){
+        } else if (hjData.size() == 0 && count >= 10){
             log.info("当日无互金数据，请检查互金数据文件是否正常！");
             return;
         } else if (selectDate == null && count >= 10) {
             log.info("当日获取网贷数据时间超时，请确认网贷系统是否正常！若系统正常，请手动再次执行该任务");
             return;
         }
-
-
 
         log.info("当前会计日期为：" + selectDate);
         if (selectDate != null && busiCommonService.existHjData(selectDate)) {
@@ -85,7 +98,6 @@ public class ScheduleRunnable implements Runnable {
 
             // 关闭线程池
             exe.shutdown();
-
             // 判断线程是否执行完成
             while (true) {
                 if (exe.isTerminated()) {

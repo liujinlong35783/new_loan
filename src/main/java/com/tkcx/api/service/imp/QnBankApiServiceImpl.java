@@ -4,7 +4,11 @@ import cn.hutool.core.date.DateUtil;
 import com.acct.job.thread.*;
 import com.alibaba.fastjson.JSONObject;
 import com.dcfs.esb.ftp.utils.ThreadSleepUtil;
+import com.google.inject.internal.util.Lists;
+import com.tkcx.api.business.acctPrint.model.AcctLogModel;
 import com.tkcx.api.business.hjtemp.Handle.HandleService;
+import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
+import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
 import com.tkcx.api.exception.FileErrorCode;
 import com.tkcx.api.service.BankApiService;
 import com.tkcx.api.vo.HjFileDataReqVo;
@@ -46,6 +50,9 @@ public class QnBankApiServiceImpl implements BankApiService {
     @Autowired
 	private ZhqdBusinesService zhqdBusinesService;
 
+    @Autowired
+	private HjFileInfoService hjFileInfoService;
+
 	@Value("${storage.tempUpload.path}")
 	private String tempUploadPath;
 	@Value("${storage.tempDownload.path}")
@@ -55,57 +62,60 @@ public class QnBankApiServiceImpl implements BankApiService {
 	private static final int FILE_NAME_LENGTH = 40;
 
 	@Override
-	public String hjHotice(String msg) throws ApplicationException {
+	public String hjNotice(String msg) throws ApplicationException {
+
 		HjFileDataRspVo rsp = new HjFileDataRspVo();
 		rsp.setTxnSt("S");
 		rsp.setRetCd("000000");
 		rsp.setRetMsg("通知成功");
 		HjFileDataReqVo req = null;
-		//开始业务
-		String brchPath = "", busiPath = "", detailPath = "", orgPath = "";
-		//下载文件
-		FileDownloadReqVo fileVo = new FileDownloadReqVo();
 		try {
 			//报文转实体对象
 			req = bankCommonService.receive(msg, HjFileDataReqVo.class);
 			//获取文件信息列表
-			List<HjFileDataReqVo.FileInfo> filelist = req.getFileInfo();
-			if(filelist!=null && filelist.size()>0)
-			for (HjFileDataReqVo.FileInfo file: filelist) {
-				fileVo.setDownloadTranCode(file.getFileTrnsmCd());//文件传输码
-				fileVo.setFilePath(file.getFilPath() + file.getFileNm());//文件下载路径
-				//判断文件类型
-				switch (file.getFileFlag()){
-					case "t_act_one_detail":
-						detailPath = downloadFile(fileVo);//返回文件保存路径
-						break;
-					case "t_act_brch_day_tot":
-						brchPath = downloadFile(fileVo);//返回文件保存路径
-						break;
-					case "t_act_busi_code_map":
-						busiPath = downloadFile(fileVo);//返回文件保存路径
-						break;
-					case "t_act_pub_org":
-						orgPath = downloadFile(fileVo);//返回文件保存路径
-						break;
+			List<HjFileDataReqVo.FileInfo> fileList = req.getFileInfo();
+
+			Date fileDate = DateUtil.parse(req.getSysHeadVo().getTxnDt(),"yyyy-MM-dd");
+			HjFileInfoModel queryInfo = new HjFileInfoModel();
+			queryInfo.setFileDate(fileDate);
+			// 查看当日是否已经推送了数据
+			List<HjFileInfoModel> hjFileInfoModels = hjFileInfoService.selectModelList(queryInfo);
+			// 如果推送了，则标识为删除状态
+			if(hjFileInfoModels != null && hjFileInfoModels.size() > 1){
+				HjFileInfoModel update = new HjFileInfoModel();
+				update.setFileDate(fileDate);
+				update.setDeleteFlag("1");
+				hjFileInfoService.saveOrUpdate(update);
+			}
+			// 保存推送数据信息
+			if(fileList != null && fileList.size() > 0) {
+				List<HjFileInfoModel> hjFileList = Lists.newArrayList();
+				for (HjFileDataReqVo.FileInfo file : fileList) {
+					HjFileInfoModel hjFileInfoModel = new HjFileInfoModel();
+					hjFileInfoModel.setFileName(file.getFilPath());
+					hjFileInfoModel.setDeleteFlag("0");
+					hjFileInfoModel.setFileTransCode(file.getFileTrnsmCd());
+					hjFileInfoModel.setFileType(file.getFileFlag());
+					// 文件日期
+					hjFileInfoModel.setFileDate(fileDate);
+					// 文件下载路径
+					hjFileInfoModel.setFilePath(file.getFilPath() + file.getFileNm());
+					hjFileList.add(hjFileInfoModel);
 				}
+				// 批量记录互金文件信息
+				hjFileInfoService.saveBatch(hjFileList);
+				// 互金推送数据日志表记录
+				if (null != req.getSysHeadVo()) {
+					AcctLogModel acctLog = new AcctLogModel();
+					acctLog.setAcctDate(DateUtil.parse(req.getSysHeadVo().getAcgDt()));
+					acctLog.setContent(req.getRemark());
+					acctLog.setLogType(0);
+					acctLog.setSerialNo(req.getSysHeadVo().getCnsmrSeqNo());
+					acctLog.insert();
+				}
+				// 异步下载文件,解析后保存至数据库中
+				downloadHjFile(hjFileList);
 			}
-			handleService.setHjFileDataReq(req);
-			//异步执行保存工作
-			handleService.startHandle(brchPath, busiPath, detailPath, orgPath);
-			if(StringUtils.isNotEmpty(brchPath)){
-				log.info("t_act_brch_day_tot ====== 文件下载成功");
-			}
-			if(StringUtils.isNotEmpty(busiPath)){
-				log.info("t_act_busi_code_map ====== 文件下载成功");
-			}
-			if(StringUtils.isNotEmpty(detailPath)){
-				log.info("t_act_one_detail ====== 文件下载成功");
-			}
-			if(StringUtils.isNotEmpty(orgPath)){
-				log.info("org机构信息 ====== 文件下载成功");
-			}
-			//结束业务
 		} catch (ApplicationException e) {
 			log.error("文件下载请求失败,错误原因：" + e);
 			rsp.setRetCd("999999");
@@ -115,6 +125,34 @@ public class QnBankApiServiceImpl implements BankApiService {
 			return response;
 		}
 	}
+
+
+	/**
+	 * 异步下载文件信息
+	 *
+	 * @param hjFileList
+	 * @throws ApplicationException
+	 */
+	@Async
+	public void downloadHjFile(List<HjFileInfoModel> hjFileList) throws ApplicationException {
+
+		for (HjFileInfoModel hjFileInfoModel : hjFileList) {
+			FileDownloadReqVo fileVo = new FileDownloadReqVo();
+			// 文件传输码
+			fileVo.setDownloadTranCode(hjFileInfoModel.getFileTransCode());
+			// 文件下载路径
+			fileVo.setFilePath(hjFileInfoModel.getFilePath());
+			// 下载文件
+			String downFilePath = downloadFile(fileVo);
+			String fileType = hjFileInfoModel.getFileType();
+			if(StringUtils.isNotEmpty(downFilePath)){
+				log.info("日期，文件 {} ====== 下载成功", hjFileInfoModel.getFileDate(), fileType);
+				// 下载成功后，解析文件，入库
+				handleService.startHandle(fileType, downFilePath);
+			}
+		}
+	}
+
 
 	@Override
 	public String zhqdQuery(String msg) throws ApplicationException {
@@ -132,6 +170,7 @@ public class QnBankApiServiceImpl implements BankApiService {
 		}
 		return resultXml;
 	}
+
 	/**
 	 * 文件下载方法
 	 * @param req 下载信息

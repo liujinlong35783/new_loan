@@ -1,7 +1,6 @@
 package com.tkcx.api.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.tkcx.api.vo.ZhqdQueryRspVo;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import common.core.exception.ApplicationException;
 
@@ -16,7 +15,7 @@ public interface BankApiService {
     /**
      * 互金通知
      */
-    String hjHotice(String msg) throws ApplicationException;
+    String hjNotice(String msg) throws ApplicationException;
 
     /**
      * 综合前端查询接口
