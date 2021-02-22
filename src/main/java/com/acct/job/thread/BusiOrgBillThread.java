@@ -15,6 +15,10 @@ import java.util.List;
 @Slf4j
 public class BusiOrgBillThread extends AcctBaseThread {
 
+    public BusiOrgBillThread(Date curDate) {
+        super(curDate);
+    }
+
     @Override
     public void run(){
         log.info("BusiOrgBillThread start..." + new Date());

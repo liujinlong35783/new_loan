@@ -12,8 +12,6 @@ import com.tkcx.api.vo.HjFileDataRspVo;
 import com.tkcx.api.vo.ZhqdQueryReqVo;
 import com.tkcx.api.vo.ZhqdQueryRspVo;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
-import com.tkcx.api.vo.ftpFile.FileUploadReqVo;
-import com.tkcx.api.vo.ftpFile.FileUploadRspVo;
 import common.core.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -204,68 +202,42 @@ public class QnBankApiServiceImpl implements BankApiService {
 
 		for(int i = 0; i < days; i++) {
 
+
 			if (acctNo ==null || acctNo == 1){
 				// 1. 借款借据回单
-				LoanReceiptThread loanThead = new LoanReceiptThread();
-				loanThead.setCurDate(endAcctDate);
-				// loanThead.setStartDate(startAcctDate);
-				exe.execute(new Thread(loanThead));
+				exe.execute(new LoanReceiptThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 2) {
 				// 2. 还款回单
-				RefundReceiptThread refundThead = new RefundReceiptThread();
-				refundThead.setCurDate(endAcctDate);
-				// refundThead.setStartDate(startAcctDate);
-				exe.execute(new Thread(refundThead));
+				exe.execute(new RefundReceiptThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 3) {
 				// 3. 网贷业务机构轧账单
-				BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
-				busiOrgBillThread.setCurDate(endAcctDate);
-				// busiOrgBillThread.setStartDate(startAcctDate);
-				exe.execute(new Thread(busiOrgBillThread));
+				exe.execute(new BusiOrgBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 4) {
 				// 4. 网贷业务机构业务流水
-				BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
-				busiOrgSeqThread.setCurDate(endAcctDate);
-				// busiOrgSeqThread.setStartDate(startAcctDate);
-				exe.execute(new Thread(busiOrgSeqThread));
+				exe.execute(new BusiOrgSeqThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 5) {
 				// 5. 贷款分户账
-				LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
-				loanAccBillThread.setCurDate(endAcctDate);
-                // loanAccBillThread.setStartDate(startAcctDate);
-				exe.execute(new Thread(loanAccBillThread));
+				exe.execute(new LoanAccBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 6) {
 				// 6. 贷款明细账
-				LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
-				loanDetailBillThread.setCurDate(endAcctDate);
-				// loanDetailBillThread.setStartDate(startAcctDate);
-				exe.execute(new Thread(loanDetailBillThread));
+				exe.execute(new LoanDetailBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 7) {
 				// 7. 贷款利息登记簿
-				InterestBillThread interestBillThread = new InterestBillThread();
-				interestBillThread.setCurDate(endAcctDate);
-				// interestBillThread.setStartDate(startAcctDate);
-				exe.execute(new Thread(interestBillThread));
+				exe.execute(new InterestBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 8) {
 				// 8. 会计凭证(记账凭证/交易凭证)
-				AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
-				acctVoucherThread.setCurDate(endAcctDate);
-				// acctVoucherThread.setStartDate(startAcctDate);
-				exe.execute(new Thread(acctVoucherThread));
+				exe.execute(new AcctVoucherThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 9) {
 				// 9. 贷款形态调整明细清单、贷款调整登记簿
-				LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
-				loanAdjustThread.setCurDate(endAcctDate);
-				// loanAdjustThread.setStartDate(startAcctDate);
-				exe.execute(new Thread(loanAdjustThread));
+				exe.execute(new LoanAdjustThread(endAcctDate));
 			}
 
 			endAcctDate = DateUtil.offsetDay(endAcctDate, -1);

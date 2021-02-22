@@ -13,6 +13,7 @@ import com.tkcx.api.utils.BusinessUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,6 +25,11 @@ import java.util.List;
 @Slf4j
 public class LoanAdjustThread extends AcctBaseThread {
 
+    public LoanAdjustThread(Date curDate) {
+        super(curDate);
+    }
+
+    @Override
     public void run(){
         LoanAdjustModel loanAdjustModel;
         AssetModel asset;

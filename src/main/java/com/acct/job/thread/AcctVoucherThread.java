@@ -23,6 +23,10 @@ import java.util.List;
 @Slf4j
 public class AcctVoucherThread extends AcctBaseThread {
 
+    public AcctVoucherThread(Date curDate) {
+        super(curDate);
+    }
+
     @Override
     public void run(){
 

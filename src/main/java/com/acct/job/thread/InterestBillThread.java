@@ -23,6 +23,10 @@ import java.util.Map;
 @Slf4j
 public class InterestBillThread extends AcctBaseThread {
 
+    public InterestBillThread(Date curDate) {
+        super(curDate);
+    }
+
     @Override
     public void run(){
 

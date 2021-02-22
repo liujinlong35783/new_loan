@@ -24,6 +24,10 @@ import java.util.List;
 @Slf4j
 public class BusiOrgSeqThread extends AcctBaseThread {
 
+    public BusiOrgSeqThread(Date curDate) {
+        super(curDate);
+    }
+
     @Override
     public void run(){
 

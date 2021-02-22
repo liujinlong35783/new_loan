@@ -22,6 +22,10 @@ import java.util.List;
 @Slf4j
 public class RefundReceiptThread extends AcctBaseThread {
 
+    public RefundReceiptThread(Date curDate) {
+        super(curDate);
+    }
+
     @Override
     public void run(){
 

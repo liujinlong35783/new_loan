@@ -57,49 +57,31 @@ public class ScheduleRunnable implements Runnable {
             ExecutorService exe = Executors.newFixedThreadPool(10);
 
             // 1. 借款借据回单，数据来自于网贷
-            LoanReceiptThread loanThead = new LoanReceiptThread();
-            loanThead.setCurDate(selectDate);
-            exe.execute(new Thread(loanThead));
+            exe.execute(new LoanReceiptThread(selectDate));
 
             // 2. 还款回单，数据来自于网贷
-            RefundReceiptThread refundThead = new RefundReceiptThread();
-            refundThead.setCurDate(selectDate);
-            exe.execute(new Thread(refundThead));
+            exe.execute(new RefundReceiptThread(selectDate));
 
             // 3. 网贷业务机构轧账单，数据来自于会计凭证 ACCT_DETAIL_TEMP 表，ACCT_DETAIL_TEMP数据来自于互金
-            BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
-            busiOrgBillThread.setCurDate(selectDate);
-            exe.execute(new Thread(busiOrgBillThread));
+            exe.execute(new BusiOrgBillThread(selectDate));
 
             // 4. 网贷业务机构业务流水，数据来自于网贷+会计凭证 ACCT_DETAIL_TEMP 表
-            BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
-            busiOrgSeqThread.setCurDate(selectDate);
-            exe.execute(new Thread(busiOrgSeqThread));
+            exe.execute(new BusiOrgSeqThread(selectDate));
 
             // 5. 贷款分户账 网贷数据+会计凭证ACCT_ORG_TEMP表，ACCT_ORG_TEMP数据来自于互金
-            LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
-            loanAccBillThread.setCurDate(selectDate);
-            exe.execute(new Thread(loanAccBillThread));
+            exe.execute(new BusiOrgSeqThread(selectDate));
 
             // 6. 贷款明细账，数据来自于网贷+会计凭证ACCT_ORG_TEMP表、ACCT_BUSI_CODE表
-            LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
-            loanDetailBillThread.setCurDate(selectDate);
-            exe.execute(new Thread(loanDetailBillThread));
+            exe.execute(new LoanDetailBillThread(selectDate));
 
             // 7. 贷款利息登记簿，数据来自于网贷系统
-            InterestBillThread interestBillThread = new InterestBillThread();
-            interestBillThread.setCurDate(selectDate);
-            exe.execute(new Thread(interestBillThread));
+            exe.execute(new InterestBillThread(selectDate));
 
             // 8. 会计凭证(记账凭证/交易凭证)，数据来自网贷+会计凭证ACCT_DETAIL_TEMP表、ACCT_ORG_TEMP表
-            AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
-            acctVoucherThread.setCurDate(selectDate);
-            exe.execute(new Thread(acctVoucherThread));
+            exe.execute(new AcctVoucherThread(selectDate));
 
             // 9. 贷款形态调整明细清单、贷款调整登记簿,数据来自网贷+会计凭证ACCT_ORG_TEMP表
-            LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
-            loanAdjustThread.setCurDate(selectDate);
-            exe.execute(new Thread(loanAdjustThread));
+            exe.execute(new LoanAdjustThread(selectDate));
 
             // 关闭线程池
             exe.shutdown();

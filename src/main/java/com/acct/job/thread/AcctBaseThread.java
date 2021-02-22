@@ -39,6 +39,11 @@ public class AcctBaseThread extends Thread {
      */
     private Date startDate;
 
+
+    public AcctBaseThread(Date curDate) {
+        this.curDate = curDate;
+    }
+
     public AcctDataService acctDataService = BeanContext.getBean(AcctDataService.class);
 
     public BusiOrgSeqService busiOrgSeqService = BeanContext.getBean(BusiOrgSeqService.class);

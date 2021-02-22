@@ -28,6 +28,10 @@ public class LoanAccBillThread extends AcctBaseThread {
     private AssetModel asset;
     private CardiiModel cardii;
 
+    public LoanAccBillThread(Date curDate) {
+        super(curDate);
+    }
+
     @Override
     public void run() {
         log.info("LoanAccBillThread start...");

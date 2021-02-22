@@ -272,10 +272,11 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 1. 借款借据回单
-        LoanReceiptThread loanThead = new LoanReceiptThread();
-        loanThead.setCurDate(selectDate);
-        loanThead.setStartDate(startDate);
-        exe.execute(new Thread(loanThead));
+//        LoanReceiptThread loanThead = new LoanReceiptThread();
+//        loanThead.setCurDate(selectDate);
+//        loanThead.setStartDate(startDate);
+//        exe.execute(new Thread(loanThead));
+        exe.execute(new LoanReceiptThread(selectDate));
 
         // 关闭线程池
         exe.shutdown();
@@ -298,10 +299,11 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 2. 还款回单
-        RefundReceiptThread refundThead = new RefundReceiptThread();
-        refundThead.setCurDate(selectDate);
-        refundThead.setStartDate(startDate);
-        exe.execute(new Thread(refundThead));
+//        RefundReceiptThread refundThead = new RefundReceiptThread();
+//        refundThead.setCurDate(selectDate);
+//        refundThead.setStartDate(startDate);
+//        exe.execute(new Thread(refundThead));
+        exe.execute(new RefundReceiptThread(selectDate));
 
         // 关闭线程池
         exe.shutdown();
@@ -322,9 +324,10 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 3. 网贷业务机构轧账单
-        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
-        busiOrgBillThread.setCurDate(selectDate);
-        exe.execute(new Thread(busiOrgBillThread));
+//        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
+//        busiOrgBillThread.setCurDate(selectDate);
+//        exe.execute(new Thread(busiOrgBillThread));
+        exe.execute(new BusiOrgBillThread(selectDate));
 
         // 关闭线程池
         exe.shutdown();
@@ -346,9 +349,10 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 4. 网贷业务机构业务流水
-        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
-        busiOrgSeqThread.setCurDate(selectDate);
-        exe.execute(new Thread(busiOrgSeqThread));
+//        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
+//        busiOrgSeqThread.setCurDate(selectDate);
+//        exe.execute(new Thread(busiOrgSeqThread));
+        exe.execute(new BusiOrgSeqThread(selectDate));
 
         // 关闭线程池
         exe.shutdown();
@@ -369,10 +373,11 @@ public class AcctPrintApplicationTests {
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
         // 5. 贷款分户账
-        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
-        loanAccBillThread.setCurDate(selectDate);
+//        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
+//        loanAccBillThread.setCurDate(selectDate);
         //loanAccBillThread.setStartDate(startDate);
-        exe.execute(new Thread(loanAccBillThread));
+//        exe.execute(new Thread(loanAccBillThread));
+        exe.execute(new LoanAccBillThread(selectDate));
         // 关闭线程池
         exe.shutdown();
 
@@ -390,9 +395,10 @@ public class AcctPrintApplicationTests {
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
         // 5. 贷款形态调整明细清单、贷款调整登记簿
-        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
-        loanAdjustThread.setCurDate(selectDate);
-        exe.execute(new Thread(loanAdjustThread));
+//        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
+//        loanAdjustThread.setCurDate(selectDate);
+//        exe.execute(new Thread(loanAdjustThread));
+        exe.execute(new LoanAdjustThread(selectDate));
         // 关闭线程池
         exe.shutdown();
 
@@ -411,10 +417,10 @@ public class AcctPrintApplicationTests {
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
         // 6. 贷款明细账
-        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
-
-        loanDetailBillThread.setCurDate(selectDate);
-        exe.execute(new Thread(loanDetailBillThread));
+//        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
+//        loanDetailBillThread.setCurDate(selectDate);
+//        exe.execute(new Thread(loanDetailBillThread));
+        exe.execute(new LoanDetailBillThread(selectDate));
         // 关闭线程池
         exe.shutdown();
 
@@ -439,9 +445,10 @@ public class AcctPrintApplicationTests {
 
         for(int i = 0; i < days; i++) {
             // 7. 贷款利息登记簿
-            InterestBillThread interestBillThread = new InterestBillThread();
-            interestBillThread.setCurDate(selectDate);
-            exe.execute(new Thread(interestBillThread));
+//            InterestBillThread interestBillThread = new InterestBillThread();
+//            interestBillThread.setCurDate(selectDate);
+//            exe.execute(new Thread(interestBillThread));
+            exe.execute(new InterestBillThread(selectDate));
 
             selectDate = DateUtil.offsetDay(selectDate, -1);
 
@@ -467,9 +474,10 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 8. 会计凭证(记账凭证/交易凭证)
-        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
-        acctVoucherThread.setCurDate(selectDate);
-        exe.execute(new Thread(acctVoucherThread));
+//        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
+//        acctVoucherThread.setCurDate(selectDate);
+//        exe.execute(new Thread(acctVoucherThread));
+        exe.execute(new AcctVoucherThread(selectDate));
 
         // 关闭线程池
         exe.shutdown();
@@ -490,49 +498,58 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(10);
 
         // 1. 借款借据回单
-        LoanReceiptThread loanThead = new LoanReceiptThread();
-        loanThead.setCurDate(selectDate);
-        exe.execute(new Thread(loanThead));
+//        LoanReceiptThread loanThead = new LoanReceiptThread();
+//        loanThead.setCurDate(selectDate);
+//        exe.execute(new Thread(loanThead));
+        exe.execute(new LoanReceiptThread(selectDate));
 
         // 2. 还款回单
-        RefundReceiptThread refundThead = new RefundReceiptThread();
-        refundThead.setCurDate(selectDate);
-        exe.execute(new Thread(refundThead));
+//        RefundReceiptThread refundThead = new RefundReceiptThread();
+//        refundThead.setCurDate(selectDate);
+//        exe.execute(new Thread(refundThead));
+        exe.execute(new RefundReceiptThread(selectDate));
 
         // 3. 网贷业务机构轧账单
-        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
-        busiOrgBillThread.setCurDate(selectDate);
-        exe.execute(new Thread(busiOrgBillThread));
+//        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
+//        busiOrgBillThread.setCurDate(selectDate);
+//        exe.execute(new Thread(busiOrgBillThread));
+        exe.execute(new BusiOrgBillThread(selectDate));
 
         // 4. 网贷业务机构业务流水
-        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
-        busiOrgSeqThread.setCurDate(selectDate);
-        exe.execute(new Thread(busiOrgSeqThread));
+//        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
+//        busiOrgSeqThread.setCurDate(selectDate);
+//        exe.execute(new Thread(busiOrgSeqThread));
+        exe.execute(new BusiOrgSeqThread(selectDate));
 
         // 5. 贷款分户账
-        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
-        loanAccBillThread.setCurDate(selectDate);
-        exe.execute(new Thread(loanAccBillThread));
+//        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
+//        loanAccBillThread.setCurDate(selectDate);
+//        exe.execute(new Thread(loanAccBillThread));
+        exe.execute(new LoanAccBillThread(selectDate));
 
         // 6. 贷款明细账
-        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
-        loanDetailBillThread.setCurDate(selectDate);
-        exe.execute(new Thread(loanDetailBillThread));
+//        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
+//        loanDetailBillThread.setCurDate(selectDate);
+//        exe.execute(new Thread(loanDetailBillThread));
+        exe.execute(new LoanDetailBillThread(selectDate));
 
         // 7. 贷款利息登记簿
-        InterestBillThread interestBillThread = new  InterestBillThread();
-        interestBillThread.setCurDate(selectDate);
-        exe.execute(new Thread(interestBillThread));
+//        InterestBillThread interestBillThread = new  InterestBillThread();
+//        interestBillThread.setCurDate(selectDate);
+//        exe.execute(new Thread(interestBillThread));
+        exe.execute(new InterestBillThread(selectDate));
 
         // 8. 会计凭证(记账凭证/交易凭证)
-        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
-        acctVoucherThread.setCurDate(selectDate);
-        exe.execute(new Thread(acctVoucherThread));
+//        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
+//        acctVoucherThread.setCurDate(selectDate);
+//        exe.execute(new Thread(acctVoucherThread));
+        exe.execute(new AcctVoucherThread(selectDate));
 
         // 9. 贷款形态调整明细清单、贷款调整登记簿
-        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
-        loanAdjustThread.setCurDate(selectDate);
-        exe.execute(new Thread(loanAdjustThread));
+//        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
+//        loanAdjustThread.setCurDate(selectDate);
+//        exe.execute(new Thread(loanAdjustThread));
+        exe.execute(new LoanAdjustThread(selectDate));
 
         // 关闭线程池
         exe.shutdown();
