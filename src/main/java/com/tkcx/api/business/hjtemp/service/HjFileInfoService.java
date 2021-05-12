@@ -20,9 +20,12 @@ public class HjFileInfoService extends CommonService<HjFileInfoDao, HjFileInfoMo
     @Resource
     private HjFileInfoDao hjFileInfoDao;
 
-
     public List<HjFileInfoModel> selectModelList(HjFileInfoModel queryInfo) {
 
         return hjFileInfoDao.selectModelList(queryInfo);
+    }
+
+    public Integer insert(HjFileInfoModel entity) {
+        return hjFileInfoDao.insert(entity);
     }
 }

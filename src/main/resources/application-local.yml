@@ -1,5 +1,5 @@
 server:
-  port: 11250
+  port: 11244
   max-http-header-size: 10240
 
 spring:

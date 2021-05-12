@@ -156,7 +156,7 @@
 		</dependency>
 
 		<dependency>
-			<groupId>tob</groupId>
+			<groupId>tob.qinnong</groupId>
 			<artifactId>common-core</artifactId>
 			<version>0.0.1</version>
 		</dependency>

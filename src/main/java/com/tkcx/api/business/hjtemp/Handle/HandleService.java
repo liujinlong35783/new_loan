@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Constructor;
@@ -45,10 +44,12 @@ public class HandleService {
 
         //异步进行保存工作
         try {
-
+            log.info("开始解析互金：{}文件", fileType);
             switch (fileType){
                 case "t_act_one_detail":
                     List<AcctDetailTempModel> detailList = makeListData(filePath, AcctDetailTempModel.class);
+                    log.info("t_act_one_detail待更新的数据总数：{},插入的第一条数据信息", detailList.size(),
+                            detailList.get(0).getAccountCode(), detailList.get(0).getCreateDate());
                     if(isRemove) {
                         acctDetailTempService.remove(null);
                         log.info("AcctDetailTempModel数据清空成功");
@@ -58,6 +59,8 @@ public class HandleService {
                     break;
                 case "t_act_brch_day_tot":
                     List<AcctBrchTempModel> brchList = makeListData(filePath, AcctBrchTempModel.class);
+                    log.info("t_act_brch_day_tot待更新的数据总数：{},插入的第一条数据信息", brchList.size(),
+                            brchList.get(0).getAcctOrg(), brchList.get(0).getCreateDate());
                     if(isRemove){
                         acctBrchTempService.remove(null);
                         log.info("AcctBrchTempModel数据清空成功");
@@ -67,6 +70,8 @@ public class HandleService {
                     break;
                 case "t_act_busi_code_map":
                     List<AcctBusiCodeModel> busiList = makeListData(filePath, AcctBusiCodeModel.class);
+                    log.info("t_act_busi_code_map待更新的数据总数：{},插入的第一条数据信息", busiList.size(),
+                            busiList.get(0).getBusiCode(), busiList.get(0).getCreateDate());
                     acctBusiCodeService.remove(null);
                     log.info("AcctBusiCodeModel数据清空成功");
                     acctBusiCodeService.saveBatch(busiList);
@@ -74,12 +79,15 @@ public class HandleService {
                     break;
                 case "t_act_pub_org":
                     List<AcctOrgTempModel> orgList = makeListData(filePath, AcctOrgTempModel.class);
+                    log.info("t_act_pub_org待更新的数据总数：{},插入的第一条数据信息", orgList.size(),
+                            orgList.get(0).getOrgCode(), orgList.get(0).getCreateDate());
                     acctOrgTempService.remove(null);
                     log.info("AcctOrgTempModel数据清空成功");
                     acctOrgTempService.saveBatch(orgList);
                     log.info("AcctOrgTempModel保存成功");
                     break;
             }
+            log.info("互金：{}文件解析成功", fileType);
         }catch (Exception e){
             new RuntimeException(e);
             log.error("数据异常{}" ,e);

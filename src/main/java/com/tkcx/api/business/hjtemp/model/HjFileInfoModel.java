@@ -54,12 +54,15 @@ public class HjFileInfoModel extends Model<HjFileInfoModel> {
      * 文件日期
      */
     @TableField(value = "FILE_DATE")
-    private Date fileDate;
+    private Date  fileDate;
 
     /**
      * 删除标识
      */
-    @TableField(value = "DELETE_FALG")
+    @TableField(value = "DELETE_FLAG")
     private String deleteFlag;
+
+    @TableField(value="CREATE_DATE")
+    private Date createDate;
 
 }

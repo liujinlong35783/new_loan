@@ -6,9 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.dcfs.esb.ftp.utils.ThreadSleepUtil;
 import com.google.inject.internal.util.Lists;
 import com.tkcx.api.business.acctPrint.model.AcctLogModel;
-import com.tkcx.api.business.hjtemp.Handle.HandleService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagEnum;
 import com.tkcx.api.exception.FileErrorCode;
 import com.tkcx.api.service.BankApiService;
 import com.tkcx.api.vo.HjFileDataReqVo;
@@ -43,8 +43,7 @@ public class QnBankApiServiceImpl implements BankApiService {
 
 	@Autowired
 	private BankCommonService bankCommonService;
-	@Autowired
-	private HandleService handleService;
+
 	@Autowired
 	private QnFtpClientServiceImpl qnFtpClientServiceImpl;
     @Autowired
@@ -52,6 +51,9 @@ public class QnBankApiServiceImpl implements BankApiService {
 
     @Autowired
 	private HjFileInfoService hjFileInfoService;
+
+    @Autowired
+	private HjFileHandleService hjFileHandleService;
 
 	@Value("${storage.tempUpload.path}")
 	private String tempUploadPath;
@@ -78,24 +80,33 @@ public class QnBankApiServiceImpl implements BankApiService {
 			Date fileDate = DateUtil.parse(req.getSysHeadVo().getTxnDt(),"yyyy-MM-dd");
 			HjFileInfoModel queryInfo = new HjFileInfoModel();
 			queryInfo.setFileDate(fileDate);
-			// 查看当日是否已经推送了数据
+			queryInfo.setDeleteFlag(HjFileFlagEnum.NOT_DELETED);
+			// 查看当日是否已经推送了数据???下面的查询是不是有问题，在这里执行出问题了。。。。。。。。。。。。。。。。
 			List<HjFileInfoModel> hjFileInfoModels = hjFileInfoService.selectModelList(queryInfo);
+			log.info("日期{}，查询到的互金推送记录{}", fileDate, hjFileInfoModels.size());
 			// 如果推送了，则标识为删除状态
 			if(hjFileInfoModels != null && hjFileInfoModels.size() > 1){
-				HjFileInfoModel update = new HjFileInfoModel();
-				update.setFileDate(fileDate);
-				update.setDeleteFlag("1");
-				hjFileInfoService.saveOrUpdate(update);
+				log.info("日期{}，互金数据重复推送，删除互金文件信息中的重复记录，重新进行保存" + fileDate);
+				for (HjFileInfoModel updateInfo : hjFileInfoModels) {
+
+					HjFileInfoModel update = new HjFileInfoModel();
+					update.setFileId(updateInfo.getFileId());
+					update.setFileDate(fileDate);
+					update.setDeleteFlag(HjFileFlagEnum.DELETED);
+					hjFileInfoService.saveOrUpdate(update);
+				}
 			}
+
 			// 保存推送数据信息
 			if(fileList != null && fileList.size() > 0) {
 				List<HjFileInfoModel> hjFileList = Lists.newArrayList();
 				for (HjFileDataReqVo.FileInfo file : fileList) {
 					HjFileInfoModel hjFileInfoModel = new HjFileInfoModel();
-					hjFileInfoModel.setFileName(file.getFilPath());
-					hjFileInfoModel.setDeleteFlag("0");
+					hjFileInfoModel.setFileName(file.getFileNm());
+					hjFileInfoModel.setDeleteFlag(HjFileFlagEnum.NOT_DELETED);
 					hjFileInfoModel.setFileTransCode(file.getFileTrnsmCd());
 					hjFileInfoModel.setFileType(file.getFileFlag());
+					hjFileInfoModel.setCreateDate(DateUtil.date());
 					// 文件日期
 					hjFileInfoModel.setFileDate(fileDate);
 					// 文件下载路径
@@ -114,7 +125,7 @@ public class QnBankApiServiceImpl implements BankApiService {
 					acctLog.insert();
 				}
 				// 异步下载文件,解析后保存至数据库中
-				downloadHjFile(hjFileList);
+				hjFileHandleService.downloadHjFile(hjFileList);
 			}
 		} catch (ApplicationException e) {
 			log.error("文件下载请求失败,错误原因：" + e);
@@ -127,31 +138,6 @@ public class QnBankApiServiceImpl implements BankApiService {
 	}
 
 
-	/**
-	 * 异步下载文件信息
-	 *
-	 * @param hjFileList
-	 * @throws ApplicationException
-	 */
-	@Async
-	public void downloadHjFile(List<HjFileInfoModel> hjFileList) throws ApplicationException {
-
-		for (HjFileInfoModel hjFileInfoModel : hjFileList) {
-			FileDownloadReqVo fileVo = new FileDownloadReqVo();
-			// 文件传输码
-			fileVo.setDownloadTranCode(hjFileInfoModel.getFileTransCode());
-			// 文件下载路径
-			fileVo.setFilePath(hjFileInfoModel.getFilePath());
-			// 下载文件
-			String downFilePath = downloadFile(fileVo);
-			String fileType = hjFileInfoModel.getFileType();
-			if(StringUtils.isNotEmpty(downFilePath)){
-				log.info("日期，文件 {} ====== 下载成功", hjFileInfoModel.getFileDate(), fileType);
-				// 下载成功后，解析文件，入库
-				handleService.startHandle(fileType, downFilePath);
-			}
-		}
-	}
 
 
 	@Override

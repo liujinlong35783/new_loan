@@ -15,7 +15,7 @@ public interface BankApiService {
     /**
      * 互金通知
      */
-    String hjNotice(String msg) throws ApplicationException;
+    String hjNotice(String msg) throws ApplicationException, ApplicationException;
 
     /**
      * 综合前端查询接口

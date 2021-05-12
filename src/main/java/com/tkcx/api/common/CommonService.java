@@ -30,6 +30,7 @@ public class CommonService<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
      * @param entityList ignore
      * @return ignore
      */
+    @Override
     @Transactional(rollbackFor = Exception.class,timeout = 200)
     public boolean saveBatch(Collection<T> entityList) {
         if(entityList==null || entityList.size()==0){
