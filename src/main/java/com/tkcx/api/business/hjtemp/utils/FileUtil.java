@@ -3,8 +3,7 @@ package com.tkcx.api.business.hjtemp.utils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,30 @@ import java.util.List;
  */
 @Slf4j
 public class FileUtil {
+
+    /**
+     * 以流的方式按行读取文件
+     * 2021-10-23 zhaodan优化
+     * @return
+     */
+    public static String readLineByLines(String filePath){
+        String lineList = new String();
+        try {
+            File file =  new File(filePath);
+            if(!file.exists()){
+                log.error("{}下文件不存在", filePath);
+                return null;
+            }
+
+            InputStream in = new FileInputStream(file);
+            BufferedReader reader=new BufferedReader(new InputStreamReader(in,"UTF-8"));
+            lineList = reader.readLine();
+
+        } catch (IOException e) {
+            log.error("读取文件{}，异常信息{}", filePath, e);
+        }
+        return lineList;
+    }
 
     /**
      * 按行读取文件

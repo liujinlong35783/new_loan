@@ -1,23 +1,22 @@
 package com.tkcx.api.business.hjtemp.Handle;
 
-import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
-import com.tkcx.api.business.hjtemp.model.AcctBusiCodeModel;
-import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
-import com.tkcx.api.business.hjtemp.model.AcctOrgTempModel;
-import com.tkcx.api.business.hjtemp.service.AcctBrchTempService;
-import com.tkcx.api.business.hjtemp.service.AcctBusiCodeService;
-import com.tkcx.api.business.hjtemp.service.AcctDetailTempService;
-import com.tkcx.api.business.hjtemp.service.AcctOrgTempService;
+import com.tkcx.api.business.hjtemp.hjThread.AcctBrchReadThread;
+import com.tkcx.api.business.hjtemp.hjThread.AcctBusiReadThread;
+import com.tkcx.api.business.hjtemp.hjThread.AcctDetailReadThread;
+import com.tkcx.api.business.hjtemp.hjThread.AcctOrgReadThread;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 互金数据文件解析保存类
@@ -26,18 +25,8 @@ import java.util.List;
 @Service
 public class HandleService {
 
-    @Autowired
-    private AcctBrchTempService acctBrchTempService;
-    @Autowired
-    private AcctBusiCodeService acctBusiCodeService;
-    @Autowired
-    private AcctDetailTempService acctDetailTempService;
-    @Autowired
-    private AcctOrgTempService acctOrgTempService;
-
     @Value("${acct.isRemove}")
     private Boolean isRemove;
-
 
 //    @Async
     public void startHandle(String filePath,String fileType){
@@ -45,54 +34,42 @@ public class HandleService {
         //异步进行保存工作
         try {
             log.info("开始解析互金：{}文件", fileType);
+
+            // 自定义线程池用来进行互金文件的解析
+            ThreadPoolExecutor readThreadPool = new ThreadPoolExecutor(
+                    4,5,60, TimeUnit.SECONDS, new LinkedBlockingDeque<>(3),
+                    Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
             switch (fileType){
                 case "t_act_one_detail":
-                    List<AcctDetailTempModel> detailList = makeListData(filePath, AcctDetailTempModel.class);
-                    log.info("t_act_one_detail待更新的数据总数：{},插入的第一条数据信息", detailList.size(),
-                            detailList.get(0).getAccountCode(), detailList.get(0).getCreateDate());
-                    if(isRemove) {
-                        acctDetailTempService.remove(null);
-                        log.info("AcctDetailTempModel数据清空成功");
-                    }
-                    acctDetailTempService.saveBatch(detailList);
-                    log.info("AcctDetailTempModel保存成功");
+                    // 2021年10月24解决CPU使用率高问题
+                    readThreadPool.execute(new AcctDetailReadThread(filePath, isRemove));
                     break;
                 case "t_act_brch_day_tot":
-                    List<AcctBrchTempModel> brchList = makeListData(filePath, AcctBrchTempModel.class);
-                    log.info("t_act_brch_day_tot待更新的数据总数：{},插入的第一条数据信息", brchList.size(),
-                            brchList.get(0).getAcctOrg(), brchList.get(0).getCreateDate());
-                    if(isRemove){
-                        acctBrchTempService.remove(null);
-                        log.info("AcctBrchTempModel数据清空成功");
-                    }
-                    acctBrchTempService.saveBatch(brchList);
-                    log.info("AcctBrchTempModel保存成功");
+                    readThreadPool.execute(new AcctBrchReadThread(filePath, isRemove));
                     break;
                 case "t_act_busi_code_map":
-                    List<AcctBusiCodeModel> busiList = makeListData(filePath, AcctBusiCodeModel.class);
-                    log.info("t_act_busi_code_map待更新的数据总数：{},插入的第一条数据信息", busiList.size(),
-                            busiList.get(0).getBusiCode(), busiList.get(0).getCreateDate());
-                    acctBusiCodeService.remove(null);
-                    log.info("AcctBusiCodeModel数据清空成功");
-                    acctBusiCodeService.saveBatch(busiList);
-                    log.info("AcctBusiCodeModel保存成功");
+                    readThreadPool.execute(new AcctBusiReadThread(filePath, isRemove));
                     break;
                 case "t_act_pub_org":
-                    List<AcctOrgTempModel> orgList = makeListData(filePath, AcctOrgTempModel.class);
-                    log.info("t_act_pub_org待更新的数据总数：{},插入的第一条数据信息", orgList.size(),
-                            orgList.get(0).getOrgCode(), orgList.get(0).getCreateDate());
-                    acctOrgTempService.remove(null);
-                    log.info("AcctOrgTempModel数据清空成功");
-                    acctOrgTempService.saveBatch(orgList);
-                    log.info("AcctOrgTempModel保存成功");
+                    readThreadPool.execute(new AcctOrgReadThread(filePath, isRemove));
                     break;
+                default:
+                    log.error("文件类型：【{}】错误", fileType);
             }
-            log.info("互金：{}文件解析成功", fileType);
+            // 关闭线程池
+            readThreadPool.shutdown();
+            boolean flag;
+            do {
+                flag = ! readThreadPool.awaitTermination(500, TimeUnit.MILLISECONDS);
+            } while (flag);
         }catch (Exception e){
-            new RuntimeException(e);
-            log.error("数据异常{}" ,e);
+            log.error("解析互金文件异常{}" ,e);
+        }finally {
+            log.info("互金：{}文件解析成功", fileType);
         }
     }
+
+
     /**
      * 通用处理
      * @param path

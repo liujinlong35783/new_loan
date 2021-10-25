@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: "@spring.active@"
+    active: product
   servlet:
     multipart:
       max-request-size: 100MB
