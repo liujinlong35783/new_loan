@@ -11,29 +11,48 @@
 		<result column="FILE_DATE" property="fileDate"/>
 		<result column="DELETE_FLAG" property="deleteFlag"/>
 		<result column="CREATE_DATE" property="createDate"/>
+		<result column="READ_FLAG" property="readFlag"/>
+		<result column="NEXT_READ_START_NUM" property="nextReadStartNum"/>
+		<result column="NEXT_READ_END_NUM" property="nextReadEndNum"/>
+		<result column="FILE_DOWNLOAD_PATH" property="fileDownloadPath"/>
+		<result column="FILE_LINE_TOTAL_NUM" property="fileLineTotalNum"/>
 	</resultMap>
 
-	
-	<select id="selectModelCount" resultMap="BaseResultMap">
-			select count(1) from HJ_FILE_INFO t
+
+
+	<select id="selectModelCount" resultType="Integer">
+			select count(1) from QN_DB_ACCT.HJ_FILE_INFO t
 		<where>
 			<include refid="select_content"/>
 		</where>
 	</select>
-	
+
 	<select id="selectModelList" resultMap="BaseResultMap">
-			select * from HJ_FILE_INFO t
+			select * from QN_DB_ACCT.HJ_FILE_INFO t
 		<where>
 			<include refid="select_content"/>
 		</where>
 	</select>
-	
-	<sql id="select_content">	
+
+	<select id="selectOneModel" resultMap="BaseResultMap">
+		select * from QN_DB_ACCT.HJ_FILE_INFO t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<sql id="select_content">
 		<if test="e.fileDate != null">
 			AND t.FILE_DATE = #{e.fileDate}
 		</if>
 		<if test="e.deleteFlag != null and e.deleteFlag != '' ">
 			AND t.DELETE_FLAG = #{e.deleteFlag}
+		</if>
+		<if test="e.fileType != null and e.fileType != '' ">
+			AND t.FILE_TYPE = #{e.fileType}
+		</if>
+		<if test="e.readFlag != null and e.readFlag != '' ">
+			AND t.READ_FLAG = #{e.readFlag}
 		</if>
 	</sql>
 

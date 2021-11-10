@@ -1,11 +1,15 @@
 package com.tkcx.api.business.hjtemp.utils;
 
+import com.google.inject.internal.util.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * 文件操作工具类
@@ -14,27 +18,172 @@ import java.util.List;
 public class FileUtil {
 
     /**
-     * 以流的方式按行读取文件
-     * 2021-10-23 zhaodan优化
+
+     * 读取文件最后N行
+     * 根据换行符判断当前的行数，
+     * 使用统计来判断当前读取第N行
+     * PS:输出的List是倒叙，需要对List反转输出
+     * @param file 待文件
+     * @param numRead 读取的行数
+     * @return List
+     */
+    public static List readLastNLine(File file, long numRead) {
+
+        // 定义结果集
+        List result = new ArrayList();
+        //行数统计
+        long count = 0;
+        // 排除不可读状态
+        if (!file.exists() || file.isDirectory() || !file.canRead()) {
+            return null;
+        }
+        // 使用随机读取
+        RandomAccessFile fileRead = null;
+        try {
+            //使用读模式
+            fileRead = new RandomAccessFile(file, "r");
+            //读取文件长度
+            long length = fileRead.length();
+            //如果是0，代表是空文件，直接返回空结果
+            if (length == 0L) {
+                return result;
+            } else {
+                //初始化游标
+                long pos = length - 1;
+                while (pos > 0) {
+                    pos--;
+                    //开始读取
+                    fileRead.seek(pos);
+                    //如果读取到\n代表是读取到一行
+                    if (fileRead.readByte() == '\n') {
+                        //使用readLine获取当前行
+                        String line = fileRead.readLine();
+                        //保存结果
+                        result.add(line);
+                        //打印当前行
+                        System.out.println(line);
+                        //行数统计，如果到达了numRead指定的行数，就跳出循环
+                        count++;
+                        if (count == numRead) {
+                            break;
+                        }
+                    }
+                }
+                if (pos == 0) {
+                    fileRead.seek(0);
+                    result.add(fileRead.readLine());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fileRead != null) {
+                try {
+                    //关闭资源
+                    fileRead.close();
+                } catch (Exception e) {
+                }
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * 计算文件一共有多少行
+     * @param filePath
      * @return
      */
-    public static String readLineByLines(String filePath){
-        String lineList = new String();
+    public static int calTextLineNum(String filePath) {
+
+        int count=0;
+        LineIterator it = null;
         try {
-            File file =  new File(filePath);
-            if(!file.exists()){
-                log.error("{}下文件不存在", filePath);
-                return null;
+            File file = new File(filePath);
+            it = FileUtils.lineIterator(file, "UTF-8");
+
+            while (it.hasNext()) {
+                StringBuffer lineStr = new StringBuffer(it.nextLine());
+                if(StringUtils.isEmpty(lineStr)){
+                    continue;
+                }
+                count++;
             }
-
-            InputStream in = new FileInputStream(file);
-            BufferedReader reader=new BufferedReader(new InputStreamReader(in,"UTF-8"));
-            lineList = reader.readLine();
-
-        } catch (IOException e) {
-            log.error("读取文件{}，异常信息{}", filePath, e);
+        } finally {
+            LineIterator.closeQuietly(it);
+            return count;
         }
-        return lineList;
+    }
+
+    /**
+     * 读取文件N行为StringBuffer格式
+     *
+     * @param filePath
+     * @param readStartNum
+     * @param readEndNum
+     * @return
+     */
+    public static List<StringBuffer> readFileNLine(String filePath, int readStartNum, int readEndNum) {
+
+        LineIterator it = null;
+        List<StringBuffer> strList = Lists.newArrayList();
+        int count=0;
+        try {
+            File file = new File(filePath);
+            it = FileUtils.lineIterator(file, "UTF-8");
+
+            while (it.hasNext()) {
+                StringBuffer lineStr = new StringBuffer(it.nextLine());
+                count++;
+                if(StringUtils.isEmpty(lineStr)){
+                    continue;
+                }
+                if(count >= readStartNum && count < readEndNum){
+                    strList.add(lineStr);
+                }
+            }
+        }catch(Exception e) {
+            log.error("按行读取文件异常：{}",e);
+        } finally {
+            LineIterator.closeQuietly(it);
+            return strList;
+        }
+    }
+
+
+    public static String readFileByLine(String path) {
+
+        FileInputStream inputStream = null;
+        Scanner sc = null;
+        String line = null;
+        try{
+            inputStream = new FileInputStream(path);
+            sc = new Scanner(inputStream,"UTF-8");
+            while(sc.hasNextLine()) {
+                line = sc.nextLine();
+                System.out.println(line);
+            }
+            // note that Scanner suppresses exceptions
+            if(sc.ioException() != null) {
+                throw sc.ioException();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally{
+            if(inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(sc != null) {
+                sc.close();
+            }
+            return line;
+        }
     }
 
     /**
@@ -42,7 +191,9 @@ public class FileUtil {
      * @return
      */
     public static List<String> readLine(String filePath){
+
         List<String> lineList = new ArrayList<String>();
+
         try {
             File file =  new File(filePath);
             if(file.exists()){
@@ -52,10 +203,11 @@ public class FileUtil {
                 log.error(filePath+"--路径下文件不存在");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("读取文件{}，异常信息{}", filePath, e);
         }
         return lineList;
     }
+
 
     /**
      *  根据结果集生成txt文件

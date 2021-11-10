@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.google.inject.internal.util.Lists;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
-import com.tkcx.api.business.hjtemp.utils.HjFileFlagEnum;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import com.tkcx.api.service.BankApiService;
 import common.core.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class BankApiServiceTest {
 
         HjFileInfoModel hjFileInfoModel = new HjFileInfoModel();
         hjFileInfoModel.setFileName("test");
-        hjFileInfoModel.setDeleteFlag(HjFileFlagEnum.NOT_DELETED);
+        hjFileInfoModel.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
         hjFileInfoModel.setFileTransCode("test");
         hjFileInfoModel.setFileType("test");
         // 文件日期

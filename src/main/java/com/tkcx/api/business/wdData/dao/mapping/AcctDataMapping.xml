@@ -23,20 +23,15 @@
 		    <result column="WRITEOFF_PRINCIPAL" property="writeoffPrincipal" />
 	</resultMap>
 
-	
-	<select id="selectModelCount" resultMap="BaseResultMap">
-			select count(1) from ACCT_DATA t
-		<where>
-			<include refid="select_content"/>
-		</where>
-	</select>
-	
-	<select id="selectModelList" resultMap="BaseResultMap">
-			select * from ACCT_DATA t
-		<where>
-			<include refid="select_content"/>
-		</where>
-	</select>
+
+
+<!--	-->
+<!--	<select id="selectModelList" resultMap="BaseResultMap">-->
+<!--			select * from ACCT_DATA t-->
+<!--		<where>-->
+<!--			<include refid="select_content"/>-->
+<!--		</where>-->
+<!--	</select>-->
 
 	<sql id="select_content">	
 				<if test="e.updateAt != null and e.updateAt != '' ">

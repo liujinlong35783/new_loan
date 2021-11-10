@@ -5,13 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-
-import com.tkcx.api.utils.BigDecimalUtils;
-import common.core.util.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -206,62 +201,6 @@ public class AcctDetailTempModel extends Model<AcctDetailTempModel> {
 	public AcctDetailTempModel() {
 	}
 
-	public String getItemCode() {
-		return itemCode.trim();
-	}
-
-	public void setItemCode(String itemCode) {
-		this.itemCode = itemCode.trim();
-	}
-
-	public String getItemCtrl() {
-		return itemCtrl.trim();
-	}
-
-	public void setItemCtrl(String itemCtrl) {
-		this.itemCtrl = itemCtrl.trim();
-	}
-
-	/**
-	 * 字符串拆分对象
-	 * @param lineData 字符串内容
-	 */
-	public AcctDetailTempModel(String lineData) {
-
-		if(StringUtils.isNotEmpty(lineData)){
-			String[] columns = lineData.split("\\^@");
-			if(columns!=null && columns.length == 23) {
-				this.identifier = columns[0].trim();
-				if (StringUtils.isNotEmpty(columns[1]))
-					this.channelDate = DateUtil.parseDate(columns[1].trim(), "yyyyMMdd");
-				this.channelSeq = columns[2].trim();
-				this.channelWay = columns[3].trim();
-				if (StringUtils.isNotEmpty(columns[4]))
-					this.acctDate = DateUtil.parseDate(columns[4].trim(), "yyyyMMdd");
-				this.acctSeq = columns[5].trim();
-				this.serviceCode = columns[6].trim();
-				this.serviceName = columns[7].trim();
-				if(StringUtils.isNotEmpty(columns[8]))
-					this.serialNo = Long.valueOf(columns[8].trim());
-				this.acctOrg = columns[9].trim();
-				this.itemCtrl = columns[10].trim();
-				this.itemCode = columns[11].trim();
-				this.accountCode = columns[12].trim();
-				this.accountName = columns[13].trim();
-				this.currency = columns[14].trim();
-				this.transferFlag = columns[15].trim();
-				this.bankNote = columns[16].trim();
-				this.debtFlag = columns[17].trim();
-				this.acctType = columns[18].trim();
-				this.transAmount = BigDecimalUtils.valueOf(columns[19].trim());
-				this.offBalanceFlag = columns[20].trim();
-				this.criticizeFlag = columns[21].trim();
-				this.status = columns[22].trim();
-			}
-		}
-
-	}
-
 	@Override
 	protected Serializable pkVal() {
 		return this.detailId;
@@ -269,6 +208,33 @@ public class AcctDetailTempModel extends Model<AcctDetailTempModel> {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+		return "AcctDetailTempModel{" +
+				"detailId=" + detailId +
+				", identifier='" + identifier + '\'' +
+				", accountCode='" + accountCode + '\'' +
+				", accountName='" + accountName + '\'' +
+				", acctDate=" + acctDate +
+				", acctOrg='" + acctOrg + '\'' +
+				", acctSeq='" + acctSeq + '\'' +
+				", acctType='" + acctType + '\'' +
+				", bankNote='" + bankNote + '\'' +
+				", channelDate=" + channelDate +
+				", channelSeq='" + channelSeq + '\'' +
+				", channelWay='" + channelWay + '\'' +
+				", createDate=" + createDate +
+				", criticizeFlag='" + criticizeFlag + '\'' +
+				", currency='" + currency + '\'' +
+				", debtFlag='" + debtFlag + '\'' +
+				", itemCode='" + itemCode + '\'' +
+				", itemCtrl='" + itemCtrl + '\'' +
+				", offBalanceFlag='" + offBalanceFlag + '\'' +
+				", serialNo=" + serialNo +
+				", serviceCode='" + serviceCode + '\'' +
+				", serviceName='" + serviceName + '\'' +
+				", status='" + status + '\'' +
+				", transAmount=" + transAmount +
+				", transferFlag='" + transferFlag + '\'' +
+				'}';
 	}
+
 }

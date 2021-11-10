@@ -1,10 +1,11 @@
-package com.tkcx.api.business.hjtemp.Handle;
+package com.tkcx.api.business.hjtemp.handle;
 
 import com.tkcx.api.business.hjtemp.hjThread.AcctBrchReadThread;
-import com.tkcx.api.business.hjtemp.hjThread.AcctBusiReadThread;
 import com.tkcx.api.business.hjtemp.hjThread.AcctDetailReadThread;
 import com.tkcx.api.business.hjtemp.hjThread.AcctOrgReadThread;
+import com.tkcx.api.business.hjtemp.hjThread.BusiCodeReadThread;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -19,7 +21,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 互金数据文件解析保存类
+ * @project：
+ * @author： zhaodan
+ * @description： 互金数据文件解析类
+ * @create： 2021/10/24 13:28
  */
 @Slf4j
 @Service
@@ -28,30 +33,38 @@ public class HandleService {
     @Value("${acct.isRemove}")
     private Boolean isRemove;
 
-//    @Async
-    public void startHandle(String filePath,String fileType){
+    /**
+     * 互金文件处理
+     *
+     * @param filePath
+     * @param fileType
+     * @param fileDate
+     */
+    public void startHandle(String filePath, String fileType, Date fileDate){
 
         //异步进行保存工作
         try {
-            log.info("开始解析互金：{}文件", fileType);
+            log.info("开始解析互金文件：日期【{}】，文件类型【{}】，文件下载路径【{}】", fileDate, fileType, filePath);
 
             // 自定义线程池用来进行互金文件的解析
             ThreadPoolExecutor readThreadPool = new ThreadPoolExecutor(
                     4,5,60, TimeUnit.SECONDS, new LinkedBlockingDeque<>(3),
                     Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+
             switch (fileType){
-                case "t_act_one_detail":
+                case HjFileFlagConstant.ACCT_DETAIL_FILE:
                     // 2021年10月24解决CPU使用率高问题
-                    readThreadPool.execute(new AcctDetailReadThread(filePath, isRemove));
+                    // 会计科目文件解析
+                    readThreadPool.execute(new AcctDetailReadThread(filePath, isRemove, fileDate));
                     break;
-                case "t_act_brch_day_tot":
-                    readThreadPool.execute(new AcctBrchReadThread(filePath, isRemove));
+                case HjFileFlagConstant.ACT_BRCH_FILE:
+                    readThreadPool.execute(new AcctBrchReadThread(filePath, isRemove, fileDate));
                     break;
-                case "t_act_busi_code_map":
-                    readThreadPool.execute(new AcctBusiReadThread(filePath, isRemove));
+                case HjFileFlagConstant.BUSI_CODE_FILE:
+                    readThreadPool.execute(new BusiCodeReadThread(filePath, isRemove, fileDate));
                     break;
-                case "t_act_pub_org":
-                    readThreadPool.execute(new AcctOrgReadThread(filePath, isRemove));
+                case HjFileFlagConstant.ACT_PUB_ORG_FILE:
+                    readThreadPool.execute(new AcctOrgReadThread(filePath, isRemove, fileDate));
                     break;
                 default:
                     log.error("文件类型：【{}】错误", fileType);
@@ -64,11 +77,8 @@ public class HandleService {
             } while (flag);
         }catch (Exception e){
             log.error("解析互金文件异常{}" ,e);
-        }finally {
-            log.info("互金：{}文件解析成功", fileType);
         }
     }
-
 
     /**
      * 通用处理

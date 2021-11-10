@@ -1,11 +1,12 @@
 server:
-  port: 11244
+  port: 23456
   max-http-header-size: 10240
 
 spring:
   datasource:
+    ## sit环境
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//6.106.4.53:1521/qinnong
+    url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
     username: QN_DB_ACCT
     password: 123456
     filters: wall,mergeStat
@@ -25,9 +26,9 @@ spring:
 
 storage:
   tempUpload:
-    path: /data/acct_print/fileserver/upload/
+    path: /data/acctprint/fileserver/upload/
   tempDownload:
-    path: /data/acct_print/fileserver/download/
+    path: /data/acctprint/fileserver/download/
   remote:
     path: /file/
   configPath: /ftpClientConfig.properties
@@ -42,7 +43,11 @@ xxl:
     executor:
       appname: acctPrint
       ip: 6.106.4.15
+      ## SIT 6.106.4.15
+      ## UAT 6.106.4.25
       port: 8098
+      ## SIT 8098
+      ## UAT 8099
       #accessToken:
-      logpath: /data/logs/acctPrint/xxl-job/
+      logpath: /data/logs/acctprint/xxl-job/
       logretentiondays: -1

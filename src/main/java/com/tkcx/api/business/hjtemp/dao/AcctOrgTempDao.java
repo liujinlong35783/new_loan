@@ -2,8 +2,8 @@ package com.tkcx.api.business.hjtemp.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tkcx.api.business.hjtemp.model.AcctOrgTempModel;
-
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import java.util.List;
  * @author tianyi
  * @Date 2019-08-23 14:49
  */
+@Repository
 public interface AcctOrgTempDao extends BaseMapper<AcctOrgTempModel>{
 
     /**

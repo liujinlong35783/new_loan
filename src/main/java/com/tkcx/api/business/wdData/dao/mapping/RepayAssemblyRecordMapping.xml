@@ -35,7 +35,7 @@
 	</resultMap>
 
 	
-	<select id="selectModelCount" resultMap="BaseResultMap">
+	<select id="selectModelCount" resultType="Integer">
 			select count(1) from REPAY_ASSEMBLY_RECORD t
 		<where>
 			<include refid="select_content"/>

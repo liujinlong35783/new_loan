@@ -1,8 +1,10 @@
 package com.tkcx.api.service.imp;
 
 import cn.hutool.core.date.DateUtil;
-import com.tkcx.api.business.hjtemp.Handle.HandleService;
+import com.tkcx.api.business.hjtemp.handle.HandleService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
+import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
+import com.tkcx.api.business.hjtemp.utils.FileUtil;
 import com.tkcx.api.exception.FileErrorCode;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import common.core.exception.ApplicationException;
@@ -34,6 +36,9 @@ public class HjFileHandleService {
     @Autowired
     private QnFtpClientServiceImpl qnFtpClientServiceImpl;
 
+    @Autowired
+    private HjFileInfoService hjFileInfoService;
+
     @Value("${storage.tempUpload.path}")
     private String tempUploadPath;
     @Value("${storage.tempDownload.path}")
@@ -49,7 +54,7 @@ public class HjFileHandleService {
      * @throws ApplicationException
      */
     @Async
-    public void downloadHjFile(List<HjFileInfoModel> hjFileList) throws ApplicationException {
+    public void downloadHjFile(List<HjFileInfoModel> hjFileList, Date fileDate) throws ApplicationException {
 
         for (HjFileInfoModel hjFileInfoModel : hjFileList) {
             FileDownloadReqVo fileVo = new FileDownloadReqVo();
@@ -62,10 +67,28 @@ public class HjFileHandleService {
             String fileType = hjFileInfoModel.getFileType();
             if(StringUtils.isNotEmpty(downFilePath)){
                 log.info("日期{}，文件 {} ====== 下载成功", hjFileInfoModel.getFileDate(), fileType);
+
+                /** TODO 要改成定时器方式触发解析互金文件逻辑
+                 * 需要保存下载路径到数据库，然后定时器触发时，需要根据文件类型、文件日期，读取未删除、未读取的互金文件信息
+                 */
+                saveHjFileDownloadPath(downFilePath, hjFileInfoModel);
                 // 下载成功后，解析文件，入库
-                handleService.startHandle(downFilePath, fileType);
+                handleService.startHandle(downFilePath, fileType, fileDate);
             }
         }
+    }
+
+    /**
+     * 保存互金下载路径
+     *
+     * @param downFilePath
+     * @param hjFileInfoModel
+     */
+    private void saveHjFileDownloadPath(String downFilePath, HjFileInfoModel hjFileInfoModel){
+
+        hjFileInfoModel.setFileDownloadPath(downFilePath);
+        hjFileInfoModel.setFileLineTotalNum(FileUtil.calTextLineNum(downFilePath));
+        hjFileInfoService.updateDownloadFile(hjFileInfoModel);
     }
 
     private String downloadFile(FileDownloadReqVo req) throws ApplicationException {

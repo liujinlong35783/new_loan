@@ -1,15 +1,12 @@
 package com.tkcx.api.business.hjtemp.model;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Getter;
 import lombok.Setter;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -66,28 +63,23 @@ public class AcctOrgTempModel extends Model<AcctOrgTempModel> {
 	public AcctOrgTempModel() {
 	}
 
-	/**
-	 * 字符串拆分对象
-	 * @param lineData 字符串内容
-	 */
-	public AcctOrgTempModel(String lineData) {
-		if(StringUtils.isNotEmpty(lineData)){
-			String[] columns = lineData.split("\\^@");
-			if(columns!=null && columns.length == 4) {
-				this.identifier = columns[0].trim();
-				this.orgCode = columns[1].trim();
-				this.orgName = columns[2].trim();
-				this.status = columns[3].trim();
-			}
-		}
-	}
 
 	@Override
 	protected Serializable pkVal() {
 		return this.orgId;
 	}
+
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+		return "AcctOrgTempModel{" +
+				"orgId=" + orgId +
+				", identifier='" + identifier + '\'' +
+				", orgCode='" + orgCode + '\'' +
+				", orgName='" + orgName + '\'' +
+				", status='" + status + '\'' +
+				", createDate=" + createDate +
+				'}';
 	}
+
+
 }

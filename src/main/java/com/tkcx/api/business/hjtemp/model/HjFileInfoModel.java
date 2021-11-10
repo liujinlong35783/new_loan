@@ -21,11 +21,13 @@ import java.util.Date;
 @TableName(value="HJ_FILE_INFO",schema="QN_DB_ACCT")
 public class HjFileInfoModel extends Model<HjFileInfoModel> {
 
+    private static final long serialVersionUID = 6037098408365993942L;
+
     /**
      * 文件id
      */
     @TableId(value = "FILE_ID",type = IdType.AUTO)
-    private int fileId;
+    private Integer fileId;
 
     /**
      * 文件类型
@@ -62,7 +64,57 @@ public class HjFileInfoModel extends Model<HjFileInfoModel> {
     @TableField(value = "DELETE_FLAG")
     private String deleteFlag;
 
+    /**
+     * 创建日期
+     */
     @TableField(value="CREATE_DATE")
     private Date createDate;
+
+    /**
+     * 读取标识
+     */
+    @TableField(value = "READ_FLAG")
+    private String readFlag;
+
+    /**
+     * 文件下载路径
+     */
+    @TableField(value = "FILE_DOWNLOAD_PATH")
+    private String fileDownloadPath;
+
+    /**
+     * 下一次读取的开始行数
+     */
+    @TableField(value="NEXT_READ_START_NUM")
+    private Integer nextReadStartNum;
+
+    /**
+     * 下一次读取的结束行数
+     */
+    @TableField(value="NEXT_READ_END_NUM")
+    private Integer nextReadEndNum;
+
+    @TableField(value = "FILE_LINE_TOTAL_NUM")
+    private Integer fileLineTotalNum;
+
+    @Override
+    public String toString() {
+        return "HjFileInfoModel{" +
+                "fileId=" + fileId +
+                ", fileType='" + fileType + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", fileTransCode='" + fileTransCode + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", fileDate=" + fileDate +
+                ", deleteFlag='" + deleteFlag + '\'' +
+                ", createDate=" + createDate +
+                ", readFlag='" + readFlag + '\'' +
+                ", fileDownloadPath='" + fileDownloadPath + '\'' +
+                ", nextReadStartNum=" + nextReadStartNum +
+                ", nextReadEndNum=" + nextReadEndNum +
+                ", fileLineTotalNum=" + fileLineTotalNum +
+                '}';
+    }
+
 
 }

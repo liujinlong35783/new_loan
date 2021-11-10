@@ -66,11 +66,4 @@ public class GenRandom {
     }
 
 
-    public static void main(String[] args) {
-       /* String ss = strTo16(getGUID());
-        System.out.println("转16：" + ss);
-
-        String bb = bytesToHexString(getGUID().getBytes());
-        System.out.println("bytes转16：" + bb);*/
-    }
 }

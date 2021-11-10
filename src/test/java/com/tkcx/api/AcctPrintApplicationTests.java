@@ -9,7 +9,7 @@ import com.tkcx.api.business.acctPrint.dao.*;
 import com.tkcx.api.business.acctPrint.html2pdf.BusiHtmlToPdf;
 import com.tkcx.api.business.acctPrint.model.Interface.IAcctPrintCommon;
 import com.tkcx.api.business.acctPrint.model.LoanReceiptModel;
-import com.tkcx.api.business.hjtemp.Handle.HandleService;
+import com.tkcx.api.business.hjtemp.handle.HandleService;
 import com.tkcx.api.business.hjtemp.utils.GenerateTxtFileUtil;
 import com.tkcx.api.common.BusiCommonService;
 import com.tkcx.api.common.RealTimeQueryService;

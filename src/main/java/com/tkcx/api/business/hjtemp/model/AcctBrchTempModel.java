@@ -4,14 +4,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import com.tkcx.api.utils.BigDecimalUtils;
-import common.core.util.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -166,56 +161,6 @@ public class AcctBrchTempModel extends Model<AcctBrchTempModel> {
 	public AcctBrchTempModel() {
 	}
 
-	public String getItemCode() {
-		return itemCode.trim();
-	}
-
-	public void setItemCode(String itemCode) {
-		this.itemCode = itemCode.trim();
-	}
-
-	public String getItemCtrl() {
-		return itemCtrl.trim();
-	}
-
-	public void setItemCtrl(String itemCtrl) {
-		this.itemCtrl = itemCtrl.trim();
-	}
-
-	/**
-	 * 字符串拆分对象
-	 * @param lineData 字符串内容
-	 */
-	public AcctBrchTempModel(String lineData) {
-
-		if(StringUtils.isNotEmpty(lineData)){
-			String[] columns = lineData.split("\\^@");
-			if(columns!=null && columns.length == 16) {
-				if (StringUtils.isNotEmpty(columns[0]))
-					this.acctDate = DateUtil.parseDate(columns[0].trim(), "yyyyMMdd");
-				this.acctOrg = columns[1].trim();
-				this.itemCtrl = columns[2].trim();
-				this.itemCode = columns[3].trim();
-				this.itemName = columns[4].trim();
-				this.offBalanceFlag = columns[5].trim();
-				this.currency = columns[6].trim();
-				this.yestDebitBalance = BigDecimalUtils.valueOf(columns[7].trim());
-				this.yestLoanBalance = BigDecimalUtils.valueOf(columns[8].trim());
-				if (StringUtils.isNotEmpty(columns[9]))
-					this.todayDebitQuantities = Integer.valueOf(columns[9].trim());
-				if (StringUtils.isNotEmpty(columns[10]))
-					this.todayLoanQuantities = Integer.valueOf(columns[10].trim());
-				this.todayDebitAmount = BigDecimalUtils.valueOf(columns[11].trim());
-				this.todayLoanAmount = BigDecimalUtils.valueOf(columns[12].trim());
-				this.todayDebitBalance = BigDecimalUtils.valueOf(columns[13].trim());
-				this.todayLoanBalance = BigDecimalUtils.valueOf(columns[14].trim());
-				this.status = columns[15].trim();
-				//this.createDate = createDate;
-				//this.debtFlag = columns[7];
-			}
-		}
-	}
-
 	@Override
 	protected Serializable pkVal() {
 		return this.id;
@@ -223,6 +168,26 @@ public class AcctBrchTempModel extends Model<AcctBrchTempModel> {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+		return "AcctBrchTempModel{" +
+				"id=" + id +
+				", acctDate=" + acctDate +
+				", acctOrg='" + acctOrg + '\'' +
+				", createDate=" + createDate +
+				", currency='" + currency + '\'' +
+				", debtFlag='" + debtFlag + '\'' +
+				", itemCode='" + itemCode + '\'' +
+				", itemCtrl='" + itemCtrl + '\'' +
+				", itemName='" + itemName + '\'' +
+				", offBalanceFlag='" + offBalanceFlag + '\'' +
+				", status='" + status + '\'' +
+				", todayDebitAmount=" + todayDebitAmount +
+				", todayDebitBalance=" + todayDebitBalance +
+				", todayDebitQuantities=" + todayDebitQuantities +
+				", todayLoanAmount=" + todayLoanAmount +
+				", todayLoanBalance=" + todayLoanBalance +
+				", todayLoanQuantities=" + todayLoanQuantities +
+				", yestDebitBalance=" + yestDebitBalance +
+				", yestLoanBalance=" + yestLoanBalance +
+				'}';
 	}
 }

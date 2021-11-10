@@ -1,6 +1,7 @@
 package com.tkcx.api;
 
-import com.tkcx.api.business.hjtemp.Handle.HandleService;
+import cn.hutool.core.date.DateUtil;
+import com.tkcx.api.business.hjtemp.handle.HandleService;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -28,5 +29,12 @@ public class HandleServiceTest {
 
         String detailPath = "C:\\Users\\ccjh\\Desktop\\h9s8x0rha17i86ulufitzrtoxigizproo82df0ik.txt";
         handleService.makeListData(detailPath, AcctDetailTempModel.class);
+    }
+
+    @Test
+    public void test() {
+        String detailPath = "C:\\Users\\ccjh\\Desktop\\test\\local\\t_act_one_detail_20211027.txt";
+        String detailType = "t_act_one_detail";
+        handleService.startHandle(detailPath, detailType, DateUtil.parseDate("2078-01-01 00:00:00"));
     }
 }

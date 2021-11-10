@@ -4,6 +4,7 @@ server:
 
 spring:
   datasource:
+    ## uat环境
     driver-class-name: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@//6.106.4.53:1521/qinnong
     #QN_DB_ACCT  123456
@@ -26,9 +27,9 @@ spring:
 
 storage:
   tempUpload:
-    path: /data/acct_print/fileserver/upload/
+    path: /data/acctprint/fileserver/upload/
   tempDownload:
-    path: /data/acct_print/fileserver/download/
+    path: /data/acctprint/fileserver/download/
   remote:
     path: /file/
   configPath: /ftpClientConfig.properties
@@ -44,5 +45,5 @@ xxl:
       ip:
       port: 8099
       #accessToken:
-      logpath: /data/logs/acctPrint/xxl-job/
+      logpath: /data/logs/acctprint/xxl-job/
       logretentiondays: -1

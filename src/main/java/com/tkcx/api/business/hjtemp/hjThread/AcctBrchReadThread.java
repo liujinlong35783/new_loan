@@ -1,14 +1,16 @@
 package com.tkcx.api.business.hjtemp.hjThread;
 
-import com.tkcx.api.business.hjtemp.convert.AcctBrchConvert;
-import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
-import com.tkcx.api.business.hjtemp.service.AcctBrchTempService;
+import com.tkcx.api.business.hjtemp.fileService.AcctBrchFileService;
+import com.tkcx.api.business.hjtemp.fileService.HjCommonService;
+import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
+import com.tkcx.api.common.BeanContext;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * @project：
@@ -25,24 +27,50 @@ public class AcctBrchReadThread extends Thread {
 
     private Boolean isRemove;
 
-    public AcctBrchReadThread(String filePath, Boolean isRemove) {
+    private Date fileDate;
+
+    /**
+     * 标志线程阻塞情况
+     */
+    private boolean pause = true;
+
+    public AcctBrchReadThread(String filePath, Boolean isRemove, Date fileDate) {
         this.filePath = filePath;
         this.isRemove = isRemove;
+        this.fileDate = fileDate;
     }
 
-    @Autowired
-    private AcctBrchTempService acctBrchTempService;
+    private AcctBrchFileService acctBrchFileService = BeanContext.getBean(AcctBrchFileService.class);
+
+    public HjCommonService hjCommonService = BeanContext.getBean(HjCommonService.class);
 
     @Override
     public void run() {
 
-        List<AcctBrchTempModel> brchList = AcctBrchConvert.makeAcctDetailList(filePath);
-        log.info("t_act_brch_day_tot待更新的数据总数：{}", brchList.size());
-        if(isRemove){
-            acctBrchTempService.remove(null);
-            log.info("AcctBrchTempModel数据清空成功");
+        try {
+            super.run();
+            //一直循环
+            while (pause) {
+                // 如果读取未完成，则暂停线程
+                HjFileInfoModel hjFileInfoModel = hjCommonService
+                        .queryHjFileInfo(fileDate, HjFileFlagConstant.ACT_BRCH_FILE);
+                log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>互金：待读取的【机构总账】信息：{}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                        hjFileInfoModel.toString());
+                if (StringUtils.equals(hjFileInfoModel.getReadFlag(), HjFileFlagConstant.FINISHED)) {
+                    log.info("日期：【{}】,读取标识：【{}】,结束执行互金机构总账文件解析线程",
+                            fileDate, hjFileInfoModel.getReadFlag());
+                    // 线程停止
+                    //interrupt();
+                    pause = false;
+                }
+                //程序每60毫秒(1秒)执行一次 值可更改
+                Thread.sleep(60);
+                //这里写你的代码 你的代码  你的代码  重要的事情说三遍
+                acctBrchFileService.handleAcctBrchFile(filePath, isRemove, hjFileInfoModel);
+            }
+        } catch (Exception e) {
+            log.error("互金机构总账信息线程异常：{}", e);
         }
-        acctBrchTempService.saveBatch(brchList);
-        log.info("AcctBrchTempModel保存成功");
     }
+
 }

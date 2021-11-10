@@ -1,6 +1,6 @@
 package com.tkcx.api.business.hjtemp.hjThread;
 
-import com.tkcx.api.business.hjtemp.fileService.AcctDetailFileService;
+import com.tkcx.api.business.hjtemp.fileService.BusiCodeFileService;
 import com.tkcx.api.business.hjtemp.fileService.HjCommonService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
@@ -15,13 +15,14 @@ import java.util.Date;
 /**
  * @project：
  * @author： zhaodan
- * @description： 互金会计科目信息线程
- * @create： 2021/10/24 13:15
+ * @description： 业务编码处理线程
+ * @create： 2021/10/24 13:33
  */
 @Slf4j
 @Setter
 @Getter
-public class AcctDetailReadThread extends Thread {
+public class BusiCodeReadThread extends Thread {
+
 
     private String filePath;
 
@@ -35,14 +36,15 @@ public class AcctDetailReadThread extends Thread {
     private boolean pause = true;
 
 
-    public AcctDetailReadThread(String filePath, Boolean isRemove, Date fileDate) {
+    public BusiCodeReadThread(String filePath, Boolean isRemove, Date fileDate) {
         this.filePath = filePath;
         this.isRemove = isRemove;
         this.fileDate = fileDate;
     }
 
-    public AcctDetailFileService acctDetailFileService = BeanContext.getBean(AcctDetailFileService.class);
+    private BusiCodeFileService busiCodeFileService = BeanContext.getBean(BusiCodeFileService.class);
     public HjCommonService hjCommonService = BeanContext.getBean(HjCommonService.class);
+
 
     @Override
     public void run() {
@@ -53,7 +55,7 @@ public class AcctDetailReadThread extends Thread {
             while (pause) {
                 // 如果读取未完成，则暂停线程
                 HjFileInfoModel hjFileInfoModel = hjCommonService
-                        .queryHjFileInfo(fileDate, HjFileFlagConstant.ACCT_DETAIL_FILE);
+                        .queryHjFileInfo(fileDate, HjFileFlagConstant.BUSI_CODE_FILE);
                 log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>互金：待读取的【会计科目】信息：{}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
                         hjFileInfoModel.toString());
                 if (StringUtils.equals(hjFileInfoModel.getReadFlag(), HjFileFlagConstant.FINISHED)) {
@@ -66,14 +68,12 @@ public class AcctDetailReadThread extends Thread {
                 //程序每60毫秒(1秒)执行一次 值可更改
                 Thread.sleep(60);
                 //这里写你的代码 你的代码  你的代码  重要的事情说三遍
-                acctDetailFileService.handleAcctDetailFile(filePath, isRemove, hjFileInfoModel);
+                busiCodeFileService.handleBusiCodeFile(filePath, isRemove, hjFileInfoModel);
             }
         } catch (Exception e) {
             log.error("互金会计科目信息线程异常：{}", e);
         }
-
     }
-
 
 
 }

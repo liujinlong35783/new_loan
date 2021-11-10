@@ -5,13 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-
-import com.tkcx.api.utils.BigDecimalUtils;
-import common.core.util.DateUtil;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -96,26 +91,6 @@ public class AcctBusiCodeModel extends Model<AcctBusiCodeModel> {
 
 	public AcctBusiCodeModel() {
 	}
-	/**
-	 * 字符串拆分对象
-	 * @param lineData 字符串内容
-	 */
-	public AcctBusiCodeModel(String lineData) {
-
-		if(StringUtils.isNotEmpty(lineData)){
-			String[] columns = lineData.split("\\^@");
-			if(columns!=null && columns.length == 8) {
-				this.identifier = columns[0].trim();
-				this.busiCode = columns[1].trim();
-				this.busiName = columns[2].trim();
-				this.balanceIdentifier = columns[3].trim();
-				this.balanceName = columns[4].trim();
-				this.itemCtrl = columns[5].trim();
-				this.itemName = columns[6].trim();
-				this.status = columns[7].trim();
-			}
-		}
-	}
 
 	@Override
 	protected Serializable pkVal() {
@@ -124,6 +99,19 @@ public class AcctBusiCodeModel extends Model<AcctBusiCodeModel> {
 
 	@Override
 	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+		return "AcctBusiCodeModel{" +
+				"codeId=" + codeId +
+				", identifier='" + identifier + '\'' +
+				", balanceIdentifier='" + balanceIdentifier + '\'' +
+				", balanceName='" + balanceName + '\'' +
+				", busiCode='" + busiCode + '\'' +
+				", busiName='" + busiName + '\'' +
+				", createDate=" + createDate +
+				", itemCtrl='" + itemCtrl + '\'' +
+				", itemName='" + itemName + '\'' +
+				", status='" + status + '\'' +
+				'}';
 	}
+
+
 }

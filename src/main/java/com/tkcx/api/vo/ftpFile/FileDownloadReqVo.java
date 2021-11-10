@@ -27,6 +27,11 @@ public class FileDownloadReqVo extends ApiRequestVo {
 	 */
 	private String filePath;
 
+
+	private String fileDate;
+	private String fileType;
+
+
 	/**
 	 * 是否清楚数据 1-清除，0-不清除
 	 */

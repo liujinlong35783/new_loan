@@ -1,14 +1,18 @@
 package com.tkcx.api.business.hjtemp.hjThread;
 
-import com.tkcx.api.business.hjtemp.convert.AcctOrgConvert;
-import com.tkcx.api.business.hjtemp.model.AcctOrgTempModel;
+import com.tkcx.api.business.hjtemp.fileService.AcctOrgFileService;
+import com.tkcx.api.business.hjtemp.fileService.HjCommonService;
+import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.AcctOrgTempService;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
+import com.tkcx.api.common.BeanContext;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import java.util.Date;
 
 /**
  * @project：
@@ -25,10 +29,22 @@ public class AcctOrgReadThread extends Thread {
 
     private Boolean isRemove;
 
-    public AcctOrgReadThread(String filePath, Boolean isRemove) {
+    private Date fileDate;
+
+    /**
+     * 标志线程阻塞情况
+     */
+    private boolean pause = true;
+
+
+    public  AcctOrgReadThread(String filePath, Boolean isRemove, Date fileDate) {
         this.filePath = filePath;
         this.isRemove = isRemove;
+        this.fileDate = fileDate;
     }
+
+    private AcctOrgFileService acctOrgFileService= BeanContext.getBean(AcctOrgFileService.class);
+    public HjCommonService hjCommonService = BeanContext.getBean(HjCommonService.class);
 
     @Autowired
     private AcctOrgTempService acctOrgTempService;
@@ -36,11 +52,29 @@ public class AcctOrgReadThread extends Thread {
     @Override
     public void run() {
 
-        List<AcctOrgTempModel> orgList = AcctOrgConvert.makeAcctDetailList(filePath);
-        log.info("t_act_pub_org待更新的数据总数：{}", orgList.size());
-        acctOrgTempService.remove(null);
-        log.info("AcctOrgTempModel数据清空成功");
-        acctOrgTempService.saveBatch(orgList);
-        log.info("AcctOrgTempModel保存成功");
+        try {
+            super.run();
+            //一直循环
+            while (pause) {
+                // 如果读取未完成，则暂停线程
+                HjFileInfoModel hjFileInfoModel = hjCommonService
+                        .queryHjFileInfo(fileDate, HjFileFlagConstant.ACT_PUB_ORG_FILE);
+                log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>互金：待读取的【会计科目】信息：{}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                        hjFileInfoModel.toString());
+                if (StringUtils.equals(hjFileInfoModel.getReadFlag(), HjFileFlagConstant.FINISHED)) {
+                    log.info("日期：【{}】,读取标识：【{}】,结束执行互金会计科目文件解析线程",
+                            fileDate, hjFileInfoModel.getReadFlag());
+                    // 线程停止
+                    //interrupt();
+                    pause = false;
+                }
+                //程序每60毫秒(1秒)执行一次 值可更改
+                Thread.sleep(60);
+                //这里写你的代码 你的代码  你的代码  重要的事情说三遍
+                acctOrgFileService.handleAcctOrgFile(filePath, isRemove, hjFileInfoModel);
+            }
+        } catch (Exception e) {
+            log.error("互金会计科目信息线程异常：{}", e);
+        }
     }
 }

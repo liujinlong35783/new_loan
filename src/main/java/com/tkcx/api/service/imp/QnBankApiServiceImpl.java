@@ -8,7 +8,7 @@ import com.google.inject.internal.util.Lists;
 import com.tkcx.api.business.acctPrint.model.AcctLogModel;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
-import com.tkcx.api.business.hjtemp.utils.HjFileFlagEnum;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import com.tkcx.api.exception.FileErrorCode;
 import com.tkcx.api.service.BankApiService;
 import com.tkcx.api.vo.HjFileDataReqVo;
@@ -80,53 +80,36 @@ public class QnBankApiServiceImpl implements BankApiService {
 			Date fileDate = DateUtil.parse(req.getSysHeadVo().getTxnDt(),"yyyy-MM-dd");
 			HjFileInfoModel queryInfo = new HjFileInfoModel();
 			queryInfo.setFileDate(fileDate);
-			queryInfo.setDeleteFlag(HjFileFlagEnum.NOT_DELETED);
-			// 查看当日是否已经推送了数据???下面的查询是不是有问题，在这里执行出问题了。。。。。。。。。。。。。。。。
+			queryInfo.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
+			// 查看当日是否已经推送了数据
 			List<HjFileInfoModel> hjFileInfoModels = hjFileInfoService.selectModelList(queryInfo);
 			log.info("日期{}，查询到的互金推送记录{}", fileDate, hjFileInfoModels.size());
-			// 如果推送了，则标识为删除状态
+			// 如果推送了，更新已经推送的记录为删除状态
 			if(hjFileInfoModels != null && hjFileInfoModels.size() > 1){
-				log.info("日期{}，互金数据重复推送，删除互金文件信息中的重复记录，重新进行保存" + fileDate);
-				for (HjFileInfoModel updateInfo : hjFileInfoModels) {
-
-					HjFileInfoModel update = new HjFileInfoModel();
-					update.setFileId(updateInfo.getFileId());
-					update.setFileDate(fileDate);
-					update.setDeleteFlag(HjFileFlagEnum.DELETED);
-					hjFileInfoService.saveOrUpdate(update);
-				}
+				updateHjFileInfo(hjFileInfoModels, fileDate);
 			}
-
+			if(fileList == null || fileList.size() == 0) {
+				log.error("互金文件信息为空");
+				rsp.setRetCd("999999");
+				rsp.setRetMsg("下载文件失败");
+				String response = bankCommonService.response(req, rsp);
+				return response;
+			}
 			// 保存推送数据信息
-			if(fileList != null && fileList.size() > 0) {
-				List<HjFileInfoModel> hjFileList = Lists.newArrayList();
-				for (HjFileDataReqVo.FileInfo file : fileList) {
-					HjFileInfoModel hjFileInfoModel = new HjFileInfoModel();
-					hjFileInfoModel.setFileName(file.getFileNm());
-					hjFileInfoModel.setDeleteFlag(HjFileFlagEnum.NOT_DELETED);
-					hjFileInfoModel.setFileTransCode(file.getFileTrnsmCd());
-					hjFileInfoModel.setFileType(file.getFileFlag());
-					hjFileInfoModel.setCreateDate(DateUtil.date());
-					// 文件日期
-					hjFileInfoModel.setFileDate(fileDate);
-					// 文件下载路径
-					hjFileInfoModel.setFilePath(file.getFilPath() + file.getFileNm());
-					hjFileList.add(hjFileInfoModel);
-				}
-				// 批量记录互金文件信息
-				hjFileInfoService.saveBatch(hjFileList);
-				// 互金推送数据日志表记录
-				if (null != req.getSysHeadVo()) {
-					AcctLogModel acctLog = new AcctLogModel();
-					acctLog.setAcctDate(DateUtil.parse(req.getSysHeadVo().getAcgDt()));
-					acctLog.setContent(req.getRemark());
-					acctLog.setLogType(0);
-					acctLog.setSerialNo(req.getSysHeadVo().getCnsmrSeqNo());
-					acctLog.insert();
-				}
-				// 异步下载文件,解析后保存至数据库中
-				hjFileHandleService.downloadHjFile(hjFileList);
+			List<HjFileInfoModel> hjFileList = assembleHjFileInfo(fileList, fileDate);
+			// 批量记录互金文件信息
+			hjFileInfoService.saveBatch(hjFileList);
+			// 互金推送数据日志表记录
+			if (null != req.getSysHeadVo()) {
+				AcctLogModel acctLog = new AcctLogModel();
+				acctLog.setAcctDate(DateUtil.parse(req.getSysHeadVo().getAcgDt()));
+				acctLog.setContent(req.getRemark());
+				acctLog.setLogType(0);
+				acctLog.setSerialNo(req.getSysHeadVo().getCnsmrSeqNo());
+				acctLog.insert();
 			}
+			// 异步下载文件,解析后保存至数据库中
+			hjFileHandleService.downloadHjFile(hjFileList, fileDate);
 		} catch (ApplicationException e) {
 			log.error("文件下载请求失败,错误原因：" + e);
 			rsp.setRetCd("999999");
@@ -138,7 +121,45 @@ public class QnBankApiServiceImpl implements BankApiService {
 	}
 
 
+	/**
+	 * 批量更新互金文件信息
+	 *
+	 * @param hjFileInfoModels
+	 * @param fileDate
+	 */
+	private void updateHjFileInfo(List<HjFileInfoModel> hjFileInfoModels, Date fileDate){
 
+		log.info("日期{}，互金数据重复推送，删除互金文件信息中的重复记录，重新进行保存", fileDate);
+		for (HjFileInfoModel updateInfo : hjFileInfoModels) {
+			HjFileInfoModel update = new HjFileInfoModel();
+			update.setFileId(updateInfo.getFileId());
+			update.setFileDate(fileDate);
+			update.setDeleteFlag(HjFileFlagConstant.DELETED);
+			hjFileInfoService.saveOrUpdate(update);
+		}
+	}
+
+	private List<HjFileInfoModel> assembleHjFileInfo(List<HjFileDataReqVo.FileInfo> fileList, Date fileDate) {
+
+		List<HjFileInfoModel> hjFileList = Lists.newArrayList();
+		for (HjFileDataReqVo.FileInfo file : fileList) {
+			HjFileInfoModel hjFileInfoModel = new HjFileInfoModel();
+			hjFileInfoModel.setFileName(file.getFileNm());
+			hjFileInfoModel.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
+			hjFileInfoModel.setReadFlag(HjFileFlagConstant.NOT_FINISH);
+			hjFileInfoModel.setNextReadStartNum(HjFileFlagConstant.READ_START_NUM_INITIAL);
+			hjFileInfoModel.setNextReadEndNum(HjFileFlagConstant.READ_END_NUM_INITIAL);
+			hjFileInfoModel.setFileTransCode(file.getFileTrnsmCd());
+			hjFileInfoModel.setFileType(file.getFileFlag());
+			hjFileInfoModel.setCreateDate(DateUtil.date());
+			// 文件日期
+			hjFileInfoModel.setFileDate(fileDate);
+			// 文件下载路径
+			hjFileInfoModel.setFilePath(file.getFilPath() + file.getFileNm());
+			hjFileList.add(hjFileInfoModel);
+		}
+		return hjFileList;
+	}
 
 	@Override
 	public String zhqdQuery(String msg) throws ApplicationException {

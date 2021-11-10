@@ -1,10 +1,13 @@
 package com.tkcx.api.business.wdData.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tkcx.api.business.wdData.model.RepayAssemblyRecordModel;
-
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,4 +32,7 @@ public interface RepayAssemblyRecordDao extends BaseMapper<RepayAssemblyRecordMo
      */
     List<RepayAssemblyRecordModel> selectModelList(@Param("e")RepayAssemblyRecordModel model);
 
+
+    @Select("SELECT * FROM QN_DB_BIZ.REPAY_ASSEMBLY_RECORD  WHERE t.REPAY_FINISH_TIME >= #{startDate} AND t.REPAY_FINISH_TIME < #{endDate}")
+    IPage<RepayAssemblyRecordModel> selectListByPage(Page<RepayAssemblyRecordModel> result, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
 }

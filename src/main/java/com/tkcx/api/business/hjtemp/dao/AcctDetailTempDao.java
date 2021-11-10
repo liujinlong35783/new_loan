@@ -1,12 +1,8 @@
 package com.tkcx.api.business.hjtemp.dao;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
-
 import com.tkcx.api.business.hjtemp.model.vo.BusiOrgBillVo;
-import javafx.scene.control.Pagination;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -29,6 +25,8 @@ public interface AcctDetailTempDao extends BaseMapper<AcctDetailTempModel>{
      * @return
      */
     Integer selectModelCount(@Param("e")AcctDetailTempModel model);
+
+    Integer selectCountNotInEleAccount(@Param("e")AcctDetailTempModel model);
 
     /**
      * 查询列表

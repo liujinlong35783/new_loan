@@ -1,14 +1,16 @@
 package com.tkcx.api.business.wdData.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.tkcx.api.common.CommonService;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tkcx.api.business.wdData.dao.RepayAssemblyRecordDao;
 import com.tkcx.api.business.wdData.model.RepayAssemblyRecordModel;
-
+import com.tkcx.api.common.CommonService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 /**
  * Service
@@ -54,4 +56,12 @@ public class RepayAssemblyRecordService extends CommonService<RepayAssemblyRecor
         return repayAssemblyRecordDao.selectModelList(model);
     }
 
+
+    public List<RepayAssemblyRecordModel> queryRepayAssRecByPage(Page<RepayAssemblyRecordModel> pageReq,
+                                                                 Date startDate, Date endDate){
+
+        Page<RepayAssemblyRecordModel> result = new Page<>(pageReq.getCurrent(), pageReq.getSize());
+        IPage<RepayAssemblyRecordModel> acctDataModelIPage = repayAssemblyRecordDao.selectListByPage(result, startDate, endDate);
+        return acctDataModelIPage.getRecords();
+    }
 }

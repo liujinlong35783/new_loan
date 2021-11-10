@@ -229,7 +229,5 @@ public class InterestBillThread extends AcctBaseThread {
         return interestBill;
     }
 
-    public static void main(String[] args) {
-        System.out.println(DateUtil.parseDate("2034-06-08 15:35:04").after(DateUtil.parseDate("2034-06-08 15:35:04")));
-    }
+
 }

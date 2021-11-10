@@ -1,8 +1,11 @@
 package com.tkcx.api.controller;
 
+import cn.hutool.core.date.DateUtil;
 import com.acct.job.jobhandler.ScheduleRunnable;
 import com.alibaba.fastjson.JSONObject;
-import com.tkcx.api.business.hjtemp.Handle.HandleService;
+import com.tkcx.api.business.hjtemp.handle.HandleService;
+import com.tkcx.api.business.hjtemp.service.AcctDetailTempService;
+import com.tkcx.api.business.wdData.service.AcctDataService;
 import com.tkcx.api.service.BankApiService;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import common.core.exception.ApplicationException;
@@ -22,17 +25,27 @@ public class TestController {
 
     @Autowired
     private HandleService handleService;
+
+
+    @Autowired
+    private AcctDataService acctDataService;
+
+    @Autowired
+    private AcctDetailTempService acctDetailTempService;
+
+
     /**
      * 测试文件下载方法
+     *
      * @param fileVo
      * @return
      */
     @RequestMapping(value = "/testDownload", method = RequestMethod.POST)
-    public String testDownloadFile(@RequestBody FileDownloadReqVo fileVo){
+    public String testDownloadFile(@RequestBody FileDownloadReqVo fileVo) {
         String busiPath = "";
         try {
             busiPath = bankApiService.downloadFile(fileVo);
-            log.info("文件保存路径："+busiPath);
+            log.info("文件保存路径：" + busiPath);
         } catch (ApplicationException e) {
             e.printStackTrace();
         }
@@ -41,38 +54,41 @@ public class TestController {
 
     /**
      * 测试文件解析数据方法
+     *
      * @param fileVo
      * @return
      */
     @RequestMapping(value = "/testMakeData", method = RequestMethod.POST)
-    public void testMakeData(@RequestBody FileDownloadReqVo fileVo){
+    public void testMakeData(@RequestBody FileDownloadReqVo fileVo) {
 
-        String fileType = fileVo.getFilePath();
-        String filePath = fileVo.getDownloadTranCode();
-        handleService.startHandle(filePath, fileType);
+        String fileType = fileVo.getFileType();
+        String filePath = fileVo.getFilePath();
+        handleService.startHandle(filePath, fileType, DateUtil.parseDate(fileVo.getFileDate()));
     }
 
     /**
      * 手动数据生成
+     *
      * @param json
      * @return
      */
     @RequestMapping(value = "/testAcctData", method = RequestMethod.POST)
-    public String testAcctData(@RequestBody JSONObject json){
+    public String testAcctData(@RequestBody JSONObject json) {
         String result = "ok";
         try {
             bankApiService.acctDataHandler(json);
-            log.info("请求参数："+json.toJSONString());
+            log.info("请求参数：" + json.toJSONString());
         } catch (ApplicationException e) {
-            log.error("数据异常{}",e);
+            log.error("数据异常{}", e);
         }
         return result;
     }
 
     @RequestMapping(value = "/testThread", method = RequestMethod.POST)
-    public String testThread(){
+    public String testThread() {
         String result = "ok";
         new ScheduleRunnable().run();
         return result;
     }
+
 }

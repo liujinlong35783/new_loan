@@ -466,26 +466,4 @@ public class GenerateTxtFileUtil {
     }
 
 
-    public static void main(String[] args) {
-        List<String> bufferList = new ArrayList();
-        bufferList.add("fksfhkjdfjdsfkj");
-        bufferList.add("┣━━━━━━━━━━╋━━━━━━━━━━╋━━━━━━━━━━━━╋━━━━━━━━━━━━━━╋━━━━━━━━━━━━╋━━━━━━━━━━━━━━┫");
-
-
-        /*String line = bufferList.get(bufferList.size() - 1);
-
-        line = line.replaceFirst("╋", "┻");
-        System.out.println(line);
-        bufferList.add(1 , bufferList.get(1).replaceFirst("╋", "┻"));
-
-        System.out.println(bufferList.get(1));*/
-
-        String line = bufferList.get(bufferList.size() - 1).replaceFirst("╋", "┻");
-        bufferList.set(bufferList.size() - 1, line);
-        System.out.println(bufferList.get(bufferList.size() - 1));
-
-
-
-    }
-
 }

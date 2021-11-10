@@ -33,6 +33,7 @@ public class LoanDetailBillThread extends AcctBaseThread {
         // 查询前一天还款记录
         QueryWrapper queryWrapper = getQueryWrapper(RepayAssemblyRecordModel.class, "repayFinishTime");
         // 查询网贷还款记录
+        // TODO 改成分页查询
         List<RepayAssemblyRecordModel> repayList = repayAssemblyRecordService.list(queryWrapper);
         log.info("LoanDetailBill of RepayAssemblyRecord record is {}.", repayList.size());
         AssetModel asset;
@@ -51,6 +52,7 @@ public class LoanDetailBillThread extends AcctBaseThread {
             queryWrapper = new QueryWrapper();
             queryWrapper.eq("ASSEMBLY_ID", repayRecord.getRepayAssemblyId());
             // 查询网贷还款记录
+            // TODO 分页查询
             List<RepayPeriodRecordModel> repayPeriodList = repayPeriodRecordService.list(queryWrapper);
             for (RepayPeriodRecordModel repayPeriod : repayPeriodList) {
                 payoffPrincipal = payoffPrincipal.add(repayPeriod.getPrincipalRepayAmount());
@@ -103,6 +105,7 @@ public class LoanDetailBillThread extends AcctBaseThread {
         }
 
         // 查询前一天放款记录
+        // TODO 分页查询
         queryWrapper = getQueryWrapper(AssetGrantRecordModel.class, "assetGrantRecordCreateAt");
         List<AssetGrantRecordModel> grantRecordList = assetGrantRecordService.list(queryWrapper);
         log.info("LoanDetailBill of AssetGrantRecord record is {}.", grantRecordList.size());
@@ -139,12 +142,10 @@ public class LoanDetailBillThread extends AcctBaseThread {
                     log.info("AssetBorrowerIdnum{} of CardII is null", loanDetailBill.getBorrowerIdnum());
                 }
             }
-
             loanDetailBill.setPrincipalBalance(loanDetailBill.getGtantAmount());
             loanDetailBill.setAcctDate(grantRecord.getCoreSysDate());
             loanDetailBillList.add(loanDetailBill);
         }
-
 
         // 保存贷款明细账
         if (!loanDetailBillList.isEmpty()) {

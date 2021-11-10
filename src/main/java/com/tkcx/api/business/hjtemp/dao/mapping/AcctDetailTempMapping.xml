@@ -37,6 +37,13 @@
 			<include refid="select_content"/>
 		</where>
 	</select>
+
+
+	<select id="selectCountNotInEleAccount" resultType="Integer">
+		select count(1) from ACCT_DETAIL_TEMP t
+		where t.CHANNEL_SEQ = #{e.channelSeq}
+		and t.ITEM_CTRL not in #{e.itemCtrl}
+	</select>
 	
 	<select id="selectModelList" resultMap="BaseResultMap">
 			select * from ACCT_DETAIL_TEMP t

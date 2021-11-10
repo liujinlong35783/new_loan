@@ -1,22 +1,21 @@
 package com.tkcx.api.business.hjtemp.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tkcx.api.business.acctPrint.model.BusiOrgBillModel;
-import com.tkcx.api.business.hjtemp.model.vo.BusiOrgBillVo;
-import com.tkcx.api.common.CommonService;
 import com.tkcx.api.business.hjtemp.dao.AcctDetailTempDao;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
+import com.tkcx.api.business.hjtemp.model.vo.BusiOrgBillVo;
+import com.tkcx.api.common.CommonService;
 import com.tkcx.api.utils.ToolUtil;
-import javafx.scene.control.Pagination;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Service
@@ -24,6 +23,7 @@ import java.util.*;
  * @author tianyi
  * @Date 2019-08-06 20:18
  */
+@Slf4j
 @Service
 public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctDetailTempModel> {
 
@@ -61,6 +61,10 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
         return acctDetailTempDao.selectModelCount(model);
     }
 
+    public Integer selectCountNotInEleAccount(AcctDetailTempModel model) {
+        log.info("查询条件：{}", model);
+        return acctDetailTempDao.selectCountNotInEleAccount(model);
+    }
     
     public List<AcctDetailTempModel> selectList(AcctDetailTempModel model) {
         return acctDetailTempDao.selectModelList(model);

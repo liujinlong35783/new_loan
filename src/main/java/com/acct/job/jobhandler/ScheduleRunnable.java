@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.acct.job.thread.*;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
-import com.tkcx.api.business.hjtemp.utils.HjFileFlagEnum;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import com.tkcx.api.common.BeanContext;
 import com.tkcx.api.common.BusiCommonService;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class ScheduleRunnable implements Runnable {
         // 判断互金数据是否已接入
         HjFileInfoModel queryInfo = new HjFileInfoModel();
         queryInfo.setFileDate(selectDate);
-        queryInfo.setDeleteFlag(HjFileFlagEnum.NOT_DELETED);
+        queryInfo.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
         List<HjFileInfoModel> hjData = hjFileInfoService.selectModelList(queryInfo);
         log.info("互金数据查询日期：{}，查询结果{}", queryInfo.getFileDate(), hjData.size());
 
@@ -88,7 +88,7 @@ public class ScheduleRunnable implements Runnable {
         threadPool.execute(new BusiOrgSeqThread(selectDate));
 
         // 5. 贷款分户账 网贷数据+会计凭证ACCT_ORG_TEMP表，ACCT_ORG_TEMP数据来自于互金
-        threadPool.execute(new BusiOrgSeqThread(selectDate));
+        threadPool.execute(new LoanAccBillThread(selectDate));
 
         // 6. 贷款明细账，数据来自于网贷+会计凭证ACCT_ORG_TEMP表、ACCT_BUSI_CODE表
         threadPool.execute(new LoanDetailBillThread(selectDate));
