@@ -28,14 +28,11 @@ public class AcctBusiConvert {
     public static List<AcctBusiCodeModel> makeAcctBusiList(String path, int readStartNum, int readEndNum){
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
-        log.info("------------------解析的文件行数：{}",lines.size());
         List<AcctBusiCodeModel> busiList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
         for (StringBuffer lineStr : lines) {
             //行数据生成对象
             busiList.add(assembleDetailTemp(lineStr.toString()));
         }
-        log.info("待入库互金文件信息：{}条", busiList.size());
-
         return busiList;
     }
 

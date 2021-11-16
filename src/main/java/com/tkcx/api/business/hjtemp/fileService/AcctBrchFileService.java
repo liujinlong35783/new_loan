@@ -30,19 +30,18 @@ public class AcctBrchFileService {
     /**
      * 处理互金会计科目文件
      *
-     * @param filePath
      * @param isRemove
      * @param queryResult
      */
-    public void handleAcctBrchFile(String filePath, Boolean isRemove, HjFileInfoModel queryResult) {
+    public void handleAcctBrchFile(Boolean isRemove, HjFileInfoModel queryResult) {
 
         try{
-            settleAcctBrchFile(filePath, isRemove, queryResult);
+            settleAcctBrchFile(isRemove, queryResult);
         } catch (Exception e) {
             log.error("读取【{}】行到【{}】行异常：{}",
                     queryResult.getNextReadStartNum(), queryResult.getNextReadEndNum(), e);
             // 如果文件解析失败或者入库失败，则对该readStartNum到readEndNum行数据重新进行读取
-            settleAcctBrchFile(filePath, isRemove, queryResult);
+            settleAcctBrchFile(isRemove, queryResult);
         } finally {
             //读取完200行后，对JVM的内存进行回收
             System.gc();
@@ -52,14 +51,14 @@ public class AcctBrchFileService {
     /**
      * 处理互金文件具体逻辑
      *
-     * @param filePath
      * @param isRemove
      * @param queryResult
      */
-    private void settleAcctBrchFile(String filePath, Boolean isRemove, HjFileInfoModel queryResult) {
+    private void settleAcctBrchFile(Boolean isRemove, HjFileInfoModel queryResult) {
 
         int readStartNum = queryResult.getNextReadStartNum();
         int readEndNum = queryResult.getNextReadEndNum();
+        String filePath = queryResult.getFileDownloadPath();
         List<AcctBrchTempModel> branchList = AcctBrchConvert.makeAcctBrchList(filePath, readStartNum, readEndNum);
         log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, branchList.size());
         /** 已读取完成的数据入库 */

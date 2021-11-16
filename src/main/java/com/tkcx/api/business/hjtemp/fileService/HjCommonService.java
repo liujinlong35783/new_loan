@@ -50,10 +50,8 @@ public class HjCommonService {
 
         HjFileInfoModel queryCon = new HjFileInfoModel();
         queryCon.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
-        queryCon.setReadFlag(HjFileFlagConstant.NOT_FINISH);
         queryCon.setFileDate(fileDate);
         queryCon.setFileType(fileType);
-        hjFileInfoService.selectOneModel(queryCon);
         return hjFileInfoService.selectOneModel(queryCon);
     }
 

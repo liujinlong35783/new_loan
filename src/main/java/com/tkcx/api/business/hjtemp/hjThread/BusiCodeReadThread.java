@@ -24,7 +24,6 @@ import java.util.Date;
 public class BusiCodeReadThread extends Thread {
 
 
-    private String filePath;
 
     private Boolean isRemove;
 
@@ -36,8 +35,8 @@ public class BusiCodeReadThread extends Thread {
     private boolean pause = true;
 
 
-    public BusiCodeReadThread(String filePath, Boolean isRemove, Date fileDate) {
-        this.filePath = filePath;
+    public BusiCodeReadThread( Boolean isRemove, Date fileDate) {
+
         this.isRemove = isRemove;
         this.fileDate = fileDate;
     }
@@ -62,13 +61,12 @@ public class BusiCodeReadThread extends Thread {
                     log.info("日期：【{}】,读取标识：【{}】,结束执行互金会计科目文件解析线程",
                             fileDate, hjFileInfoModel.getReadFlag());
                     // 线程停止
-                    //interrupt();
-                    pause = false;
+                    return;
                 }
-                //程序每60毫秒(1秒)执行一次 值可更改
+                //程序每60毫秒执行一次 值可更改
                 Thread.sleep(60);
-                //这里写你的代码 你的代码  你的代码  重要的事情说三遍
-                busiCodeFileService.handleBusiCodeFile(filePath, isRemove, hjFileInfoModel);
+                // 业务逻辑
+                busiCodeFileService.handleBusiCodeFile(isRemove, hjFileInfoModel);
             }
         } catch (Exception e) {
             log.error("互金会计科目信息线程异常：{}", e);

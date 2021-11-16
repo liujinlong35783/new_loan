@@ -10,26 +10,31 @@
 		</layout>
 	</appender>
 
-	<appender name="rootlog"
-		class="org.apache.log4j.DailyRollingFileAppender">
+	<appender name="rootlog" class="org.apache.log4j.DailyRollingFileAppender">
+		<!-- 设置日志信息输出文件全路径名 -->
 		<param name="File" value="/data/logs/acctprint/root.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
 		<param name="Encoding" value="UTF-8" />
+		<!-- 设置日志输出的最大级别 -->
+		<param name="levelMax" value="ERROR" />
+		<!-- 设置保存备份回滚日志的最大个数 -->
+		<param name="MaxBackupIndex" value="10" />
+		<!-- 设置当日志文件达到此阈值的时候自动回滚，单位可以是KB，MB，GB，默认单位是KB -->
+		<param name="MaxFileSize" value="10MB" />
+		<!-- 设置日志输出的样式 -->
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern"
-				value="[%d{yyyy-MM-dd HH:mm:ss SSS}]-[%p]-[%c{2}(%L)]-[%t] %m%n" />
+			<param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss SSS}]-[%p]-[%c{2}(%L)]-[%t] %m%n" />
 		</layout>
 	</appender>
 
-	<logger name="org.springframework.jdbc.core.JdbcTemplate"
-		additivity="false">
+
+	<logger name="org.springframework.jdbc.core.JdbcTemplate" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="rootlog" />
 	</logger>
-	<logger
-		name="org.springframework.jdbc.core.StatementCreatorUtils"
-		additivity="false">
+	<logger name="org.springframework.jdbc.core.StatementCreatorUtils" additivity="false">
 		<level value="TRACE" />
 		<appender-ref ref="rootlog" />
 	</logger>

@@ -40,6 +40,7 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
         return acctDetailTempDao.deleteById(id);
     }
 
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateById(AcctDetailTempModel entity) {
         return this.updateById(entity);
@@ -62,7 +63,6 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
     }
 
     public Integer selectCountNotInEleAccount(AcctDetailTempModel model) {
-        log.info("查询条件：{}", model);
         return acctDetailTempDao.selectCountNotInEleAccount(model);
     }
     

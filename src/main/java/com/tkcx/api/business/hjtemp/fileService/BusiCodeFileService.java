@@ -37,19 +37,18 @@ public class BusiCodeFileService {
     /**
      * 处理互金会计科目文件
      *
-     * @param filePath
      * @param isRemove
      * @param queryResult
      */
-    public void handleBusiCodeFile(String filePath, Boolean isRemove, HjFileInfoModel queryResult) {
+    public void handleBusiCodeFile(Boolean isRemove, HjFileInfoModel queryResult) {
 
         try{
-            settleBusiCodeFile(filePath, isRemove, queryResult);
+            settleBusiCodeFile(isRemove, queryResult);
         } catch (Exception e) {
             log.error("读取【{}】行到【{}】行异常：{}",
                     queryResult.getNextReadStartNum(), queryResult.getNextReadEndNum(), e);
             // 如果文件解析失败或者入库失败，则对该readStartNum到readEndNum行数据重新进行读取
-            settleBusiCodeFile(filePath, isRemove, queryResult);
+            settleBusiCodeFile(isRemove, queryResult);
         } finally {
             //读取完200行后，对JVM的内存进行回收
             System.gc();
@@ -59,14 +58,14 @@ public class BusiCodeFileService {
     /**
      * 处理互金文件具体逻辑
      *
-     * @param filePath
      * @param isRemove
      * @param queryResult
      */
-    private void settleBusiCodeFile(String filePath, Boolean isRemove, HjFileInfoModel queryResult) {
+    private void settleBusiCodeFile(Boolean isRemove, HjFileInfoModel queryResult) {
 
         int readStartNum = queryResult.getNextReadStartNum();
         int readEndNum = queryResult.getNextReadEndNum();
+        String filePath = queryResult.getFileDownloadPath();
         List<AcctBusiCodeModel> busiList = AcctBusiConvert.makeAcctBusiList(filePath, readStartNum, readEndNum);
         log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, busiList.size());
         /** 已读取完成的数据入库 */

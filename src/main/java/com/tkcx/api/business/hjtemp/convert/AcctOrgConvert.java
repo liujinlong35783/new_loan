@@ -28,13 +28,11 @@ public class AcctOrgConvert {
     public static List<AcctOrgTempModel> makeAcctBusiList(String path,int readStartNum, int readEndNum){
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
-        log.info("------------------解析的文件行数：{}",lines.size());
         List<AcctOrgTempModel> acctOrgList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
         for (StringBuffer lineStr : lines) {
             //行数据生成对象
             acctOrgList.add(assembleOrgTemp(lineStr.toString()));
         }
-        log.info("待入库互金文件信息：{}条", acctOrgList.size());
         return acctOrgList;
     }
 

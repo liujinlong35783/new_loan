@@ -62,8 +62,7 @@ public class TestController {
     public void testMakeData(@RequestBody FileDownloadReqVo fileVo) {
 
         String fileType = fileVo.getFileType();
-        String filePath = fileVo.getFilePath();
-        handleService.startHandle(filePath, fileType, DateUtil.parseDate(fileVo.getFileDate()));
+        handleService.startHandle(fileType, DateUtil.parseDate(fileVo.getFileDate()));
     }
 
     /**

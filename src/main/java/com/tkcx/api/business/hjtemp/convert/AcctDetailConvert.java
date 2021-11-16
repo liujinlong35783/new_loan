@@ -32,14 +32,12 @@ public class AcctDetailConvert {
     public static List<AcctDetailTempModel> makeAcctDetailList(String path, int readStartNum, int readEndNum){
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
-        log.info("------------------解析的文件行数：{}",lines.size());
         List<AcctDetailTempModel> acctDetailList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
         for (StringBuffer lineStr : lines) {
             //行数据生成对象
             AcctDetailTempModel acctDetailTempModel = assembleDetailTemp(lineStr.toString());
             acctDetailList.add(acctDetailTempModel);
         }
-        log.info("待入库互金t_act_one_detail文件信息：{}条", acctDetailList.size());
         return acctDetailList;
     }
 
@@ -54,7 +52,6 @@ public class AcctDetailConvert {
         StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
                 HjFileFlagConstant.ACCT_DETAIL_LINE_LENGTH);
 
-        log.info("行内容：{}",lineStr);
         AcctDetailTempModel acctDetailTempModel = new AcctDetailTempModel();
         acctDetailTempModel.setIdentifier(buffers[0].toString());
         if (StringUtils.isNotEmpty(buffers[1].toString())) {
@@ -63,7 +60,6 @@ public class AcctDetailConvert {
         acctDetailTempModel.setChannelSeq(buffers[2].toString());
         acctDetailTempModel.setChannelWay(buffers[3].toString());
         if (StringUtils.isNotEmpty(buffers[4])) {
-            log.info("第4列内容：{}", buffers[4]);
             acctDetailTempModel.setAcctDate(DateUtil.parseDate(buffers[4].toString(), "yyyyMMdd"));
         }
         acctDetailTempModel.setAcctSeq(buffers[5].toString());

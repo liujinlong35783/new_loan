@@ -42,6 +42,20 @@ public class HjFileInfoDaoTest {
         }
     }
 
+    @Test
+    public void testSelectOne() {
+
+        // t_act_one_detail
+        HjFileInfoModel queryCon = new HjFileInfoModel();
+        queryCon.setFileType("t_act_one_detail");
+        queryCon.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
+        queryCon.setReadFlag(HjFileFlagConstant.NOT_FINISH);
+        queryCon.setFileDate(DateUtil.parseDate("2084-10-22"));
+        HjFileInfoModel hjFiles =hjFileInfoDao.selectOneModel(queryCon);
+
+        log.info("互金文件信息查询结果：{}", hjFileInfoDao.selectOneModel(queryCon));
+
+    }
 
     @Test
     public void  testQueryCount() {

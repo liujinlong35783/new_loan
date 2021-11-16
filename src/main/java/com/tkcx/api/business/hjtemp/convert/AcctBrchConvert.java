@@ -32,13 +32,11 @@ public class AcctBrchConvert {
 
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
-        log.info("------------------解析的文件行数：{}",lines.size());
         List<AcctBrchTempModel> branchList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
         for (StringBuffer lineStr : lines) {
             //行数据生成对象
             branchList.add(assembleBrchTemp(lineStr.toString()));
         }
-        log.info("待入库互金t_act_brch_day_tot文件信息：{}条", branchList.size());
         return branchList;
 
     }

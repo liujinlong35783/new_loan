@@ -94,6 +94,7 @@ public class HjFileInfoModel extends Model<HjFileInfoModel> {
     @TableField(value="NEXT_READ_END_NUM")
     private Integer nextReadEndNum;
 
+
     @TableField(value = "FILE_LINE_TOTAL_NUM")
     private Integer fileLineTotalNum;
 

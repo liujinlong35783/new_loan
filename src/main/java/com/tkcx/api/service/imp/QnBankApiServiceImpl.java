@@ -76,18 +76,6 @@ public class QnBankApiServiceImpl implements BankApiService {
 			req = bankCommonService.receive(msg, HjFileDataReqVo.class);
 			//获取文件信息列表
 			List<HjFileDataReqVo.FileInfo> fileList = req.getFileInfo();
-
-			Date fileDate = DateUtil.parse(req.getSysHeadVo().getTxnDt(),"yyyy-MM-dd");
-			HjFileInfoModel queryInfo = new HjFileInfoModel();
-			queryInfo.setFileDate(fileDate);
-			queryInfo.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
-			// 查看当日是否已经推送了数据
-			List<HjFileInfoModel> hjFileInfoModels = hjFileInfoService.selectModelList(queryInfo);
-			log.info("日期{}，查询到的互金推送记录{}", fileDate, hjFileInfoModels.size());
-			// 如果推送了，更新已经推送的记录为删除状态
-			if(hjFileInfoModels != null && hjFileInfoModels.size() > 1){
-				updateHjFileInfo(hjFileInfoModels, fileDate);
-			}
 			if(fileList == null || fileList.size() == 0) {
 				log.error("互金文件信息为空");
 				rsp.setRetCd("999999");
@@ -95,10 +83,22 @@ public class QnBankApiServiceImpl implements BankApiService {
 				String response = bankCommonService.response(req, rsp);
 				return response;
 			}
-			// 保存推送数据信息
+			log.info("互金推送的文件信息:{}", fileList.size());
+			Date fileDate = DateUtil.parse(req.getSysHeadVo().getTxnDt(),"yyyy-MM-dd");
+			// 查询是否已经推送了互金文件
+			if(!queryHjFileInfo(fileDate)){
+				log.error("互金推送的文件信息已在数据库中存在，但已存在信息更新异常");
+				rsp.setRetCd("999999");
+				rsp.setRetMsg("下载文件失败");
+				String response = bankCommonService.response(req, rsp);
+				return response;
+			}
+
+			// 组装保存推送数据信息
 			List<HjFileInfoModel> hjFileList = assembleHjFileInfo(fileList, fileDate);
-			// 批量记录互金文件信息
-			hjFileInfoService.saveBatch(hjFileList);
+			if(hjFileList == null) {
+				log.error("{}日，互金数据保存失败", fileDate);
+			}
 			// 互金推送数据日志表记录
 			if (null != req.getSysHeadVo()) {
 				AcctLogModel acctLog = new AcctLogModel();
@@ -109,9 +109,9 @@ public class QnBankApiServiceImpl implements BankApiService {
 				acctLog.insert();
 			}
 			// 异步下载文件,解析后保存至数据库中
-			hjFileHandleService.downloadHjFile(hjFileList, fileDate);
-		} catch (ApplicationException e) {
-			log.error("文件下载请求失败,错误原因：" + e);
+			 hjFileHandleService.downloadHjFile(hjFileList, fileDate);
+		} catch (Exception e) {
+			log.error("文件下载请求失败,错误原因：{}", e);
 			rsp.setRetCd("999999");
 			rsp.setRetMsg("下载文件失败");
 		}finally {
@@ -121,24 +121,36 @@ public class QnBankApiServiceImpl implements BankApiService {
 	}
 
 
+
 	/**
-	 * 批量更新互金文件信息
+	 * 查询是否已经推送了互金文件
 	 *
-	 * @param hjFileInfoModels
 	 * @param fileDate
 	 */
-	private void updateHjFileInfo(List<HjFileInfoModel> hjFileInfoModels, Date fileDate){
+	private boolean queryHjFileInfo(Date fileDate){
 
-		log.info("日期{}，互金数据重复推送，删除互金文件信息中的重复记录，重新进行保存", fileDate);
-		for (HjFileInfoModel updateInfo : hjFileInfoModels) {
-			HjFileInfoModel update = new HjFileInfoModel();
-			update.setFileId(updateInfo.getFileId());
-			update.setFileDate(fileDate);
-			update.setDeleteFlag(HjFileFlagConstant.DELETED);
-			hjFileInfoService.saveOrUpdate(update);
+		HjFileInfoModel queryInfo = new HjFileInfoModel();
+		queryInfo.setFileDate(fileDate);
+		queryInfo.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
+		// 查看当日是否已经推送了数据
+		List<HjFileInfoModel> hjFileInfoModels = hjFileInfoService.selectModelList(queryInfo);
+		log.info("日期{}，查询到的互金推送记录{}", fileDate, hjFileInfoModels.size());
+		// 如果推送了，更新已经推送的记录为删除状态
+		if(hjFileInfoModels != null && hjFileInfoModels.size() > 1 &&
+				!hjFileInfoService.updateBatchById(hjFileInfoModels)){
+			return false;
 		}
+		return true;
 	}
 
+
+	/**
+	 * 组装保存入库互金文件信息
+	 *
+	 * @param fileList
+	 * @param fileDate
+	 * @return
+	 */
 	private List<HjFileInfoModel> assembleHjFileInfo(List<HjFileDataReqVo.FileInfo> fileList, Date fileDate) {
 
 		List<HjFileInfoModel> hjFileList = Lists.newArrayList();
@@ -154,11 +166,14 @@ public class QnBankApiServiceImpl implements BankApiService {
 			hjFileInfoModel.setCreateDate(DateUtil.date());
 			// 文件日期
 			hjFileInfoModel.setFileDate(fileDate);
-			// 文件下载路径
 			hjFileInfoModel.setFilePath(file.getFilPath() + file.getFileNm());
+			// 文件路径
 			hjFileList.add(hjFileInfoModel);
 		}
-		return hjFileList;
+		if(hjFileInfoService.saveBatch(hjFileList)) {
+			return hjFileList;
+		}
+		return null;
 	}
 
 	@Override

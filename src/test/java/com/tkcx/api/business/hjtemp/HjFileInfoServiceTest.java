@@ -44,7 +44,6 @@ public class HjFileInfoServiceTest {
     public void testQuery() {
 
         // TODO 待测试
-        HjFileInfoService hjFileInfoService = new HjFileInfoService();
         // t_act_one_detail
         HjFileInfoModel queryCon = new HjFileInfoModel();
         queryCon.setFileType("t_act_brch_day_tot");

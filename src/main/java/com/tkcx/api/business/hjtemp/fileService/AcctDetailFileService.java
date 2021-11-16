@@ -36,19 +36,18 @@ public class AcctDetailFileService {
     /**
      * 处理互金会计科目文件
      *
-     * @param filePath
      * @param isRemove
      * @param queryResult
      */
-    public void handleAcctDetailFile(String filePath, Boolean isRemove, HjFileInfoModel queryResult) {
+    public void handleAcctDetailFile(Boolean isRemove, HjFileInfoModel queryResult) {
 
         try{
-            settleAcctDetailFile(filePath, isRemove, queryResult);
+            settleAcctDetailFile(isRemove, queryResult);
         } catch (Exception e) {
             log.error("读取【{}】行到【{}】行异常：{}",
                     queryResult.getNextReadStartNum(), queryResult.getNextReadEndNum(), e);
             // 如果文件解析失败或者入库失败，则对该readStartNum到readEndNum行数据重新进行读取
-            settleAcctDetailFile(filePath, isRemove, queryResult);
+            settleAcctDetailFile(isRemove, queryResult);
         } finally {
             //读取完200行后，对JVM的内存进行回收
             System.gc();
@@ -58,14 +57,14 @@ public class AcctDetailFileService {
     /**
      * 处理互金文件具体逻辑
      *
-     * @param filePath
      * @param isRemove
      * @param queryResult
      */
-    private void settleAcctDetailFile(String filePath, Boolean isRemove, HjFileInfoModel queryResult) {
+    private void settleAcctDetailFile(Boolean isRemove, HjFileInfoModel queryResult) {
 
         int readStartNum = queryResult.getNextReadStartNum();
         int readEndNum = queryResult.getNextReadEndNum();
+        String filePath = queryResult.getFileDownloadPath();
         List<AcctDetailTempModel> detailList = AcctDetailConvert.makeAcctDetailList(filePath, readStartNum, readEndNum);
         log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, detailList.size());
         /** 已读取完成的数据入库 */

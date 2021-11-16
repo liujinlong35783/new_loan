@@ -73,7 +73,7 @@ public class HjFileHandleService {
                  */
                 saveHjFileDownloadPath(downFilePath, hjFileInfoModel);
                 // 下载成功后，解析文件，入库
-                handleService.startHandle(downFilePath, fileType, fileDate);
+                handleService.startHandle(fileType, fileDate);
             }
         }
     }
@@ -86,6 +86,7 @@ public class HjFileHandleService {
      */
     private void saveHjFileDownloadPath(String downFilePath, HjFileInfoModel hjFileInfoModel){
 
+        log.info("日期{}，文件类型:{}，下载路径：{}", hjFileInfoModel.getFileDate(), hjFileInfoModel.getFileType(), downFilePath);
         hjFileInfoModel.setFileDownloadPath(downFilePath);
         hjFileInfoModel.setFileLineTotalNum(FileUtil.calTextLineNum(downFilePath));
         hjFileInfoService.updateDownloadFile(hjFileInfoModel);

@@ -25,8 +25,6 @@ import java.util.Date;
 @Getter
 public class AcctOrgReadThread extends Thread {
 
-    private String filePath;
-
     private Boolean isRemove;
 
     private Date fileDate;
@@ -37,8 +35,8 @@ public class AcctOrgReadThread extends Thread {
     private boolean pause = true;
 
 
-    public  AcctOrgReadThread(String filePath, Boolean isRemove, Date fileDate) {
-        this.filePath = filePath;
+    public  AcctOrgReadThread(Boolean isRemove, Date fileDate) {
+
         this.isRemove = isRemove;
         this.fileDate = fileDate;
     }
@@ -54,7 +52,7 @@ public class AcctOrgReadThread extends Thread {
 
         try {
             super.run();
-            //一直循环
+            // 一直循环
             while (pause) {
                 // 如果读取未完成，则暂停线程
                 HjFileInfoModel hjFileInfoModel = hjCommonService
@@ -65,13 +63,12 @@ public class AcctOrgReadThread extends Thread {
                     log.info("日期：【{}】,读取标识：【{}】,结束执行互金会计科目文件解析线程",
                             fileDate, hjFileInfoModel.getReadFlag());
                     // 线程停止
-                    //interrupt();
-                    pause = false;
+                    return;
                 }
-                //程序每60毫秒(1秒)执行一次 值可更改
+                // 程序每60毫秒执行一次 值可更改
                 Thread.sleep(60);
-                //这里写你的代码 你的代码  你的代码  重要的事情说三遍
-                acctOrgFileService.handleAcctOrgFile(filePath, isRemove, hjFileInfoModel);
+                // 业务逻辑
+                acctOrgFileService.handleAcctOrgFile(isRemove, hjFileInfoModel);
             }
         } catch (Exception e) {
             log.error("互金会计科目信息线程异常：{}", e);

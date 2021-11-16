@@ -36,15 +36,14 @@ public class HandleService {
     /**
      * 互金文件处理
      *
-     * @param filePath
      * @param fileType
      * @param fileDate
      */
-    public void startHandle(String filePath, String fileType, Date fileDate){
+    public void startHandle(String fileType, Date fileDate){
 
         //异步进行保存工作
         try {
-            log.info("开始解析互金文件：日期【{}】，文件类型【{}】，文件下载路径【{}】", fileDate, fileType, filePath);
+            log.info("开始解析互金文件：日期【{}】，文件类型【{}】", fileDate, fileType);
 
             // 自定义线程池用来进行互金文件的解析
             ThreadPoolExecutor readThreadPool = new ThreadPoolExecutor(
@@ -55,16 +54,16 @@ public class HandleService {
                 case HjFileFlagConstant.ACCT_DETAIL_FILE:
                     // 2021年10月24解决CPU使用率高问题
                     // 会计科目文件解析
-                    readThreadPool.execute(new AcctDetailReadThread(filePath, isRemove, fileDate));
+                    readThreadPool.execute(new AcctDetailReadThread(isRemove, fileDate));
                     break;
                 case HjFileFlagConstant.ACT_BRCH_FILE:
-                    readThreadPool.execute(new AcctBrchReadThread(filePath, isRemove, fileDate));
+                    readThreadPool.execute(new AcctBrchReadThread(isRemove, fileDate));
                     break;
                 case HjFileFlagConstant.BUSI_CODE_FILE:
-                    readThreadPool.execute(new BusiCodeReadThread(filePath, isRemove, fileDate));
+                    readThreadPool.execute(new BusiCodeReadThread(isRemove, fileDate));
                     break;
                 case HjFileFlagConstant.ACT_PUB_ORG_FILE:
-                    readThreadPool.execute(new AcctOrgReadThread(filePath, isRemove, fileDate));
+                    readThreadPool.execute(new AcctOrgReadThread(isRemove, fileDate));
                     break;
                 default:
                     log.error("文件类型：【{}】错误", fileType);

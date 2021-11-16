@@ -49,8 +49,8 @@ public class AcctDataService extends CommonService<AcctDataDao,AcctDataModel> {
         return acctDataDao.selectOne(queryWrapper);
     }
 
-    public Integer selectCount(Date preDate, Date curDate, String transSeqNo) {
-        return acctDataDao.selectModelCount(preDate, curDate, transSeqNo);
+    public Integer selectCount(Date preDate, Date curDate) {
+        return acctDataDao.selectModelCount(preDate, curDate);
     }
 
     public List<AcctDataModel> selectList(Date startDate, Date endDate) {

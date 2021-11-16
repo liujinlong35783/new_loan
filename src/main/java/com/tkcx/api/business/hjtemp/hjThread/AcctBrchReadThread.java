@@ -23,7 +23,6 @@ import java.util.Date;
 @Getter
 public class AcctBrchReadThread extends Thread {
 
-    private String filePath;
 
     private Boolean isRemove;
 
@@ -34,8 +33,8 @@ public class AcctBrchReadThread extends Thread {
      */
     private boolean pause = true;
 
-    public AcctBrchReadThread(String filePath, Boolean isRemove, Date fileDate) {
-        this.filePath = filePath;
+    public AcctBrchReadThread(Boolean isRemove, Date fileDate) {
+
         this.isRemove = isRemove;
         this.fileDate = fileDate;
     }
@@ -60,13 +59,12 @@ public class AcctBrchReadThread extends Thread {
                     log.info("日期：【{}】,读取标识：【{}】,结束执行互金机构总账文件解析线程",
                             fileDate, hjFileInfoModel.getReadFlag());
                     // 线程停止
-                    //interrupt();
-                    pause = false;
+                    return;
                 }
-                //程序每60毫秒(1秒)执行一次 值可更改
+                // 程序每60毫秒(1秒)执行一次 值可更改
                 Thread.sleep(60);
-                //这里写你的代码 你的代码  你的代码  重要的事情说三遍
-                acctBrchFileService.handleAcctBrchFile(filePath, isRemove, hjFileInfoModel);
+                // 业务逻辑
+                acctBrchFileService.handleAcctBrchFile(isRemove, hjFileInfoModel);
             }
         } catch (Exception e) {
             log.error("互金机构总账信息线程异常：{}", e);

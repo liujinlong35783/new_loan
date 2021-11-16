@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import java.util.Objects;
  * @param <M>
  * @param <T>
  */
+@Slf4j
 public class CommonService<M extends BaseMapper<T>, T> extends ServiceImpl<M, T> {
 
     /**
@@ -51,10 +53,11 @@ public class CommonService<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
                 i++;
             }
             batchSqlSession.flushStatements();
+            return true;
         }catch (Exception e){
-            log.error(i+"行数据异常{}",e);
+            log.error("{}行,数据异常{}", i, e);
+            return false;
         }
-        return true;
     }
 
     /**
@@ -62,6 +65,7 @@ public class CommonService<M extends BaseMapper<T>, T> extends ServiceImpl<M, T>
      * @param entityList
      * @return
      */
+    @Override
     @Transactional(rollbackFor = Exception.class,timeout = 200)
     public boolean saveOrUpdateBatch(Collection<T> entityList) {
         if(entityList==null || entityList.size()==0){

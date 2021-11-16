@@ -24,8 +24,8 @@ public interface AcctDataDao extends BaseMapper<AcctDataModel>{
      * @param curDate
      * @return
      */
-    @Select("select count(1) from QN_DB_BIZ.ACCT_DATA t WHERE t.CREATE_AT >= #{preDate} AND t.CREATE_AT < #{curDate} AND t.TRANS_SEQ_NO =#{transSeqNo} ")
-    Integer selectModelCount(@Param("preDate") Date preDate, @Param("curDate") Date curDate, @Param("transSeqNo") String transSeqNo);
+    @Select("select count(1) from QN_DB_BIZ.ACCT_DATA t WHERE t.CREATE_AT >= #{preDate} AND t.CREATE_AT < #{curDate} ")
+    Integer selectModelCount(@Param("preDate") Date preDate, @Param("curDate") Date curDate);
 
     /**
      * 查询列表

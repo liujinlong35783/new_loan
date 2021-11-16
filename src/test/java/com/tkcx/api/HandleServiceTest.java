@@ -33,8 +33,7 @@ public class HandleServiceTest {
 
     @Test
     public void test() {
-        String detailPath = "C:\\Users\\ccjh\\Desktop\\test\\local\\t_act_one_detail_20211027.txt";
         String detailType = "t_act_one_detail";
-        handleService.startHandle(detailPath, detailType, DateUtil.parseDate("2078-01-01 00:00:00"));
+        handleService.startHandle(detailType, DateUtil.parseDate("2078-01-01 00:00:00"));
     }
 }
