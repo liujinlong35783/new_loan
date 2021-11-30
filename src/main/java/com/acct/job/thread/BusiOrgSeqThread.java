@@ -27,15 +27,6 @@ import java.util.List;
 @Slf4j
 public class BusiOrgSeqThread extends AcctBaseThread {
 
-
-    /**
-     * 标志线程阻塞情况
-     */
-    private boolean pause = true;
-    int currentPage = PageUtils.startPageNum;
-
-
-
     public BusiOrgSeqThread(Date curDate) {
         super(curDate);
     }
@@ -52,24 +43,15 @@ public class BusiOrgSeqThread extends AcctBaseThread {
             int acctDataTotalPage = PageUtils.calTotalPage(acctDataTotalRec);
             log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，ACCT_DATA总记录数：【{}】，总页数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",
                     getCurDate(), acctDataTotalRec, acctDataTotalPage);
-            while (pause) {
-                if(acctDataTotalRec == 0) {
-                    pause = false;
-                }
-                if (acctDataTotalPage == currentPage) {
-                    // 线程停止
-                    // interrupt();
-                    // TODO for循环嵌套结束条件是看内存for还是外层for
-                    pause = false;
-                }
-                Thread.sleep(60);
-                // 改成分页查询
-                List<AcctDataModel> acctDataList = queryAcctDataByPage(currentPage, PageUtils.pageSize, super.getCurDate());
+
+            for(int currentPage = PageUtils.startPageNum; currentPage <= acctDataTotalRec ; currentPage++){
+                List<AcctDataModel> acctDataList = queryAcctDataByPage(currentPage, PageUtils.pageSize,
+                        super.getCurDate());
                 log.info("ACCT_DATA，第【{}】页网贷数据记录数：【{}】", currentPage, acctDataList.size());
                 // 业务逻辑
-                handleBusiOrgSeq(acctDataList);
-                currentPage++;
+                handleBusiOrgSeq(currentPage, acctDataList);
             }
+
         }catch (Exception e) {
             log.error("网贷业务机构业务流水线程执行：{}", e);
         }
@@ -155,7 +137,7 @@ public class BusiOrgSeqThread extends AcctBaseThread {
 
 
 
-    private void handleBusiOrgSeq(List<AcctDataModel> acctDataList) {
+    private void handleBusiOrgSeq(int currentPage, List<AcctDataModel> acctDataList) {
 
         try {
             dealBusOrgSeq(acctDataList);
@@ -178,27 +160,27 @@ public class BusiOrgSeqThread extends AcctBaseThread {
      */
     private void dealBusOrgSeq(List<AcctDataModel> acctDataList) {
 
-        int acctDetailCurPage = PageUtils.startPageNum;
+
         for (AcctDataModel acctData : acctDataList) {
             String transSeqNo = acctData.getTransSeqNo();
             log.info("TRANS_SEQ_NO:{}", transSeqNo);
             // 查询总页数
             int acctDetailTotalPage = queryDetailTotalPage(transSeqNo);
-            /** 结束循环 */
-            if(acctDetailTotalPage == acctDetailCurPage || acctDetailTotalPage == 0) {
-                log.info("互金会计分录查询当前页:{},CHANNEL_SEQ:【{}】", acctDetailCurPage, transSeqNo);
-                return;
+
+            for(int acctDetailCurPage = PageUtils.startPageNum ; acctDetailCurPage <= acctDetailTotalPage
+                    ; acctDetailCurPage++){
+                log.info("开始执行入库前的预备操作。。。。。。。。");
+                List<AcctDetailTempModel> detailList = queryDetailByPage(acctDetailCurPage, PageUtils.pageSize,
+                        transSeqNo);
+                log.info("AcctDetailTempModel第【{}】页，分页查询结果：{}", acctDetailCurPage, detailList.size());
+                if(detailList == null){
+                    log.info("互金会计分录无CHANNEL_SEQ：【{}】对应的数据", acctData.getTransSeqNo());
+                    continue;
+                }
+                saveBusOrgList(acctDetailCurPage, detailList, acctData);
             }
-            List<AcctDetailTempModel> detailList = queryDetailByPage(acctDetailCurPage, PageUtils.pageSize, transSeqNo);
-            log.info("AcctDetailTempModel 第【{}】页，分页查询结果：{}", acctDetailCurPage, detailList.size());
-            if(detailList == null){
-                log.info("互金会计分录无CHANNEL_SEQ：【{}】对应的数据", acctData.getTransSeqNo());
-                continue;
-            }
-            saveBusOrgList(acctDetailCurPage, detailList, acctData);
-            acctDetailCurPage++;
         }
-        currentPage++;
+
     }
 
 
@@ -236,7 +218,6 @@ public class BusiOrgSeqThread extends AcctBaseThread {
             }
             busiOrgSeqList.add(busiOrgSeq);
         }
-        log.info("待入库的业务流水记录数：【{}】", busiOrgSeqList.size());
         boolean saveResult = busiOrgSeqService.saveBatch(busiOrgSeqList);
         if(saveResult) {
             log.info("第{}页，入库成功记录数：{}", acctDetailCurPage, busiOrgSeqList.size());

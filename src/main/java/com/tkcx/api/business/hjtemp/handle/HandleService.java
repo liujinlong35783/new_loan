@@ -63,7 +63,7 @@ public class HandleService {
                     readThreadPool.execute(new BusiCodeReadThread(isRemove, fileDate));
                     break;
                 case HjFileFlagConstant.ACT_PUB_ORG_FILE:
-                    readThreadPool.execute(new AcctOrgReadThread(isRemove, fileDate));
+                    readThreadPool.execute(new AcctOrgReadThread(fileDate));
                     break;
                 default:
                     log.error("文件类型：【{}】错误", fileType);

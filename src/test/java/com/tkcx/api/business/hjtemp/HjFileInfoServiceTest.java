@@ -3,6 +3,7 @@ package com.tkcx.api.business.hjtemp;
 import cn.hutool.core.date.DateUtil;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
+import com.tkcx.api.business.hjtemp.utils.FileUtil;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -61,12 +62,14 @@ public class HjFileInfoServiceTest {
     public void testUpdate() {
 
         HjFileInfoModel queryCon = new HjFileInfoModel();
-        queryCon.setFileType("t_act_brch_day_tot");
+        queryCon.setFileType("t_act_one_detail");
         queryCon.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
-        queryCon.setFileDate(DateUtil.parseDate("2078-01-01"));
+        queryCon.setFileDate(DateUtil.parseDate("2021-11-19"));
         queryCon.setReadFlag(HjFileFlagConstant.NOT_FINISH);
 
-        queryCon.setFileLineTotalNum(1222);
+        String downFilePath = "E:\\works\\tkcx-jydb-files\\会计凭证\\会计凭证CPU使用率高问题\\kjpz20211118日志\\1.2\\jtbejpvh446rhhsf3a22tumie0zeadorwntqptr4.txt";
+
+        queryCon.setFileLineTotalNum(FileUtil.calTextLineNum(downFilePath));
         queryCon.setFileDownloadPath("test/test/test");
         log.info("更细结果：{}",hjFileInfoService.updateDownloadFile(queryCon));
     }

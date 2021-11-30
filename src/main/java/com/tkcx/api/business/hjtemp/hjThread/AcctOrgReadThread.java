@@ -25,8 +25,6 @@ import java.util.Date;
 @Getter
 public class AcctOrgReadThread extends Thread {
 
-    private Boolean isRemove;
-
     private Date fileDate;
 
     /**
@@ -35,9 +33,8 @@ public class AcctOrgReadThread extends Thread {
     private boolean pause = true;
 
 
-    public  AcctOrgReadThread(Boolean isRemove, Date fileDate) {
+    public  AcctOrgReadThread(Date fileDate) {
 
-        this.isRemove = isRemove;
         this.fileDate = fileDate;
     }
 
@@ -52,6 +49,8 @@ public class AcctOrgReadThread extends Thread {
 
         try {
             super.run();
+            // 删除前一天的机构信息
+            acctOrgFileService.delAcctOrgData(fileDate);
             // 一直循环
             while (pause) {
                 // 如果读取未完成，则暂停线程
@@ -68,7 +67,7 @@ public class AcctOrgReadThread extends Thread {
                 // 程序每60毫秒执行一次 值可更改
                 Thread.sleep(60);
                 // 业务逻辑
-                acctOrgFileService.handleAcctOrgFile(isRemove, hjFileInfoModel);
+                acctOrgFileService.handleAcctOrgFile(hjFileInfoModel);
             }
         } catch (Exception e) {
             log.error("互金会计科目信息线程异常：{}", e);

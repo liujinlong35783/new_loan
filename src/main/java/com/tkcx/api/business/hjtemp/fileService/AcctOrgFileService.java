@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,42 +38,49 @@ public class AcctOrgFileService {
     /**
      * 处理互金会计科目文件
      *
-     * @param isRemove
      * @param queryResult
      */
-    public void handleAcctOrgFile(Boolean isRemove, HjFileInfoModel queryResult) {
+    public void handleAcctOrgFile(HjFileInfoModel queryResult) {
 
         try{
-            settleAcctOrgFile(isRemove, queryResult);
+            settleAcctOrgFile(queryResult);
         } catch (Exception e) {
             log.error("读取【{}】行到【{}】行异常：{}",
                     queryResult.getNextReadStartNum(), queryResult.getNextReadEndNum(), e);
             // 如果文件解析失败或者入库失败，则对该readStartNum到readEndNum行数据重新进行读取
-            settleAcctOrgFile(isRemove, queryResult);
+            settleAcctOrgFile(queryResult);
         } finally {
             //读取完200行后，对JVM的内存进行回收
             System.gc();
         }
     }
 
+    public boolean delAcctOrgData(Date fileDate) {
+
+        boolean remove = acctOrgTempService.remove(null);
+        if(remove){
+            log.info("{}日之前的AcctOrgTempModel数据清空成功", fileDate);
+        }
+        return remove;
+    }
+
     /**
      * 处理互金文件具体逻辑
      *
-     * @param isRemove
      * @param queryResult
      */
-    private void settleAcctOrgFile(Boolean isRemove, HjFileInfoModel queryResult) {
+    private void settleAcctOrgFile(HjFileInfoModel queryResult) {
 
         int readStartNum = queryResult.getNextReadStartNum();
         int readEndNum = queryResult.getNextReadEndNum();
         String filePath = queryResult.getFileDownloadPath();
         List<AcctOrgTempModel> orgList = AcctOrgConvert.makeAcctBusiList(filePath, readStartNum, readEndNum);
         log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, orgList.size());
-        /** 已读取完成的数据入库 */
-        if(isRemove) {
-            acctOrgTempService.remove(null);
-            log.info("AcctOrgTempModel数据清空成功");
-        }
+//        /** 已读取完成的数据入库 */
+//        if(isRemove) {
+//            acctOrgTempService.remove(null);
+//            log.info("AcctOrgTempModel数据清空成功");
+//        }
         boolean updateResult = acctOrgTempService.saveBatch(orgList);
         if(updateResult){
             log.info("AcctOrgTempModel保存成功");
