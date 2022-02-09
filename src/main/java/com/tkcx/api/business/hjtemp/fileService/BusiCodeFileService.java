@@ -67,16 +67,12 @@ public class BusiCodeFileService {
         int readEndNum = queryResult.getNextReadEndNum();
         String filePath = queryResult.getFileDownloadPath();
         List<AcctBusiCodeModel> busiList = AcctBusiConvert.makeAcctBusiList(filePath, readStartNum, readEndNum);
-        log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, busiList.size());
         /** 已读取完成的数据入库 */
         if(isRemove) {
             acctBusiCodeService.remove(null);
             log.info("AcctBrchTempModel数据清空成功");
         }
-        boolean updateResult = acctBusiCodeService.saveBatch(busiList);
-        if(updateResult){
-            log.info("AcctBrchTempModel保存成功");
-        }
+        acctBusiCodeService.saveBatch(busiList);
         /** 更新已读取的文件信息 */
         hjCommonService.updateReadFileInfo(queryResult);
     }

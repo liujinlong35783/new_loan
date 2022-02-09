@@ -60,16 +60,12 @@ public class AcctBrchFileService {
         int readEndNum = queryResult.getNextReadEndNum();
         String filePath = queryResult.getFileDownloadPath();
         List<AcctBrchTempModel> branchList = AcctBrchConvert.makeAcctBrchList(filePath, readStartNum, readEndNum);
-        log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, branchList.size());
         /** 已读取完成的数据入库 */
         if(isRemove) {
             acctBrchTempService.remove(null);
             log.info("AcctBrchTempModel数据清空成功");
         }
-        boolean updateResult = acctBrchTempService.saveBatch(branchList);
-        if(updateResult){
-            log.info("AcctBrchTempModel保存成功");
-        }
+        acctBrchTempService.saveBatch(branchList);
         /** 更新已读取的文件信息 */
         hjCommonService.updateReadFileInfo(queryResult);
     }

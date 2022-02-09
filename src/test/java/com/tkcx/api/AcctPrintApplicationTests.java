@@ -80,7 +80,7 @@ public class AcctPrintApplicationTests {
     @Resource
     private BankApiService bankApiService;
 
-    private Date selectDate = DateUtil.parseDate("2033-04-04");
+    private Date selectDate = DateUtil.parseDate("2074-05-20");
 
     @Test
     public void contextLoads() {
@@ -317,9 +317,9 @@ public class AcctPrintApplicationTests {
         }
     }
 
-    //@Test
+    @Test
     public void testBusiOrgBillThread(){
-        selectDate = busiCommonService.getCoreSysDate();
+        //selectDate = busiCommonService.getCoreSysDate();
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
 

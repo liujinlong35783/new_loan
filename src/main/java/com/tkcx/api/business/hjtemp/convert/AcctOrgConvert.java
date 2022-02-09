@@ -29,9 +29,13 @@ public class AcctOrgConvert {
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
         List<AcctOrgTempModel> acctOrgList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
-        for (StringBuffer lineStr : lines) {
+        for (int lineNum = 0; lineNum <lines.size(); lineNum++) {
             //行数据生成对象
-            acctOrgList.add(assembleOrgTemp(lineStr.toString()));
+            AcctOrgTempModel orgModel = assembleOrgTemp(lines.get(lineNum).toString(), readStartNum, lineNum);
+            if(orgModel == null){
+                continue;
+            }
+            acctOrgList.add(orgModel);
         }
         return acctOrgList;
     }
@@ -41,12 +45,14 @@ public class AcctOrgConvert {
      * @param lineStr
      * @return
      */
-    public static AcctOrgTempModel assembleOrgTemp(String lineStr) {
+    public static AcctOrgTempModel assembleOrgTemp(String lineStr,int readStartNum, int lineNum) {
 
 
         StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
-                HjFileFlagConstant.PUB_ORG_LINE_LENGTH);
-
+                HjFileFlagConstant.PUB_ORG_LINE_LENGTH, readStartNum, lineNum);
+        if(buffers == null){
+            return null;
+        }
         AcctOrgTempModel orgModel = new AcctOrgTempModel();
         orgModel.setIdentifier(buffers[0].toString());
         orgModel.setOrgCode(buffers[1].toString());

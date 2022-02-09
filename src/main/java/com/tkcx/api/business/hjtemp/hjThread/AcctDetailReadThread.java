@@ -1,5 +1,6 @@
 package com.tkcx.api.business.hjtemp.hjThread;
 
+import cn.hutool.core.date.DateUtil;
 import com.tkcx.api.business.hjtemp.fileService.AcctDetailFileService;
 import com.tkcx.api.business.hjtemp.fileService.HjCommonService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
@@ -45,6 +46,7 @@ public class AcctDetailReadThread extends Thread {
     @Override
     public void run() {
 
+        Date startDate = new Date();
         try {
             super.run();
             //一直循环
@@ -52,7 +54,7 @@ public class AcctDetailReadThread extends Thread {
                 // 如果读取未完成，则暂停线程
                 HjFileInfoModel hjFileInfoModel = hjCommonService
                         .queryHjFileInfo(fileDate, HjFileFlagConstant.ACCT_DETAIL_FILE);
-                log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>互金：待读取的【会计科目】信息：{}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>互金：待读取的【会计科目】：{}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
                         hjFileInfoModel.toString());
                 if (StringUtils.equals(hjFileInfoModel.getReadFlag(), HjFileFlagConstant.FINISHED)) {
                     log.info("日期：【{}】,读取标识：【{}】,结束执行互金会计科目文件解析线程",
@@ -66,7 +68,10 @@ public class AcctDetailReadThread extends Thread {
                 acctDetailFileService.handleAcctDetailFile(isRemove, hjFileInfoModel);
             }
         } catch (Exception e) {
-            log.error("互金会计科目信息线程异常：{}", e);
+            log.error("读取互金【会计科目】线程异常：{}", e);
+        } finally {
+            Date endDate = new Date();
+            log.info("互金会计科目文件解析耗时：{}", DateUtil.formatBetween(startDate, endDate));
         }
 
     }

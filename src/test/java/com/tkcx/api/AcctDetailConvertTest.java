@@ -22,7 +22,8 @@ public class AcctDetailConvertTest {
     public void test(){
 
         // D:\data\acctprint\fileserver\download\test\20211028
-        String path = "/data/acctprint/fileserver/download/test/20211028/t_act_one_detail.txt";
-        AcctDetailConvert.makeAcctDetailList(path, 1, 200);
+        // D:\data\acctprint\fileserver\download\test\20211028
+        String path = "D:\\data\\acctprint\\fileserver\\download\\test\\20211028\\t_act_one_detail.txt";
+        AcctDetailConvert.makeAcctDetailList(path, 1, 36);
     }
 }

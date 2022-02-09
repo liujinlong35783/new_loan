@@ -1,5 +1,6 @@
 package com.tkcx.api.business.hjtemp.hjThread;
 
+import cn.hutool.core.date.DateUtil;
 import com.tkcx.api.business.hjtemp.fileService.AcctBrchFileService;
 import com.tkcx.api.business.hjtemp.fileService.HjCommonService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
@@ -46,6 +47,7 @@ public class AcctBrchReadThread extends Thread {
     @Override
     public void run() {
 
+        Date startDate = new Date();
         try {
             super.run();
             //一直循环
@@ -53,7 +55,7 @@ public class AcctBrchReadThread extends Thread {
                 // 如果读取未完成，则暂停线程
                 HjFileInfoModel hjFileInfoModel = hjCommonService
                         .queryHjFileInfo(fileDate, HjFileFlagConstant.ACT_BRCH_FILE);
-                log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>互金：待读取的【机构总账】信息：{}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+                log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>互金：待读取的【机构总账】：{}<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
                         hjFileInfoModel.toString());
                 if (StringUtils.equals(hjFileInfoModel.getReadFlag(), HjFileFlagConstant.FINISHED)) {
                     log.info("日期：【{}】,读取标识：【{}】,结束执行互金机构总账文件解析线程",
@@ -67,7 +69,10 @@ public class AcctBrchReadThread extends Thread {
                 acctBrchFileService.handleAcctBrchFile(isRemove, hjFileInfoModel);
             }
         } catch (Exception e) {
-            log.error("互金机构总账信息线程异常：{}", e);
+            log.error("读取互金【机构总账】信息线程异常：{}", e);
+        } finally {
+            Date endDate = new Date();
+            log.info("互金机构总账文件解析耗时：{}", DateUtil.formatBetween(startDate, endDate));
         }
     }
 

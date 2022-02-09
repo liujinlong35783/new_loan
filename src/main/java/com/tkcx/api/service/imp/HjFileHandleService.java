@@ -5,6 +5,7 @@ import com.tkcx.api.business.hjtemp.handle.HandleService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
+import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import com.tkcx.api.exception.FileErrorCode;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import common.core.exception.ApplicationException;
@@ -88,7 +89,13 @@ public class HjFileHandleService {
 
         log.info("日期{}，文件类型:{}，下载路径：{}", hjFileInfoModel.getFileDate(), hjFileInfoModel.getFileType(), downFilePath);
         hjFileInfoModel.setFileDownloadPath(downFilePath);
-        hjFileInfoModel.setFileLineTotalNum(FileUtil.calTextLineNum(downFilePath));
+        int totalNum = FileUtil.calTextLineNum(downFilePath);
+        hjFileInfoModel.setFileLineTotalNum(totalNum);
+        if(totalNum <= HjFileFlagConstant.READ_END_NUM_INITIAL){
+            // 如果互金文件总行数小于501，则直接更新文件读取结束行数为文件的总行数
+            hjFileInfoModel.setNextReadEndNum(totalNum);
+        }
+
         hjFileInfoService.updateDownloadFile(hjFileInfoModel);
     }
 

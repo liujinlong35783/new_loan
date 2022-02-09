@@ -29,9 +29,13 @@ public class AcctBusiConvert {
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
         List<AcctBusiCodeModel> busiList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
-        for (StringBuffer lineStr : lines) {
+        for (int lineNum = 0; lineNum <lines.size(); lineNum++) {
             //行数据生成对象
-            busiList.add(assembleDetailTemp(lineStr.toString()));
+            AcctBusiCodeModel busiModel = assembleBusiTemp(lines.get(lineNum).toString(), readStartNum, lineNum);
+            if(busiModel == null){
+                continue;
+            }
+            busiList.add(busiModel);
         }
         return busiList;
     }
@@ -41,11 +45,14 @@ public class AcctBusiConvert {
      * @param lineStr
      * @return
      */
-    public static AcctBusiCodeModel assembleDetailTemp(String lineStr) {
+    public static AcctBusiCodeModel assembleBusiTemp(String lineStr,int readStartNum, int lineNum) {
 
 
         StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
-                HjFileFlagConstant.BUSI_CODE_LINE_LENGTH);
+                HjFileFlagConstant.BUSI_CODE_LINE_LENGTH, readStartNum, lineNum);
+        if(buffers == null){
+            return null;
+        }
         AcctBusiCodeModel busCodeModel = new AcctBusiCodeModel();
         busCodeModel.setIdentifier(buffers[0].toString());
         busCodeModel.setBusiCode(buffers[1].toString());

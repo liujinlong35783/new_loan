@@ -13,7 +13,7 @@ public class PageUtils {
 
     public static int startPageNum = 1;
 
-    public static int pageSize = 500;
+    public static int pageSize = 5000;
 
     /**
      * 计算总页数

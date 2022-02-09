@@ -33,10 +33,13 @@ public class AcctDetailConvert {
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
         List<AcctDetailTempModel> acctDetailList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
-        for (StringBuffer lineStr : lines) {
+        for (int lineNum = 0; lineNum <lines.size(); lineNum++) {
             //行数据生成对象
-            AcctDetailTempModel acctDetailTempModel = assembleDetailTemp(lineStr.toString());
-            acctDetailList.add(acctDetailTempModel);
+            AcctDetailTempModel detailModel = assembleDetailTemp(lines.get(lineNum).toString(), readStartNum, lineNum);
+            if(detailModel == null){
+                continue;
+            }
+            acctDetailList.add(detailModel);
         }
         return acctDetailList;
     }
@@ -46,12 +49,14 @@ public class AcctDetailConvert {
      * @param lineStr
      * @return
      */
-    public static AcctDetailTempModel assembleDetailTemp(String lineStr) {
+    public static AcctDetailTempModel assembleDetailTemp(String lineStr,int readStartNum, int lineNum) {
 
 
         StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
-                HjFileFlagConstant.ACCT_DETAIL_LINE_LENGTH);
-
+                HjFileFlagConstant.ACCT_DETAIL_LINE_LENGTH, readStartNum, lineNum);
+        if(buffers == null){
+            return null;
+        }
         AcctDetailTempModel acctDetailTempModel = new AcctDetailTempModel();
         acctDetailTempModel.setIdentifier(buffers[0].toString());
         if (StringUtils.isNotEmpty(buffers[1].toString())) {

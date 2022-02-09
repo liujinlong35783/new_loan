@@ -75,16 +75,8 @@ public class AcctOrgFileService {
         int readEndNum = queryResult.getNextReadEndNum();
         String filePath = queryResult.getFileDownloadPath();
         List<AcctOrgTempModel> orgList = AcctOrgConvert.makeAcctBusiList(filePath, readStartNum, readEndNum);
-        log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, orgList.size());
-//        /** 已读取完成的数据入库 */
-//        if(isRemove) {
-//            acctOrgTempService.remove(null);
-//            log.info("AcctOrgTempModel数据清空成功");
-//        }
-        boolean updateResult = acctOrgTempService.saveBatch(orgList);
-        if(updateResult){
-            log.info("AcctOrgTempModel保存成功");
-        }
+        acctOrgTempService.saveBatch(orgList);
+
         /** 更新已读取的文件信息 */
         hjCommonService.updateReadFileInfo(queryResult);
     }

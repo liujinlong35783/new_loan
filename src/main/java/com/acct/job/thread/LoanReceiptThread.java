@@ -1,5 +1,6 @@
 package com.acct.job.thread;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tkcx.api.business.acctPrint.model.LoanReceiptModel;
 import com.tkcx.api.business.wdData.model.AssetGrantRecordModel;
@@ -86,7 +87,8 @@ public class LoanReceiptThread extends AcctBaseThread {
                 log.info("{} assetItemNo of AssetIndividual is null", assetItemNo);
             }
 
-            loanReceipt.setAcctDate(grantRecord.getCoreSysDate());
+            // 原来是loanReceipt.setAcctDate(grantRecord.getCoreSysDate()); DATE转换格式 yyyy-mm-dd hh:mi:ss转成yyyy-mm-dd
+            loanReceipt.setAcctDate(DateUtil.parse(DateUtil.formatDate(grantRecord.getCoreSysDate()), "yyyy-MM-dd"));
             loanReceiptList.add(loanReceipt);
         }
 
@@ -97,4 +99,6 @@ public class LoanReceiptThread extends AcctBaseThread {
 
         log.info("LoanReceiptThread end..." + new Date());
     }
+
+
 }

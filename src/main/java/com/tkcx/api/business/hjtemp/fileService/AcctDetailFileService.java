@@ -66,16 +66,13 @@ public class AcctDetailFileService {
         int readEndNum = queryResult.getNextReadEndNum();
         String filePath = queryResult.getFileDownloadPath();
         List<AcctDetailTempModel> detailList = AcctDetailConvert.makeAcctDetailList(filePath, readStartNum, readEndNum);
-        log.info("待更新的数据从【{}】行到【{}】行，总数：【{}】", readStartNum, readEndNum, detailList.size());
         /** 已读取完成的数据入库 */
         if(isRemove) {
             acctDetailTempService.remove(null);
             log.info("AcctDetailTempModel数据清空成功");
         }
-        boolean updateResult = acctDetailTempService.saveBatch(detailList);
-        if(updateResult){
-            log.info("AcctDetailTempModel保存成功");
-        }
+        acctDetailTempService.saveBatch(detailList);
+
         /** 更新已读取的文件信息 */
         hjCommonService.updateReadFileInfo(queryResult);
     }

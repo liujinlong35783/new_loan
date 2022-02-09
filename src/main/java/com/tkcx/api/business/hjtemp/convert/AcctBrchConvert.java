@@ -33,9 +33,13 @@ public class AcctBrchConvert {
 
         List<StringBuffer> lines = FileUtil.readFileNLine(path, readStartNum, readEndNum);
         List<AcctBrchTempModel> branchList = new ArrayList(HjFileFlagConstant.ONE_TIME_READ_LINE_NUM);
-        for (StringBuffer lineStr : lines) {
+        for (int lineNum = 0; lineNum <lines.size(); lineNum++) {
             //行数据生成对象
-            branchList.add(assembleBrchTemp(lineStr.toString()));
+            AcctBrchTempModel brchModeal = assembleBrchTemp(lines.get(lineNum).toString(), readStartNum, lineNum);
+            if(brchModeal == null){
+                continue;
+            }
+            branchList.add(brchModeal);
         }
         return branchList;
 
@@ -46,11 +50,14 @@ public class AcctBrchConvert {
      * @param lineStr
      * @return
      */
-    public static AcctBrchTempModel assembleBrchTemp(String lineStr) {
+    public static AcctBrchTempModel assembleBrchTemp(String lineStr,int readStartNum, int lineNum) {
 
 
         StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
-                HjFileFlagConstant.ACT_BRCH_LINE_LENGTH);
+                HjFileFlagConstant.ACT_BRCH_LINE_LENGTH, readStartNum, lineNum);
+        if(buffers == null){
+            return null;
+        }
 
         AcctBrchTempModel acctBrchTempModel = new AcctBrchTempModel();
         if (StringUtils.isNotEmpty(buffers[0])) {

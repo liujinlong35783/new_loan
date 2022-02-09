@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 /**
  * 文件操作工具类
+ * @author
  */
 @Slf4j
 public class FileUtil {
@@ -147,6 +148,47 @@ public class FileUtil {
         } finally {
             LineIterator.closeQuietly(it);
             return strList;
+        }
+    }
+
+
+    public static void main(String[] args) {
+        String path="C:\\Users\\ccjh\\Desktop\\test2.txt";
+        int total = FileUtil.calTextLineNum(path);
+        int readStartNum = HjFileFlagConstant.READ_START_NUM_INITIAL;
+        int readEndNum = HjFileFlagConstant.READ_END_NUM_INITIAL;
+        System.out.println(readStartNum +"**********"+ readEndNum);
+        System.out.println(FileUtil.readFileNLine(path,readStartNum,readEndNum).size());
+        readStartNum = readEndNum;
+        readEndNum = FileUtil.calReadEndLine(readEndNum, total);
+        System.out.println(readStartNum +"**********"+ readEndNum);
+        System.out.println(FileUtil.readFileNLine(path,readStartNum,readEndNum).size());
+    }
+
+
+
+    public static int calReadEndLine(int readEndNum, int txtTotalNum) {
+
+        log.info("已读取文件行数：【{}】，文件总行数：【{}】", readEndNum, txtTotalNum);
+        if(readEndNum < txtTotalNum &&
+                (txtTotalNum-readEndNum) > HjFileFlagConstant.ONE_TIME_READ_LINE_NUM) {
+            log.info("文件总行数查询 - 已读取行数【大于】500行，文件读取继续");
+            // 结束行数与文件总行数之差大于500，则结束行数更新为当前结束行数+500(步长)
+            return readEndNum + HjFileFlagConstant.ONE_TIME_READ_LINE_NUM;
+        }else if(readEndNum < txtTotalNum &&
+                (txtTotalNum-readEndNum) <= HjFileFlagConstant.ONE_TIME_READ_LINE_NUM){
+            log.info("文件总行数查询 - 已读取行数【小于等于】500行，文件读取继续");
+            /**
+             * 结束行数与文件总行数之差小于500，结束行数更新为当前结束行数+剩下未读取的行数
+             * 结束行数是文件总行数的倍数时，结束行数更新为当前结束行数+剩下未读取的行数+1，这里这样设置，是因为读取文件的条件是当前行数小于文件总行数
+             */
+            return readEndNum + (txtTotalNum-readEndNum) + HjFileFlagConstant.READ_START_NUM_INITIAL;
+        }else if(readEndNum == txtTotalNum) {
+            log.info("文件总行数查询 = 已读取行数，文件读取结束");
+            return txtTotalNum;
+        }else {
+            log.error("文件读取结束行数判断异常！！！！");
+            return 0;
         }
     }
 

@@ -163,13 +163,11 @@ public class BusiOrgSeqThread extends AcctBaseThread {
 
         for (AcctDataModel acctData : acctDataList) {
             String transSeqNo = acctData.getTransSeqNo();
-            log.info("TRANS_SEQ_NO:{}", transSeqNo);
             // 查询总页数
             int acctDetailTotalPage = queryDetailTotalPage(transSeqNo);
 
-            for(int acctDetailCurPage = PageUtils.startPageNum ; acctDetailCurPage <= acctDetailTotalPage
-                    ; acctDetailCurPage++){
-                log.info("开始执行入库前的预备操作。。。。。。。。");
+            for(int acctDetailCurPage = PageUtils.startPageNum ; acctDetailCurPage <= acctDetailTotalPage;
+                acctDetailCurPage++){
                 List<AcctDetailTempModel> detailList = queryDetailByPage(acctDetailCurPage, PageUtils.pageSize,
                         transSeqNo);
                 log.info("AcctDetailTempModel第【{}】页，分页查询结果：{}", acctDetailCurPage, detailList.size());
