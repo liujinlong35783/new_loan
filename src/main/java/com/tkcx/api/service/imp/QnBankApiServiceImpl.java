@@ -28,8 +28,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * 综合服务类
@@ -166,8 +165,8 @@ public class QnBankApiServiceImpl implements BankApiService {
 			hjFileInfoModel.setCreateDate(DateUtil.date());
 			// 文件日期
 			hjFileInfoModel.setFileDate(fileDate);
-			hjFileInfoModel.setFilePath(file.getFilPath() + file.getFileNm());
 			// 文件路径
+			hjFileInfoModel.setFilePath(file.getFilPath() + file.getFileNm());
 			hjFileList.add(hjFileInfoModel);
 		}
 		if(hjFileInfoService.saveBatch(hjFileList)) {
@@ -259,46 +258,58 @@ public class QnBankApiServiceImpl implements BankApiService {
 		long days = DateUtil.betweenDay(startAcctDate, endAcctDate, true);
 
 		// 创建线程池
-		ExecutorService exe = Executors.newFixedThreadPool(Integer.valueOf(String.valueOf(days)));
+		ThreadPoolExecutor threadPool = new ThreadPoolExecutor(
+				5,10,60, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5),
+				Executors.defaultThreadFactory(), new ThreadPoolExecutor.AbortPolicy());
+//		ExecutorService exe = Executors.newFixedThreadPool(Integer.valueOf(String.valueOf(days)));
 
 		for(int i = 0; i < days; i++) {
 
 
 			if (acctNo ==null || acctNo == 1){
 				// 1. 借款借据回单
-				exe.execute(new LoanReceiptThread(endAcctDate));
+//				exe.execute(new LoanReceiptThread(endAcctDate));
+				threadPool.execute(new RefundReceiptThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 2) {
 				// 2. 还款回单
-				exe.execute(new RefundReceiptThread(endAcctDate));
+//				exe.execute(new RefundReceiptThread(endAcctDate));
+				threadPool.execute(new RefundReceiptThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 3) {
 				// 3. 网贷业务机构轧账单
-				exe.execute(new BusiOrgBillThread(endAcctDate));
+//				exe.execute(new BusiOrgBillThread(endAcctDate));
+				threadPool.execute(new BusiOrgBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 4) {
 				// 4. 网贷业务机构业务流水
-				exe.execute(new BusiOrgSeqThread(endAcctDate));
+//				exe.execute(new BusiOrgSeqThread(endAcctDate));
+				threadPool.execute(new BusiOrgSeqThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 5) {
 				// 5. 贷款分户账
-				exe.execute(new LoanAccBillThread(endAcctDate));
+//				exe.execute(new LoanAccBillThread(endAcctDate));
+				threadPool.execute(new LoanAccBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 6) {
 				// 6. 贷款明细账
-				exe.execute(new LoanDetailBillThread(endAcctDate));
+//				exe.execute(new LoanDetailBillThread(endAcctDate));
+				threadPool.execute(new LoanDetailBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 7) {
 				// 7. 贷款利息登记簿
-				exe.execute(new InterestBillThread(endAcctDate));
+//				exe.execute(new InterestBillThread(endAcctDate));
+				threadPool.execute(new InterestBillThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 8) {
 				// 8. 会计凭证(记账凭证/交易凭证)
-				exe.execute(new AcctVoucherThread(endAcctDate));
+//				exe.execute(new AcctVoucherThread(endAcctDate));
+				threadPool.execute(new AcctVoucherThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 9) {
 				// 9. 贷款形态调整明细清单、贷款调整登记簿
-				exe.execute(new LoanAdjustThread(endAcctDate));
+//				exe.execute(new LoanAdjustThread(endAcctDate));
+				threadPool.execute(new LoanAdjustThread(endAcctDate));
 			}
 
 			endAcctDate = DateUtil.offsetDay(endAcctDate, -1);
@@ -306,10 +317,10 @@ public class QnBankApiServiceImpl implements BankApiService {
 
 
 		// 关闭线程池
-		exe.shutdown();
+		threadPool.shutdown();
 		// 判断线程是否执行完成
 		while (true) {
-			if (exe.isTerminated()) {
+			if (threadPool.isTerminated()) {
 				Date endDate = new Date();
 				log.info("AcctDataHandler end ......" + endDate);
 				log.info("定时任务耗时：" + DateUtil.formatBetween(startDate,endDate));

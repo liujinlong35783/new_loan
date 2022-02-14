@@ -122,4 +122,11 @@ public class EncryptService {
 		return stringBuilder.append(systemId).append(formatTime).append(serialNumber).toString();
 	}
 
+	public static void main(String[] args) {
+
+		EncryptService encryptService = new EncryptService();
+		System.out.println(encryptService.getNx());
+		System.out.println(encryptService.getNx().length());
+	}
+
 }

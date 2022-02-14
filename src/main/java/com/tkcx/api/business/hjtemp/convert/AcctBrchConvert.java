@@ -3,11 +3,10 @@ package com.tkcx.api.business.hjtemp.convert;
 import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
-import com.tkcx.api.business.hjtemp.utils.HjStringUtils;
+import com.tkcx.api.business.hjtemp.utils.AcctStringUtils;
 import com.tkcx.api.utils.BigDecimalUtils;
 import common.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -53,14 +52,14 @@ public class AcctBrchConvert {
     public static AcctBrchTempModel assembleBrchTemp(String lineStr,int readStartNum, int lineNum) {
 
 
-        StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
+        StringBuffer[] buffers = AcctStringUtils.convertString2Buffer(lineStr,
                 HjFileFlagConstant.ACT_BRCH_LINE_LENGTH, readStartNum, lineNum);
         if(buffers == null){
             return null;
         }
 
         AcctBrchTempModel acctBrchTempModel = new AcctBrchTempModel();
-        if (StringUtils.isNotEmpty(buffers[0])) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[0])) {
             acctBrchTempModel.setAcctDate(DateUtil.parseDate(buffers[0].toString(), "yyyyMMdd"));
         }
         acctBrchTempModel.setAcctOrg(buffers[1].toString());
@@ -71,10 +70,10 @@ public class AcctBrchConvert {
         acctBrchTempModel.setCurrency(buffers[6].toString());
         acctBrchTempModel.setYestDebitBalance(BigDecimalUtils.valueOf(buffers[7].toString()));
         acctBrchTempModel.setYestLoanBalance(BigDecimalUtils.valueOf(buffers[8].toString()));
-        if (StringUtils.isNotEmpty(buffers[9])){
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[9])){
             acctBrchTempModel.setTodayDebitQuantities(Integer.valueOf(buffers[9].toString()));
         }
-        if (StringUtils.isNotEmpty(buffers[10])){
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[10])){
             acctBrchTempModel.setTodayLoanQuantities(Integer.valueOf(buffers[10].toString()));
         }
         acctBrchTempModel.setTodayDebitAmount(BigDecimalUtils.valueOf(buffers[11].toString()));

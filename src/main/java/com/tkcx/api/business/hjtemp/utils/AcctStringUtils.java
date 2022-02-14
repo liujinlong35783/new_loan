@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
  * @create： 2021/11/3 14:54
  */
 @Slf4j
-public class HjStringUtils {
+public class AcctStringUtils {
 
     public static StringBuffer[] convertString2Buffer(String lineStr, int length,int readStartNum, int lineNum) {
 
@@ -23,6 +23,24 @@ public class HjStringUtils {
             buffers[i] = new StringBuffer(columns[i].trim());
         }
         return buffers;
+    }
+
+    /**
+     * 转化字符串为十六进制编码
+     * @param s
+     * @return
+     */
+    public static String toHexString(String s)
+    {
+        String str="";
+
+        for (int i=0;i<s.length();i++)
+        {
+            int ch = (int)s.charAt(i);
+            String s4 = Integer.toHexString(ch);
+            str = str + s4;
+        }
+        return "0x" + str;//0x表示十六进制
     }
 
 }

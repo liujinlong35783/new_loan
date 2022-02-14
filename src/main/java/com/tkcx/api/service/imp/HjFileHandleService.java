@@ -126,6 +126,8 @@ public class HjFileHandleService {
             }
         }
 
+        // TODO 这里下载文件要改造成afe，即先访问前置系统
+
         File remoteFile = new File(remoteFilePath);
         String fileName = remoteFile.getName();
         String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);

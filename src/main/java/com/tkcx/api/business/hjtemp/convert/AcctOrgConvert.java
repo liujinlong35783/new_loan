@@ -3,7 +3,7 @@ package com.tkcx.api.business.hjtemp.convert;
 import com.tkcx.api.business.hjtemp.model.AcctOrgTempModel;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
-import com.tkcx.api.business.hjtemp.utils.HjStringUtils;
+import com.tkcx.api.business.hjtemp.utils.AcctStringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +48,7 @@ public class AcctOrgConvert {
     public static AcctOrgTempModel assembleOrgTemp(String lineStr,int readStartNum, int lineNum) {
 
 
-        StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
+        StringBuffer[] buffers = AcctStringUtils.convertString2Buffer(lineStr,
                 HjFileFlagConstant.PUB_ORG_LINE_LENGTH, readStartNum, lineNum);
         if(buffers == null){
             return null;

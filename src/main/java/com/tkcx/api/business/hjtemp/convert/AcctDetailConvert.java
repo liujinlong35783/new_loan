@@ -3,11 +3,10 @@ package com.tkcx.api.business.hjtemp.convert;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
-import com.tkcx.api.business.hjtemp.utils.HjStringUtils;
+import com.tkcx.api.business.hjtemp.utils.AcctStringUtils;
 import com.tkcx.api.utils.BigDecimalUtils;
 import common.core.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -52,25 +51,25 @@ public class AcctDetailConvert {
     public static AcctDetailTempModel assembleDetailTemp(String lineStr,int readStartNum, int lineNum) {
 
 
-        StringBuffer[] buffers = HjStringUtils.convertString2Buffer(lineStr,
+        StringBuffer[] buffers = AcctStringUtils.convertString2Buffer(lineStr,
                 HjFileFlagConstant.ACCT_DETAIL_LINE_LENGTH, readStartNum, lineNum);
         if(buffers == null){
             return null;
         }
         AcctDetailTempModel acctDetailTempModel = new AcctDetailTempModel();
         acctDetailTempModel.setIdentifier(buffers[0].toString());
-        if (StringUtils.isNotEmpty(buffers[1].toString())) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[1].toString())) {
             acctDetailTempModel.setChannelDate(DateUtil.parseDate(buffers[1].toString(), "yyyyMMdd"));
         }
         acctDetailTempModel.setChannelSeq(buffers[2].toString());
         acctDetailTempModel.setChannelWay(buffers[3].toString());
-        if (StringUtils.isNotEmpty(buffers[4])) {
+        if (org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[4])) {
             acctDetailTempModel.setAcctDate(DateUtil.parseDate(buffers[4].toString(), "yyyyMMdd"));
         }
         acctDetailTempModel.setAcctSeq(buffers[5].toString());
         acctDetailTempModel.setServiceCode(buffers[6].toString());
         acctDetailTempModel.setServiceName(buffers[7].toString());
-        if(StringUtils.isNotEmpty(buffers[8])) {
+        if(org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[8])) {
             acctDetailTempModel.setSerialNo(Long.valueOf(buffers[8].toString()));
         }
         acctDetailTempModel.setAcctOrg(buffers[9].toString());
