@@ -44,7 +44,7 @@
 
 	<sql id="select_query">
 		<if test="e.orgCode != null and e.orgCode != '' ">
-			AND t.ORG_CODE = #{e.orgCode}
+			AND t.ORG_CODE = '${e.orgCode}'
 		</if>
 		<if test="e.acctDate != null">
 			AND t.ACCT_DATE = TO_DATE(#{e.acctDate}, 'yyyy-MM-dd')
