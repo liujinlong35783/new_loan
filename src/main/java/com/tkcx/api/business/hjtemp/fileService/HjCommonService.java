@@ -55,6 +55,21 @@ public class HjCommonService {
         return hjFileInfoService.selectOneModel(queryCon);
     }
 
+    /**
+     * 根据文件名称获取前一天未删除未读取的新网贷文件信息
+     *
+     * @param fileName
+     * @return
+     */
+    public HjFileInfoModel queryXWDFileInfo(String fileName, String fileType) {
+
+        HjFileInfoModel queryCon = new HjFileInfoModel();
+        queryCon.setDeleteFlag(HjFileFlagConstant.NOT_DELETED);
+        queryCon.setFileName(fileName);
+        queryCon.setFileType(fileType);
+        return hjFileInfoService.selectOneModel(queryCon);
+    }
+
 
     /**
      * 计算读取文件结束行数
