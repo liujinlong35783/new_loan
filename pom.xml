@@ -212,6 +212,27 @@
 			<artifactId>activation</artifactId>
 			<version>1.1.1</version>
 		</dependency>
+		<dependency>
+			<groupId>com.okcoin.commons</groupId>
+			<artifactId>common-core-0.0.1</artifactId>
+			<version>v0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/common-core-0.0.1.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.okcoin.commons</groupId>
+			<artifactId>sxxh_LGBC</artifactId>
+			<version>v0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/sxxh_LGBC.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.okcoin.commons</groupId>
+			<artifactId>sxxh_LGBC_20211029</artifactId>
+			<version>v0.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/sxxh_LGBC_20211029.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
