@@ -145,6 +145,13 @@ public class AccountVoucherModel  extends Model<AccountVoucherModel> implements 
 	private Integer transferFlag;
 
 	/**
+	 * 创建日期（新增）
+	 *
+	 */
+	@TableField(value="CREATE_DATE")
+	private Date createDate;
+
+	/**
 	 * 会计日期
 	 *
 	 */

@@ -146,6 +146,12 @@ public class InterestBillModel extends Model<InterestBillModel>  implements IAcc
 	private String shouldOtherSum;
 
 	/**
+	 * 创建日期（新增）
+	 *
+	 */
+	@TableField(value="CREATE_DATE")
+	private Date createDate;
+	/**
 	 * 会计日期
 	 *
 	 */

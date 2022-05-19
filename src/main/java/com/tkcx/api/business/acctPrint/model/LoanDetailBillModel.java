@@ -121,6 +121,13 @@ public class LoanDetailBillModel extends Model<LoanDetailBillModel> implements I
 	private Date validDate;
 
 	/**
+	 * 创建日期（新增）
+	 *
+	 */
+	@TableField(value="CREATE_DATE")
+	private Date createDate;
+
+	/**
 	 * 会计日期
 	 *
 	 */
