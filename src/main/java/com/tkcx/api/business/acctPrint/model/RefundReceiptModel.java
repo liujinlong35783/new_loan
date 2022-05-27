@@ -171,6 +171,13 @@ public class RefundReceiptModel extends Model<RefundReceiptModel> implements IAc
 	@TableField(value="ORG_NAME")
 	private String orgName;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
+
 	private String printCount;
 
 	@Override
