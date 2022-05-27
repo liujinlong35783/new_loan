@@ -45,6 +45,9 @@
 		<if test="e.fileDate != null">
 			AND t.FILE_DATE = #{e.fileDate}
 		</if>
+		<if test="e.fileName != null">
+			AND t.FILE_NAME = #{e.fileName}
+		</if>
 		<if test="e.deleteFlag != null and e.deleteFlag != '' ">
 			AND t.DELETE_FLAG = #{e.deleteFlag}
 		</if>
