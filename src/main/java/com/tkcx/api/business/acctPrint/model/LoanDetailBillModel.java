@@ -148,6 +148,13 @@ public class LoanDetailBillModel extends Model<LoanDetailBillModel> implements I
 	@TableField(value="LOAN_NAME")
 	private String loanName;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.detailId;

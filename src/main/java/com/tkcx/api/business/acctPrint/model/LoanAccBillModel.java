@@ -164,6 +164,13 @@ public class LoanAccBillModel extends Model<LoanAccBillModel> implements IAcctPr
 	@TableField(value="CREATE_DATE")
 	private Date createDate;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.accBillId;

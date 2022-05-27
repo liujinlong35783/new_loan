@@ -174,6 +174,13 @@ public class AccountVoucherModel  extends Model<AccountVoucherModel> implements 
 
 	private String printCount;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.voucherId;

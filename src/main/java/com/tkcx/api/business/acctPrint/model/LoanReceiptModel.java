@@ -141,6 +141,13 @@ public class LoanReceiptModel extends Model<LoanReceiptModel> implements IAcctPr
 	@TableField(value="ORG_NAME")
 	private String orgName;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
+
 	private String printCount;
 
 	@Override

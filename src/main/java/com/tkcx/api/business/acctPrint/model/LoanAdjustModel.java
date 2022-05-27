@@ -128,6 +128,13 @@ public class LoanAdjustModel extends Model<LoanAdjustModel> implements IAcctPrin
 	@TableField(value="ORG_NAME")
 	private String orgName;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
+
 	@Override
 	protected Serializable pkVal() {
 		return this.adjustId;
