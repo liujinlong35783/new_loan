@@ -120,7 +120,7 @@ public class LoanAccBillThread extends AcctBaseThread {
         QueryWrapper<AcctDataModel> queryWrapperAcctData = getQueryWrapper(AcctDataModel.class, "createAt");
         queryWrapperAcctData.in("RET_STATUS", "0", "1");
         queryWrapperAcctData.in("SCENE", "normal_to_overdue", "overdue_to_idle", "idle_to_normal_or_overdue",
-                "repay_normal", "repay_overdue", "repay_idle");
+                "repay_normal", "repay_overdue", "repay_idle","normal_to_idle");
         queryWrapperAcctData.select("SCENE", "ASSET_ITEM_NO", "CREATE_AT", "BIZ_TRACK_NO",
                 "MESSAGE", "PRODUCT_CODE", "ACG_DT", "TRANS_SEQ_NO", "REPAY_PLAN_NO",
                 "NORMAL_PRINCIPAL", "OVERDUE_PRINCIPAL", "IDLE_PRINCIPAL", "BAD_PRINCIPAL");
@@ -149,8 +149,54 @@ public class LoanAccBillThread extends AcctBaseThread {
                 repayOverdue(model);
             } else if ("repay_idle".equals(scene)) {
                 repayIdle(model);
+            } else if ("normal_to_idle".equals(scene)) {
+                normalToIdle(model);
             }
         }
+    }
+
+    /**
+     * 正常转已减值数据
+     *
+     * @param model
+     */
+    private void normalToIdle(AcctDataModel model) {
+        normalModel = getAccBillModel(asset.getAssetLoanAccount(), 0);
+        if (null == normalModel) return;
+        idleModel = getAccBillModel(asset.getAssetLoanAccount(), 2);
+        BigDecimal idlePrincipal = model.getIdlePrincipal().abs();
+        if (null == idleModel) {//执行新增
+            idleModel = new LoanAccBillModel();
+            setCardiiData(asset);
+            idleModel.setLoanName(cardii.getCardiiName());
+            idleModel.setGrantAccount(cardii.getCardiiAccount());//二类卡账号
+            AcctBusiCodeModel busiCodeModel = acctBusiCodeService.getModelByBusiCode(BusinessUtils.getValueByKey(model.getMessage()
+                    , "busiCode"), "YUQIBJIN");
+            if (busiCodeModel != null) {
+                //互金数据
+                idleModel.setItem(busiCodeModel.getItemCtrl());
+            }
+            idleModel.setOrgCode(asset.getOrgid());
+            idleModel.setOrgName(busiCommonService.getOrgNameByCode(asset.getOrgid()));
+            idleModel.setDebtNo(asset.getAssetDebtNo());//借据号
+            idleModel.setLoanAccount(asset.getAssetLoanAccount());//贷款账号
+            idleModel.setGrantDate(asset.getAssetActualGrantAt());
+            idleModel.setAccountStatus(EnumConstant.ACCOUNT_STATUS);
+            idleModel.setDueDate(asset.getAssetDueAt());
+            idleModel.setActualRate(asset.getAssetInterestRate());
+            idleModel.setGtantAmount(asset.getAssetPrincipalAmount().toPlainString());
+            idleModel.setBalanceAmount(idlePrincipal.toPlainString());//已减值金额
+            idleModel.setBorrowerIdnum(asset.getAssetBorrowerIdnum());
+            idleModel.setPrincipalStatus(2);
+            idleModel.setDebtFlag(EnumConstant.DEBT_FLAG_DEBT);//借款
+            idleModel.setAcctDate(DateUtil.parse(model.getAcgDt()));
+            modelMap.put(getMapKey(asset, 2), idleModel);//新增放入
+        }else {//执行更新
+            idleModel.setBalanceAmount(new BigDecimal(idleModel.getBalanceAmount()).add(idlePrincipal).toPlainString());
+        }
+        //正常金额计算  = 历史本金余额-本次已减值金额
+        normalModel.setBalanceAmount(new BigDecimal(normalModel.getBalanceAmount()).subtract(idlePrincipal).toPlainString());
+
     }
 
     /**
