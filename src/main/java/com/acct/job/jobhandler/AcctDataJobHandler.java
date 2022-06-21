@@ -1,7 +1,5 @@
 package com.acct.job.jobhandler;
 
-import com.tkcx.api.common.BeanContext;
-import com.tkcx.api.common.BusiCommonService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
@@ -26,6 +24,12 @@ public class AcctDataJobHandler extends IJobHandler {
         new ScheduleRunnable().run();
 
         log.info("AcctDataJobHandler -->>>>>>>>end....");
+
+//        log.info("NewLoanScheduleRunnable -->>>>>>>>start....");
+//
+//        new NewLoanScheduleRunnable().run();
+//
+//        log.info("NewLoanScheduleRunnable -->>>>>>>>end....");
 
         return SUCCESS;
     }
