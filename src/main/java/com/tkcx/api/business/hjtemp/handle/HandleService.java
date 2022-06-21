@@ -1,9 +1,6 @@
 package com.tkcx.api.business.hjtemp.handle;
 
-import com.tkcx.api.business.hjtemp.hjThread.AcctBrchReadThread;
-import com.tkcx.api.business.hjtemp.hjThread.AcctDetailReadThread;
-import com.tkcx.api.business.hjtemp.hjThread.AcctOrgReadThread;
-import com.tkcx.api.business.hjtemp.hjThread.BusiCodeReadThread;
+import com.tkcx.api.business.hjtemp.hjThread.*;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +61,9 @@ public class HandleService {
                     break;
                 case HjFileFlagConstant.ACT_PUB_ORG_FILE:
                     readThreadPool.execute(new AcctOrgReadThread(fileDate));
+                    break;
+                case HjFileFlagConstant.XIN_LOAN_ACCT_DETAIL_FILE:
+                    readThreadPool.execute(new XinLoanAcctDetailReadThread(isRemove,fileDate));
                     break;
                 default:
                     log.error("文件类型：【{}】错误", fileType);
