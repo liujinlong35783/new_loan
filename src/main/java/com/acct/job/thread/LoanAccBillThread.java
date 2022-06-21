@@ -140,7 +140,8 @@ public class LoanAccBillThread extends AcctBaseThread {
             if ("normal_to_overdue".equals(scene)) {
                 normalToOverdue(model);
             } else if ("overdue_to_idle".equals(scene)) {
-                overdueToIdle(model);
+//                overdueToIdle(model);
+                normalToIdle(model);
             } else if ("idle_to_normal_or_overdue".equals(scene)) {
                 idleToNormalOrOverdue(model);
             } else if ("repay_normal".equals(scene)) {
@@ -149,9 +150,10 @@ public class LoanAccBillThread extends AcctBaseThread {
                 repayOverdue(model);
             } else if ("repay_idle".equals(scene)) {
                 repayIdle(model);
-            } else if ("normal_to_idle".equals(scene)) {
-                normalToIdle(model);
             }
+//            else if ("normal_to_idle".equals(scene)) {
+//                normalToIdle(model);
+//            }
         }
     }
 
