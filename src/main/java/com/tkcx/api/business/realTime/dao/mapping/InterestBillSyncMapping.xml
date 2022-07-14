@@ -45,8 +45,8 @@
         QN_DB_BIZ.REPAY_PLAN r
         WHERE
         t.REPAY_PLAN_NO = r.REPAY_PLAN_NO
-        AND r.REPAY_PLAN_DUE_AT &lt;= TO_DATE(#{e.timeSegment.startDate}, 'yyyy-MM-dd' )
-        AND t.CREATE_CORE_SYSTE_DATE = TO_DATE(#{e.timeSegment.startDate}, 'yyyy-MM-dd' )
+        AND r.REPAY_PLAN_DUE_AT &lt;= to_date(to_char(#{e.timeSegment.startDate}, 'yyyy-MM-dd'), 'yyyy-mm-dd')
+        AND t.CREATE_CORE_SYSTE_DATE = to_date(to_char(#{e.timeSegment.endDate}, 'yyyy-MM-dd'), 'yyyy-mm-dd')
         GROUP BY
         t.ASSET_ITEM_NO
         ) ins,

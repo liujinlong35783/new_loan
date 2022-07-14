@@ -50,7 +50,8 @@ public class InterestBillQuery {
             String[] columns = queryStr.split("\\^@");
             if(columns!=null) {
                 if (StringUtils.isNotEmpty(columns[0])) {
-                    this.orgCode = "'" + columns[0].replace(",", "','") + "'";
+                    this.orgCode = columns[0].replace(",", "','") ;
+//                    this.orgCode = "'" + columns[0].replace(",", "','") + "'";
                 }
                 this.loanName = columns[1];
                 this.borrowerIdnum = columns[2];
