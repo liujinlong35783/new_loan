@@ -64,6 +64,41 @@ public class LoanBillAndAdjustQuery {
                     this.item = columns[3];
                     this.timeSegment = new TimeSegment(columns[4], columns[5]);
                 }else if(busiCode == 6){
+                    this.loanAccount = columns[2];
+                    this.borrowerIdnum = columns[3];
+                    this.timeSegment = new TimeSegment(columns[4], columns[5]);
+                }else if(busiCode==5){
+                    this.borrowerIdnum = columns[2];
+                    this.loanAccount = columns[3];
+                    this.timeSegment = new TimeSegment(columns[4], columns[5]);
+                    if(StringUtils.isNotEmpty(columns[6])){
+                        this.principalStatus = Integer.valueOf(columns[6]);
+                    }
+                    this.item = columns[7];
+                }
+
+                if (StringUtils.isNotEmpty(columns[0])) {
+                    this.orgCode = columns[0].replace(",", "','");
+                }
+                this.loanName = columns[1];
+            }
+        }
+    }
+
+    /**
+     * 5贷款分户账/6明细账/9贷款形态调整查询
+     * @param queryStr
+     * @param busiCode
+     */
+    public void LoanBillAndAdjustQuery(String queryStr, Integer busiCode) {
+        if(StringUtils.isNotEmpty(queryStr)) {
+            String[] columns = queryStr.split("\\^@");
+            if(columns!=null) {
+                if(busiCode == 9){
+                    this.loanAccount = columns[2];
+                    this.item = columns[3];
+                    this.timeSegment = new TimeSegment(columns[4], columns[5]);
+                }else if(busiCode == 6){
                     this.borrowerIdnum = columns[2];
                     this.loanAccount = columns[3];
                     this.timeSegment = new TimeSegment(columns[4], columns[5]);
