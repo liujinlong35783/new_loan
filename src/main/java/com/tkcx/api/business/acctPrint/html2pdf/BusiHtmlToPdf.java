@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.itextpdf.kernel.geom.PageSize;
 import com.tkcx.api.business.acctPrint.model.AccountVoucherModel;
 import com.tkcx.api.business.acctPrint.model.BusiOrgBillModel;
+import com.tkcx.api.business.acctPrint.model.InterestBillModel;
 import com.tkcx.api.business.acctPrint.model.Interface.IAcctPrintCommon;
 import com.tkcx.api.utils.HtmlToPdf;
 import com.tkcx.api.utils.ToolUtil;
@@ -39,8 +40,21 @@ public class BusiHtmlToPdf {
         } else if(interfaceIden == 3){
             return busiOrgBillDataToPdf(listData);
         } else if(interfaceIden == 8){
+            if (interfaceIden == 8) {
+                setValue("busiDate", DateUtil.format(((AccountVoucherModel)listData.get(0)).getBusiDate(), "yyyy年MM月dd日 HH时mm分ss秒"), htmlTemplate);
+
+                setValue("voucherNo",((AccountVoucherModel)listData.get(0)).getVoucherNo(), htmlTemplate);
+                setValue("busiType",((AccountVoucherModel)listData.get(0)).getBusiType(), htmlTemplate);
+                setValue("transferFlag",((AccountVoucherModel)listData.get(0)).getTransferFlag()+"", htmlTemplate);
+                setValue("serialNo",((AccountVoucherModel)listData.get(0)).getSerialNo(), htmlTemplate);
+                setValue("operator",((AccountVoucherModel)listData.get(0)).getOperator(), htmlTemplate);
+            }
             return accountVoucherDataToPdf(listData);
         } else {
+            if (interfaceIden == 7) {
+                setValue("contractNo", ((InterestBillModel)listData.get(0)).getContractNo(), htmlTemplate);
+                setValue("debtNo",((InterestBillModel)listData.get(0)).getDebtNo(), htmlTemplate);
+            }
             return listDataToPdf(listData);
         }
     }
@@ -114,11 +128,13 @@ public class BusiHtmlToPdf {
      * @return
      */
     private static boolean accountVoucherDataToPdf(List<IAcctPrintCommon> listData){
-        StringBuffer htmlBuffer = new StringBuffer(htmlTemplate.toString()), htmlContent = new StringBuffer();
+        StringBuffer htmlBuffer = new StringBuffer(htmlTemplate.toString());
+        StringBuffer htmlContent = new StringBuffer();
         AccountVoucherModel model;
         String serialNo = null;
         for (int i = 0; listData != null && i < listData.size(); i++) {
             model = (AccountVoucherModel) listData.get(i);
+            serialNo = model.getSerialNo();
             if(null == serialNo || serialNo.equals(model.getSerialNo())){
                 htmlContent.append(model.toHtmlString());
             }
@@ -131,7 +147,7 @@ public class BusiHtmlToPdf {
             if(null == serialNo || !serialNo.equals(model.getSerialNo())){
                 model.customizedHtmlTitle(htmlBuffer);
             }
-            serialNo = model.getSerialNo();
+
         }
         pdf.close();
         return true;
@@ -176,7 +192,7 @@ public class BusiHtmlToPdf {
         setValue("orgCode", queryReq.getAppHeadVo().getOrgId(), htmlStr);
         setValue("orgName", queryReq.getOrgName(), htmlStr);
         setValue("printPerson", queryReq.getAppHeadVo().getTxnTlrId(), htmlStr);
-        setValue("printDate", DateUtil.format(new Date(), "yyyy年MM月dd日 hh时mm分ss秒"), htmlStr);
+        setValue("printDate", DateUtil.format(new Date(), "yyyy年MM月dd日 HH时mm分ss秒"), htmlStr);
     }
 
     /**
