@@ -75,4 +75,17 @@ public class HjFileFlagConstant {
      * 机构信息每行长度
      */
     public final static int PUB_ORG_LINE_LENGTH = 4;
+
+    /**################################ 新增 ########################################*/
+    /**################################ 新网贷会计科目配置 ########################################*/
+
+    /**
+     * 新网贷会计科目文件名
+     */
+    public final static String XIN_LOAN_ACCT_DETAIL_FILE = "t_act_one_detail_99000000";
+    /**
+     * 新网贷会计科目文件每行长度
+     */
+    public final static int XIN_LOAN_ACCT_DETAIL_LINE_LENGTH = 23;
+
 }
