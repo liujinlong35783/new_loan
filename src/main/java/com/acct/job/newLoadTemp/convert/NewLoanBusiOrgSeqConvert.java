@@ -79,7 +79,6 @@ public class NewLoanBusiOrgSeqConvert {
         busiOrgSeqModel.setTransSeqNo(buffers[13].toString());
         busiOrgSeqModel.setLoanAccount(buffers[14].toString());
         busiOrgSeqModel.setOperator(buffers[15].toString());
-        busiOrgSeqModel.setNewLoanFlag("1");
 
         return busiOrgSeqModel;
     }

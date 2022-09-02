@@ -89,7 +89,6 @@ public class NewLoanAcctVoucherConvert {
             AccountVoucherModel.setAcctDate(DateUtil.parseDate(buffers[20].toString(), "yyyy-MM-dd"));
         }
         AccountVoucherModel.setOrgName(buffers[21].toString());
-        AccountVoucherModel.setNewLoanFlag("1");
         return AccountVoucherModel;
     }
 }

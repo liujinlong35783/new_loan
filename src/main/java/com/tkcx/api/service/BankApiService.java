@@ -21,6 +21,11 @@ public interface BankApiService {
      * 综合前端查询接口
      */
     String zhqdQuery(String msg) throws ApplicationException;
+
+    /**
+     * 加密请求报文
+     */
+    String encryptXml(String msg) throws ApplicationException;
     /**
      * 文件下载
      * @param req
@@ -36,5 +41,13 @@ public interface BankApiService {
      * @throws ApplicationException
      */
     String acctDataHandler(JSONObject json) throws ApplicationException;
+    /**
+     * 定时抓取文件处理
+     * @return
+     * @throws ApplicationException
+     */
+    boolean makeDownloadFile() throws ApplicationException;
+
+
 }
 

@@ -148,12 +148,7 @@ public class LoanDetailBillModel extends Model<LoanDetailBillModel> implements I
 	@TableField(value="LOAN_NAME")
 	private String loanName;
 
-	/**
-	 * 新网贷标志
-	 *
-	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+
 
 	@Override
 	protected Serializable pkVal() {
@@ -185,8 +180,8 @@ public class LoanDetailBillModel extends Model<LoanDetailBillModel> implements I
 				+ "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(payoffPrincipal).length()) + ToolUtil.fenToYuan(payoffPrincipal)
 				+ "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(payoffInterest).length()) + ToolUtil.fenToYuan(payoffInterest)
 				+ "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(amount).length()) + ToolUtil.fenToYuan(amount)
-				+ "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(principalBalance).length()) + ToolUtil.fenToYuan(principalBalance)
-				+ "┃" + BusinessUtils.addDefaultVal(20 - borrowerIdnum.length()) + borrowerIdnum + "┃";
+				+ "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(principalBalance).length()) + ToolUtil.fenToYuan(principalBalance);
+				//+ "┃" + BusinessUtils.addDefaultVal(20 - borrowerIdnum.length()) + borrowerIdnum + "┃";
 	}
 
 	/**
@@ -225,9 +220,10 @@ public class LoanDetailBillModel extends Model<LoanDetailBillModel> implements I
 		htmlStr.append(ToolUtil.fenToYuan(amount));
 		htmlStr.append("</td>");htmlStr.append("<td>");
 		htmlStr.append(ToolUtil.fenToYuan(principalBalance));
-		htmlStr.append("</td>");htmlStr.append("<td>");
-		htmlStr.append(borrowerIdnum);
 		htmlStr.append("</td>");
+		//htmlStr.append("<td>");
+		//htmlStr.append(borrowerIdnum);
+		//htmlStr.append("</td>");
 		htmlStr.append("</tr>");
 		return htmlStr.toString();
 	}

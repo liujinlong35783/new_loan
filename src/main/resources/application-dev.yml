@@ -6,9 +6,9 @@ spring:
   datasource:
     ## sit环境
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
-    username: QN_DB_ACCT
-    password: 123456
+      url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
+      username: QN_DB_ACCT
+      password: 123456
     filters: wall,mergeStat
     druid:
       initial-size: 5

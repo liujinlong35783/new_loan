@@ -59,6 +59,9 @@
 		<if test="e.loanAccount != null and e.loanAccount != '' ">
 			AND t.LOAN_ACCOUNT = #{e.loanAccount}
 		</if>
+		<if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+			AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+		</if>
 		<if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
 			AND ((t.GRANT_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate})
 			or (t.PAYOFF_DATE BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate}))

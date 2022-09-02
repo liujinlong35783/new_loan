@@ -83,7 +83,6 @@ public class NewLoanLoanReceiptConvert {
         }
         loanReceiptModel.setOrgName(buffers[16].toString());
         loanReceiptModel.setOrgCode(buffers[17].toString());
-        loanReceiptModel.setNewLoanFlag("1");
 
         return loanReceiptModel;
     }

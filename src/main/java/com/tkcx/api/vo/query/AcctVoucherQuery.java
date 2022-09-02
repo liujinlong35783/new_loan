@@ -30,6 +30,16 @@ public class AcctVoucherQuery {
     private TimeSegment timeSegment;
 
     /**
+     * 户名
+     */
+    private String loanName;
+
+    /**
+     * 身份证号
+     */
+    private String borrowerIdnum;
+
+    /**
      * 业务类型
      */
     private Integer busiType;
@@ -41,6 +51,9 @@ public class AcctVoucherQuery {
                 this.orgCode = columns[0];
                 this.serialNo = columns[1];
                 this.timeSegment = new TimeSegment(columns[2], columns[3]);
+/*                this.loanName = columns[2];
+                this.borrowerIdnum = columns[3];
+                this.timeSegment = new TimeSegment(columns[4], columns[5]);*/
             }
         }
     }

@@ -171,12 +171,6 @@ public class RefundReceiptModel extends Model<RefundReceiptModel> implements IAc
 	@TableField(value="ORG_NAME")
 	private String orgName;
 
-	/**
-	 * 新网贷标志
-	 *
-	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
 
 	private String printCount;
 
@@ -189,12 +183,12 @@ public class RefundReceiptModel extends Model<RefundReceiptModel> implements IAc
 	public String toString() {
 		return (DateUtil.formatDateTime(payoffDate) + "^@" + refundName + "^@"
 				+ contractNo + "^@" + loanAccount + "^@" + payAccount + "^@"
-				+ debtNo + "^@" + loanAmount + "^@" + DateUtil.formatDateTime(grantDate) + "^@"
+				+ debtNo + "^@" + ToolUtil.fenToYuan(loanAmount) + "^@" + DateUtil.formatDateTime(grantDate) + "^@"
 				+ DateUtil.formatDateTime(dueDate) + "^@" + interestRate + "^@"
-				+ overdueInterestRate + "^@" + repaidPrincipalAmount + "^@"
-				+ unsettlePrincipalAmount + "^@" + repaidInterestAmount + "^@"
-				+ unsettleInterestAmount + "^@" + unsettleSumAmount + "^@"
-				+ repaidSumAmount + "^@" + orgCode + "^@" + orgName + "^@" + "^@" + (printCount == null ? String.valueOf(0) : printCount)
+				+ overdueInterestRate + "^@" + ToolUtil.fenToYuan(repaidPrincipalAmount) + "^@"
+				+ ToolUtil.fenToYuan(unsettlePrincipalAmount) + "^@" + ToolUtil.fenToYuan(repaidInterestAmount) + "^@"
+				+ ToolUtil.fenToYuan(unsettleInterestAmount) + "^@" + ToolUtil.fenToYuan(unsettleSumAmount) + "^@"
+				+ ToolUtil.fenToYuan(repaidSumAmount) + "^@" + orgCode + "^@" + orgName + "^@" + "^@" + (printCount == null ? String.valueOf(0) : printCount)
 		).replace("null", "");
 	}
 
@@ -207,8 +201,8 @@ public class RefundReceiptModel extends Model<RefundReceiptModel> implements IAc
 				"    <tr><td>贷款账号:</td><td>"+loanAccount+"</td><td>借据号:</td><td>"+debtNo+"</td></tr>\n" +
 				"    <tr><td>还款账号:</td><td>"+payAccount+"</td><td>贷款金额:</td><td>￥"+ToolUtil.fenToYuan(loanAmount) +"</td></tr>\n" +
 				"    <tr><td>发放日期:</td><td>"+DateUtil.formatDateTime(grantDate)+"</td><td>到期日期:</td><td>"+DateUtil.formatDateTime(dueDate)+"</td></tr>\n" +
-				"    <tr><td>正常利率:</td><td>"+interestRate+"</td><td>逾期利率:</td><td>"+overdueInterestRate+"</td></tr>\n" +
-				"    <tr><td>偿还本金:</td><td>￥"+ToolUtil.fenToYuan(repaidPrincipalAmount)+"</td><td>偿还利息:</td><td>￥"+ToolUtil.fenToYuan(repaidPrincipalAmount)+"</td></tr>\n" +
+				"    <tr><td>正常利率（年利率）:</td><td>"+interestRate+"</td><td>逾期利率（年利率）:</td><td>"+overdueInterestRate+"</td></tr>\n" +
+				"    <tr><td>偿还本金:</td><td>￥"+ToolUtil.fenToYuan(repaidPrincipalAmount)+"</td><td>偿还利息:</td><td>￥"+ToolUtil.fenToYuan(repaidInterestAmount)+"</td></tr>\n" +
 				"    <tr><td>偿还本息合计:</td><td colspan=\"3\">￥"+ToolUtil.fenToYuan(repaidSumAmount)+"  人民币"+ToolUtil.toChinese(ToolUtil.fenToYuan(repaidSumAmount))+"</td></tr>\n" +
 				"    <tr><td>结欠本金:</td><td>￥"+ToolUtil.fenToYuan(unsettlePrincipalAmount)+"</td><td>结欠利息:</td><td>￥"+ToolUtil.fenToYuan(unsettleInterestAmount)+"</td></tr>\n" +
 				"    <tr><td>结欠本息合计:</td><td colspan=\"3\">￥"+ToolUtil.fenToYuan(unsettleSumAmount)+"  人民币："+ToolUtil.toChinese(ToolUtil.fenToYuan(unsettleSumAmount))+"</td></tr>" +

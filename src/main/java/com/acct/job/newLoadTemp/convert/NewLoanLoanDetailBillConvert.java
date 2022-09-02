@@ -80,7 +80,6 @@ public class NewLoanLoanDetailBillConvert {
         loanDetailBillModel.setContractNo(buffers[16].toString());
         loanDetailBillModel.setBorrowerIdnum(buffers[17].toString());
         loanDetailBillModel.setLoanName(buffers[18].toString());
-        loanDetailBillModel.setNewLoanFlag("1");
 
         return loanDetailBillModel;
     }

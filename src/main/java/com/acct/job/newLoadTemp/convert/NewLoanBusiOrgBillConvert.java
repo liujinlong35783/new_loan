@@ -75,7 +75,6 @@ public class NewLoanBusiOrgBillConvert {
         if (org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[11])) {
             busiOrgBillModel.setAcctDate(DateUtil.parseDate(buffers[11].toString(), "yyyy-MM-dd"));
         }
-        busiOrgBillModel.setNewLoanFlag("1");
         return busiOrgBillModel;
     }
 }

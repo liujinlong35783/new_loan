@@ -70,6 +70,9 @@ public class LoanReceiptThread extends AcctBaseThread {
                     loanReceipt.setPayoffType(EnumConstant.EQ_LOAN_PMT);
                 }else if(interestType!=null&&interestType.equals("eq_principal_pmt")){
                     loanReceipt.setPayoffType(EnumConstant.EQ_PRINCIPAL_PMT);
+                    //我改的
+                }else if(interestType!=null&&interestType.equals("pay_int_principal_due")){
+                    loanReceipt.setPayoffType(EnumConstant.pay_int_principal_due);
                 }
             } else {
                 log.info("{} assetItemNo of Asset is null", assetItemNo);

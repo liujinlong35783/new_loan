@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,5 +76,14 @@ public class BusiCodeFileService {
         acctBusiCodeService.saveBatch(busiList);
         /** 更新已读取的文件信息 */
         hjCommonService.updateReadFileInfo(queryResult);
+    }
+
+    public boolean delBusiCodeData(Date fileDate) {
+
+        boolean remove = acctBusiCodeService.remove(null);
+        if(remove){
+            log.info("{}日之前的AcctBusiCodeModel数据清空成功", fileDate);
+        }
+        return remove;
     }
 }

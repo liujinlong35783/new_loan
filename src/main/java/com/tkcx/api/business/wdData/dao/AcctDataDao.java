@@ -35,6 +35,9 @@ public interface AcctDataDao extends BaseMapper<AcctDataModel>{
     @Select("select * from QN_DB_BIZ.ACCT_DATA t WHERE t.CREATE_AT >= #{startDate} AND t.CREATE_AT < #{endDate}")
     List<AcctDataModel> selectModelList(@Param("startDate")Date startDate, @Param("endDate")Date endDate);
 
+    @Select("select MESSAGE from QN_DB_BIZ.ACCT_DATA_DETAIL where ACCT_DATA_ID =#{id} and ROWNUM = 1")
+    String selectAcctDataDetailMessage(@Param("id")Integer id);
+
 
     @Select("SELECT * FROM QN_DB_BIZ.ACCT_DATA t WHERE t.CREATE_AT >= #{startDate} AND t.CREATE_AT < #{endDate}")
     IPage<AcctDataModel> selectListByPage(Page<AcctDataModel> page, @Param("startDate")Date startDate, @Param("endDate")Date endDate);

@@ -52,6 +52,8 @@ public class BusiCodeReadThread extends Thread {
         Date startDate = new Date();
         try {
             super.run();
+            // 删除前一天的业务编码表信息
+            busiCodeFileService.delBusiCodeData(fileDate);
             //一直循环
             while (pause) {
                 // 如果读取未完成，则暂停线程

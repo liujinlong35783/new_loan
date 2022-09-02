@@ -1,6 +1,6 @@
 package com.tkcx.api;
 
-import com.acct.job.jobhandler.ScheduleRunnable;
+import com.tkcx.api.utils.afe.jobhandler.ScheduleRunnable;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

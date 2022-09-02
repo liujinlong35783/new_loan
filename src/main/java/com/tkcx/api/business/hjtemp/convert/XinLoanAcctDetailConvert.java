@@ -86,7 +86,6 @@ public class XinLoanAcctDetailConvert {
         xinLoanAcctDetailTempModel.setOffBalanceFlag(buffers[20].toString());
         xinLoanAcctDetailTempModel.setCriticizeFlag(buffers[21].toString());
         xinLoanAcctDetailTempModel.setStatus(buffers[22].toString());
-        xinLoanAcctDetailTempModel.setNewLoanFlag("1");
         return xinLoanAcctDetailTempModel;
     }
 

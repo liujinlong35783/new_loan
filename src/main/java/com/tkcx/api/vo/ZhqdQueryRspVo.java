@@ -39,10 +39,10 @@ public class ZhqdQueryRspVo extends ServiceResponseVo {
     @Override
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put("OvrlRcrd", queryCount);
-        map.put("FileTrnsmCd", fileTrnsmCd);
-        map.put("FilPath", filePath);
-        map.put("FileNm", fileName);
+        map.put("KEPRCD_OVRAL_QTY", queryCount);
+        map.put("FILE_TRNSM_CD", fileTrnsmCd);
+        map.put("FILE_PTH_ADDR", filePath);
+        map.put("FILE_APLTN", fileName);
         return map;
     }
 }

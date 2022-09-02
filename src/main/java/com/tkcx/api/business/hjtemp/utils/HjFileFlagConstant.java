@@ -26,12 +26,12 @@ public class HjFileFlagConstant {
     /**
      * 读取互金文件结束行初始值
      */
-    public final static Integer READ_END_NUM_INITIAL  = 5001;
+    public final static Integer READ_END_NUM_INITIAL  = 501;
 
     /**
      * 文件读取步长
      */
-    public final static Integer ONE_TIME_READ_LINE_NUM = 5000;
+    public final static Integer ONE_TIME_READ_LINE_NUM = 500;
 
     /**################################ 会计科目配置 ########################################*/
 

@@ -179,12 +179,6 @@ public class InterestBillModel extends Model<InterestBillModel>  implements IAcc
 	@TableField(value="CONTRACT_NO")
 	private String contractNo;
 
-	/**
-	 * 新网贷标志
-	 *
-	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
 
 	@Override
 	protected Serializable pkVal() {

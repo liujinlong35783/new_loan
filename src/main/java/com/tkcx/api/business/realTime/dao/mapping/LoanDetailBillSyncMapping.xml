@@ -63,6 +63,9 @@
             <if test="e.loanAccount != null and e.loanAccount != '' ">
                 AND ast.ASSET_LOAN_ACCOUNT = #{e.loanAccount}
             </if>
+            <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+                AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
+            </if>
             <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
                 AND (ast.ASSET_ACTUAL_GRANT_AT BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate})
             </if>
@@ -107,6 +110,9 @@
             </if>
             <if test="e.loanAccount != null and e.loanAccount != '' ">
                 AND ast.ASSET_LOAN_ACCOUNT = #{e.loanAccount}
+            </if>
+            <if test="e.borrowerIdnum != null and e.borrowerIdnum != '' ">
+                AND t.BORROWER_IDNUM = #{e.borrowerIdnum}
             </if>
             <if test="e.timeSegment != null and e.timeSegment.startDate != null and e.timeSegment.endDate != null">
                 AND ((ast.ASSET_ACTUAL_GRANT_AT BETWEEN #{e.timeSegment.startDate} AND #{e.timeSegment.endDate})

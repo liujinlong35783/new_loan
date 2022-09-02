@@ -6,10 +6,14 @@ spring:
   datasource:
     ## uat环境
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//6.106.4.53:1521/qinnong
+    #url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
+#    url: jdbc:oracle:thin:@//6.106.16.104:1521/orcl
+    url: jdbc:oracle:thin:@//6.106.16.104:1521/QNA
     #QN_DB_ACCT  123456
-    username: SYSTEM
-    password: qinnong
+#    username: SYSTEM
+#    password: qinnong
+    username: QN_DB_ACCT
+    password: 123456
     filters: wall,mergeStat
     druid:
       initial-size: 5
@@ -28,6 +32,7 @@ spring:
 storage:
   tempUpload:
     path: /data/acctprint/fileserver/upload/
+#    path: D:\data\acctprint\fileserver\upload\
   tempDownload:
     path: /data/acctprint/fileserver/download/
   remote:
@@ -47,3 +52,12 @@ xxl:
       #accessToken:
       logpath: /data/logs/acctprint/xxl-job/
       logretentiondays: -1
+
+
+#afe:
+#  lspublic:
+#    Key:
+#      path: /data/accprint/cer/113700.cer
+#  private:
+#    Key:
+#      path: /data/accprint/cer/113501.pfx

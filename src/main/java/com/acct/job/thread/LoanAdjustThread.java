@@ -42,7 +42,7 @@ public class LoanAdjustThread extends AcctBaseThread {
         QueryWrapper<AcctDataModel> queryWrapperAcctData = getQueryWrapper(AcctDataModel.class, "createAt");
         queryWrapperAcctData.in("RET_STATUS", "0", "1");
         queryWrapperAcctData.in("SCENE", AcctRecordScene.OVERDUE_TO_IDLE, AcctRecordScene.NORMAL_TO_OVERDUE, AcctRecordScene.IDLE_TO_NORMAL_OR_OVERDUE);
-        queryWrapperAcctData.select("SCENE", "ASSET_ITEM_NO", "CREATE_AT", "BIZ_TRACK_NO", "MESSAGE", "PRODUCT_CODE", "ACG_DT", "TRANS_SEQ_NO","REPAY_PLAN_NO","NORMAL_PRINCIPAL","OVERDUE_PRINCIPAL","IDLE_PRINCIPAL","BAD_PRINCIPAL");
+        queryWrapperAcctData.select("ID", "SCENE", "ASSET_ITEM_NO", "CREATE_AT", "BIZ_TRACK_NO", "MESSAGE", "PRODUCT_CODE", "ACG_DT", "TRANS_SEQ_NO","REPAY_PLAN_NO","NORMAL_PRINCIPAL","OVERDUE_PRINCIPAL","IDLE_PRINCIPAL","BAD_PRINCIPAL");
         List<AcctDataModel> accDataList = acctDataService.list(queryWrapperAcctData);
 
         if (accDataList != null && accDataList.size() > 0) {
@@ -104,11 +104,13 @@ public class LoanAdjustThread extends AcctBaseThread {
      */
     private AcctBusiCodeModel[] getBusiCodeModel(AcctDataModel model, LoanAdjustModel loanAdjustModel){
         String jsonMsg = model.getMessage(), scene = model.getScene(), productCode = model.getProductCode();
-
+        //形态转移专用，用id关联DETAIL新表
         AcctBusiCodeModel[] models = new AcctBusiCodeModel[]{new AcctBusiCodeModel(), new AcctBusiCodeModel()};
-
-        String newBusiCode = BusinessUtils.getValueByKey(jsonMsg,"busiCode"), oldBusiCode = "", newCalanceIdentifier = "", oldCalanceIdentifier = "";
+        String message = acctDataService.selectMessage(model.getId());
+        //网贷调整，ID对应多个ACCT_DATA_ID，多个busiCode值一样
+        String newBusiCode = BusinessUtils.getValueByKey(message,"busiCode"), oldBusiCode = "", newCalanceIdentifier = "", oldCalanceIdentifier = "";
         if(AcctRecordScene.IDLE_TO_NORMAL_OR_OVERDUE.equals(scene)){
+
             oldBusiCode = productCode + BusiCodeConstant.PROC_CODE_IDLE;
             oldCalanceIdentifier = BusiCodeConstant.DZHIBJIN;
             if(BusiCodeConstant.PROC_CODE_NORMAL.equals(newBusiCode.replace(productCode,""))){

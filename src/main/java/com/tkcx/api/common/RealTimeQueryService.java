@@ -26,10 +26,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 实时查询业务类
@@ -62,6 +61,10 @@ public class RealTimeQueryService {
     public List realTime(Object query){
         String start = "", end = "", acctDate = "";
         Date coreSysDate = busiCommonService.getCoreSysDate();
+        //测试使用
+/*        Calendar calendar = Calendar.getInstance();
+        calendar.set(2023,11,21);
+        Date coreSysDate = calendar.getTime();*/
         if(coreSysDate!=null){
             acctDate = DateUtil.format(coreSysDate, "yyyy-MM-dd");
         } else return null;

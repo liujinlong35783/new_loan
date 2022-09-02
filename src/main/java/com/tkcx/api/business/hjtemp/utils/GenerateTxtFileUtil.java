@@ -258,7 +258,7 @@ public class GenerateTxtFileUtil {
             if (widthType == 0) {
                 return new Integer[]{77, 38, 36, 34, 32};
             } else if (widthType == 1) {
-                return new Integer[]{4, 23, 6, 13, 5, 4, 4, 5, 5, 10, 4, 5, 5, 10, 5, 4, 5, 10};
+                return new Integer[]{5, 21, 6, 13, 5, 4, 4, 5, 5, 10, 4, 5, 5, 10, 5, 4, 5};
             } else {
                 return new Integer[]{38, 204};
             }
@@ -266,7 +266,7 @@ public class GenerateTxtFileUtil {
             if (widthType == 0) {
                 return new Integer[]{72, 37, 37, 33, 33};
             } else if (widthType == 1) {
-                return new Integer[]{4, 23, 6, 14, 14, 11, 5, 5, 5, 5, 5, 5, 5, 5, 5, 10};
+                return new Integer[]{5, 23, 6, 14, 14, 11, 5, 5, 5, 5, 5, 5, 5, 5, 5};
             } else {
                 return new Integer[]{38, 200};
             }
@@ -355,7 +355,7 @@ public class GenerateTxtFileUtil {
             map.put("还款金额", 1);
             map.put("借贷标识", 0);
             map.put("余额", 3);
-            map.put("身份证号", 6);
+            //map.put("身份证号", 6);
         } else if (intfId == 6) {
             map.put("机构号", 1);
             map.put("机构名称", 19);
@@ -372,7 +372,7 @@ public class GenerateTxtFileUtil {
             map.put("还息金额", 1);
             map.put("全部金额", 1);
             map.put("本金余额", 1);
-            map.put("身份证号", 6);
+            //map.put("身份证号", 6);
         } else if (intfId == 7) {
             map.put("机构号", 1);
             map.put("机构名称", 19);

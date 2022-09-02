@@ -185,7 +185,7 @@ public class NewLoanCommonService {
         log.info("NewLoanCommonService excuteFiles ..." + startDate);
 //        log.info("新网贷解析文件路径："+"D:\\\\JAVA\\\\Company\\\\tkcx\\\\kjpz_file"+File.separator+produceFilePath);
 //        File file = new File("D:\\\\JAVA\\\\Company\\\\tkcx\\\\kjpz_file"+File.separator+produceFilePath);
-        String path="D:\\\\\\\\JAVA\\\\\\\\Company\\\\\\\\tkcx\\\\\\\\kjpz_file";
+        String path=filePath;
         File[] files1 = new File(path).listFiles();
         ArrayList<Integer> dateFile = new ArrayList<>();
         for (File file : files1) {

@@ -34,10 +34,10 @@ public class ZhqdQueryReqVo extends ServiceRequestVo {
 
     @Override
     public void withMap(Map<String, Object> map) {
-        this.interfaceIden = Integer.valueOf((String) map.get("QryTp"));
-        this.queryContent = StringUtils.trim((String) map.get("FileCntnt"));
-        this.printFlag = Integer.valueOf((String) map.get("PrtFlg"));
-        this.queryNo = StringUtils.trim((String) map.get("BtchNo"));
+        this.interfaceIden = Integer.valueOf((String) map.get("QRY_TYP_CD"));
+        this.queryContent = StringUtils.trim((String) map.get("FILE_CNT"));
+        this.printFlag = Integer.valueOf((String) map.get("PR_FLG"));
+        this.queryNo = StringUtils.trim((String) map.get("FILE_BCHNO"));
         if(StringUtils.isNotEmpty(queryContent)){
             String[] columns = queryContent.split("\\^@");
             this.orgName = columns[columns.length-1];

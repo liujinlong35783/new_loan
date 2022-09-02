@@ -61,8 +61,11 @@
 		<if test="e.loanAccount != null and e.loanAccount != '' ">
 			AND t.LOAN_ACCOUNT = #{e.loanAccount}
 		</if>
-		<if test="e.principalStatus != null ">
-			AND t.PRINCIPAL_STATUS = #{e.principalStatus}
+		<if test="e.principalStatus == '0' ">
+			AND t.PRINCIPAL_STATUS in ('1','0')
+		</if>
+		<if test="e.principalStatus =='1' ">
+			AND t.PRINCIPAL_STATUS in ('2','3')
 		</if>
 		<if test="e.item != null and e.item != '' ">
 			AND t.ITEM = #{e.item}

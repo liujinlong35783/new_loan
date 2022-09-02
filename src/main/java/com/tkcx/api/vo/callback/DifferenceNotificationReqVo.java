@@ -54,10 +54,10 @@ public class DifferenceNotificationReqVo extends ServiceRequestVo {
 	public void withMap(Map<String, Object> map) {
 		this.sndSysFlg = StringUtils.trim((String) map.get("SndSysFlg"));
 		this.oprTp = StringUtils.trim((String) map.get("OprTp"));
-		this.batchNo = StringUtils.trim((String) map.get("BatchNo"));
-		this.filPath = StringUtils.trim((String) map.get("FilPath"));
-		this.fileNm = StringUtils.trim((String) map.get("FileNm"));
-		this.fileTrnsmCd = StringUtils.trim((String) map.get("FileTrnsmCd"));
+		this.batchNo = StringUtils.trim((String) map.get("FILE_BCHNO"));
+		this.filPath = StringUtils.trim((String) map.get("FILE_PTH_ADDR"));
+		this.fileNm = StringUtils.trim((String) map.get("FILE_APLTN"));
+		this.fileTrnsmCd = StringUtils.trim((String) map.get("FILE_TRNSM_CD"));
 	}
 
 }

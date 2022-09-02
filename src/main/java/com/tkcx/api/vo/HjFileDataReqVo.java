@@ -27,13 +27,16 @@ public class HjFileDataReqVo extends ServiceRequestVo {
 
     @Override
     public void withMap(Map<String, Object> map) {
+        //我改的
+//        this.msgDate = StringUtils.trim((String) map.get("TRD_DT1"));
+//        this.remark = StringUtils.trim((String) map.get("REMRK"));
+//        List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) map.get("FILE_INFO_ARR");
         this.msgDate = StringUtils.trim((String) map.get("TranOcrDt"));
         this.remark = StringUtils.trim((String) map.get("Rmrk"));
         List<HashMap<String, Object>> list = (List<HashMap<String, Object>>) map.get("DtlInfoAry");
-        FileInfo info;
         this.fileInfo = new ArrayList<>();
         for (HashMap<String, Object> filemap: list ) {
-            info = new FileInfo();
+            FileInfo info = new FileInfo();
             info.withMap(filemap);
             fileInfo.add(info);
         }
@@ -66,6 +69,10 @@ public class HjFileDataReqVo extends ServiceRequestVo {
 
         @Override
         public void withMap(Map<String, Object> map) {
+            /*this.fileFlag = StringUtils.trim((String) map.get("FILE_GNRT_FLG"));
+            this.filPath = StringUtils.trim((String) map.get("FILE_PTH_ADDR"));
+            this.fileNm = StringUtils.trim((String) map.get("FILE_APLTN"));
+            this.fileTrnsmCd = StringUtils.trim((String) map.get("FILE_TRNSM_CD"));*/
             this.fileFlag = StringUtils.trim((String) map.get("MakeFileFlg"));
             this.filPath = StringUtils.trim((String) map.get("FilPath"));
             this.fileNm = StringUtils.trim((String) map.get("FileNm"));

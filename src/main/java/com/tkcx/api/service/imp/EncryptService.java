@@ -23,7 +23,7 @@ import java.util.Random;
  *
  */
 @Slf4j
-@Service
+@Service("encryptService")
 public class EncryptService {
 
 	@Value("${bank.service.sysId}")

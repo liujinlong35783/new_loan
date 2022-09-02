@@ -1,5 +1,6 @@
 package com.tkcx.api.service;
 
+import com.tkcx.api.vo.ZhqdQueryReqVo;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import com.tkcx.api.vo.ftpFile.FileDownloadRspVo;
 import com.tkcx.api.vo.ftpFile.FileUploadReqVo;
@@ -22,7 +23,7 @@ public interface FtpClientService {
 	 * @return
 	 * @throws ApplicationException
 	 */
-	public FileUploadRspVo ftpFileUpload(FileUploadReqVo fileUploadReqVo) throws ApplicationException;
+	public FileUploadRspVo ftpFileUpload(FileUploadReqVo fileUploadReqVo, ZhqdQueryReqVo queryReq) throws ApplicationException;
 
 	/**
 	 * 通过传输码下载文件

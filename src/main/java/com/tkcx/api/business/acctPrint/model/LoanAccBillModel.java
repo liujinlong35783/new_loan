@@ -164,12 +164,7 @@ public class LoanAccBillModel extends Model<LoanAccBillModel> implements IAcctPr
 	@TableField(value="CREATE_DATE")
 	private Date createDate;
 
-	/**
-	 * 新网贷标志
-	 *
-	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+
 
 	@Override
 	protected Serializable pkVal() {
@@ -200,10 +195,10 @@ public class LoanAccBillModel extends Model<LoanAccBillModel> implements IAcctPr
         String payoffDateStr = nullToString(payoffDate, DateUtil.formatDate(payoffDate));
         String payoffAccStr = nullToString(payoffAccount, payoffAccount);
 
-        return "┃" + BusinessUtils.addDefaultVal(8 - orgCode.length()) + orgCode
-                + "┃" + BusinessUtils.addDefaultVal(46 - orgName.length() * 2) + orgName
+        return "┃" + BusinessUtils.addDefaultVal(6 - orgCode.length()) + orgCode
+                + "┃" + BusinessUtils.addDefaultVal(40 - orgName.length() * 2) + orgName
                 + "┃" + BusinessUtils.addDefaultVal(12 - loanName.length() * 2) + loanName
-                + "┃" + BusinessUtils.addDefaultVal(26 - loanAccount.length()) + loanAccount
+                + "┃" + BusinessUtils.addDefaultVal(28 - loanAccount.length()) + loanAccount
                 + "┃" + BusinessUtils.addDefaultVal(10 - item.length()) + item
                 + "┃" + BusinessUtils.addDefaultVal(8 - principalStatusStr.length() * 2) + principalStatusStr
                 + "┃" + BusinessUtils.addDefaultVal(8 - accStatus.length() * 2) + accStatus
@@ -216,9 +211,9 @@ public class LoanAccBillModel extends Model<LoanAccBillModel> implements IAcctPr
                 + "┃" + BusinessUtils.addDefaultVal(20 - payoffAccStr.length()) + payoffAccStr
                 + "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(payoffAmount).length()) + ToolUtil.fenToYuan(payoffAmount)
                 + "┃" + BusinessUtils.addDefaultVal(8 - debtFlagStr.length() * 2) + debtFlagStr
-                + "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(balanceAmount).length()) + ToolUtil.fenToYuan(balanceAmount)
-                + "┃" + BusinessUtils.addDefaultVal(20 - borrowerIdnum.length()) + borrowerIdnum + "┃";
+                + "┃" + BusinessUtils.addDefaultVal(10 - ToolUtil.fenToYuan(balanceAmount).length()) + ToolUtil.fenToYuan(balanceAmount);
 	}
+
 
 	public String nullToString(Object obj, String val) {
 	    return obj == null ? "" : val;
@@ -278,9 +273,9 @@ public class LoanAccBillModel extends Model<LoanAccBillModel> implements IAcctPr
 		htmlStr.append("<td>");
 		htmlStr.append(ToolUtil.fenToYuan(balanceAmount));
 		htmlStr.append("</td>");
-		htmlStr.append("<td>");
+/*		htmlStr.append("<td>");
 		htmlStr.append(borrowerIdnum);
-		htmlStr.append("</td>");
+		htmlStr.append("</td>");*/
 		htmlStr.append("</tr>");
 		return htmlStr.toString().replace("null","");
 	}

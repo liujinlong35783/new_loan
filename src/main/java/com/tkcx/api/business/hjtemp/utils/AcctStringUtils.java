@@ -43,4 +43,9 @@ public class AcctStringUtils {
         return "0x" + str;//0x表示十六进制
     }
 
+    public static void main(String[] args) {
+        String s = toHexString("12312");
+        System.out.println(s);
+    }
+
 }

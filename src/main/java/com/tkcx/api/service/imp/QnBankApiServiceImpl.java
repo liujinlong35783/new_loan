@@ -6,15 +6,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.dcfs.esb.ftp.utils.ThreadSleepUtil;
 import com.google.inject.internal.util.Lists;
 import com.tkcx.api.business.acctPrint.model.AcctLogModel;
+import com.tkcx.api.business.hjtemp.handle.HandleService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
 import com.tkcx.api.exception.FileErrorCode;
 import com.tkcx.api.service.BankApiService;
-import com.tkcx.api.vo.HjFileDataReqVo;
-import com.tkcx.api.vo.HjFileDataRspVo;
-import com.tkcx.api.vo.ZhqdQueryReqVo;
-import com.tkcx.api.vo.ZhqdQueryRspVo;
+import com.tkcx.api.vo.*;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import common.core.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +24,18 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 综合服务类
- * 
+ *
  * @author tianyi
  *
  */
@@ -45,14 +48,20 @@ public class QnBankApiServiceImpl implements BankApiService {
 
 	@Autowired
 	private QnFtpClientServiceImpl qnFtpClientServiceImpl;
-    @Autowired
+	@Autowired
 	private ZhqdBusinesService zhqdBusinesService;
 
-    @Autowired
+	@Autowired
 	private HjFileInfoService hjFileInfoService;
 
-    @Autowired
-	private HjFileHandleService hjFileHandleService;
+	@Autowired
+	public HjFileHandleService hjFileHandleService;
+
+	@Autowired
+	private AfeUtilsServiceImpl afeUtilsService;
+
+	@Autowired
+	private AfeCommonService afeCommonService;
 
 	@Value("${storage.tempUpload.path}")
 	private String tempUploadPath;
@@ -63,8 +72,13 @@ public class QnBankApiServiceImpl implements BankApiService {
 	private static final int FILE_NAME_LENGTH = 40;
 
 	@Override
-	public String hjNotice(String msg) throws ApplicationException {
-
+	public String hjNotice(String EncryptMsg) throws ApplicationException {
+//		log.info("QnBankApiServiceImpl hjNotice EncryptMsg:"+EncryptMsg);
+		log.info("QnBankApiServiceImpl hjNotice DecryptMsg:"+EncryptMsg);
+		//解密后的报文
+		//互金直推不过AFE
+//		String msg = afeUtilsService.afeDecryptMsg(EncryptMsg);
+//		log.info("QnBankApiServiceImpl hjNotice DecryptMsg:"+msg);
 		HjFileDataRspVo rsp = new HjFileDataRspVo();
 		rsp.setTxnSt("S");
 		rsp.setRetCd("000000");
@@ -72,10 +86,12 @@ public class QnBankApiServiceImpl implements BankApiService {
 		HjFileDataReqVo req = null;
 		try {
 			//报文转实体对象
-			req = bankCommonService.receive(msg, HjFileDataReqVo.class);
+			req = bankCommonService.receive(EncryptMsg, HjFileDataReqVo.class);
 			//获取文件信息列表
-			List<HjFileDataReqVo.FileInfo> fileList = req.getFileInfo();
+			List fileList = req.getFileInfo();
+			log.info("fileList :"+fileList);
 			if(fileList == null || fileList.size() == 0) {
+				log.info("fileList size null or size==0");
 				log.error("互金文件信息为空");
 				rsp.setRetCd("999999");
 				rsp.setRetMsg("下载文件失败");
@@ -97,6 +113,7 @@ public class QnBankApiServiceImpl implements BankApiService {
 			List<HjFileInfoModel> hjFileList = assembleHjFileInfo(fileList, fileDate);
 			if(hjFileList == null) {
 				log.error("{}日，互金数据保存失败", fileDate);
+				log.info("{}日，互金数据保存失败", fileDate);
 			}
 			// 互金推送数据日志表记录
 			if (null != req.getSysHeadVo()) {
@@ -108,14 +125,18 @@ public class QnBankApiServiceImpl implements BankApiService {
 				acctLog.insert();
 			}
 			// 异步下载文件,解析后保存至数据库中
-			 hjFileHandleService.downloadHjFile(hjFileList, fileDate);
+			hjFileHandleService.downloadHjFile(hjFileList, fileDate,req);
 		} catch (Exception e) {
 			log.error("文件下载请求失败,错误原因：{}", e);
+			log.info("文件下载请求失败,错误原因：{}", e);
 			rsp.setRetCd("999999");
 			rsp.setRetMsg("下载文件失败");
 		}finally {
-			String response = bankCommonService.response(req, rsp);
-			return response;
+			log.info("hjNotice finally req:"+req+",rsp:"+rsp);
+			String message = bankCommonService.response(req, rsp);
+//			String responseData = afeCommonService.encrypt(req, message);
+
+			return message;
 		}
 	}
 
@@ -175,13 +196,40 @@ public class QnBankApiServiceImpl implements BankApiService {
 		return null;
 	}
 
+	/**
+	 * 获取文件类型
+	 * @param fileName
+	 * @return
+	 */
+	public static String fileExcuteGetType(String fileName){
+		int start = fileName.lastIndexOf(File.separator);
+		int end = fileName.lastIndexOf("_");
+		String fileType = fileName.substring(start + 1,end);
+		return fileType;
+	}
+	/**
+	 * 获取文件时间
+	 * @param fileName
+	 * @return
+	 */
+	public static Date fileExcuteGetData(String fileName,String fileType){
+		int start = fileName.lastIndexOf("_");
+		int end = fileName.lastIndexOf(".");
+		String fileData = fileName.substring(start + 1,end);
+		Date date = DateUtil.parse(fileData, "yyyyMMdd");
+		return date;
+	}
 	@Override
-	public String zhqdQuery(String msg) throws ApplicationException {
+	public String zhqdQuery(String EncryptMsg) throws ApplicationException {
+		log.info("QnBankApiServiceImpl zhqdQuery EncryptMsg:"+EncryptMsg);
+		//解密后的报文
+		String msg = afeUtilsService.afeDecryptMsg(EncryptMsg);
+		log.info("QnBankApiServiceImpl zhqdQuery DecryptMsg:"+msg);
 		ZhqdQueryRspVo rsp = new ZhqdQueryRspVo();
 		ZhqdQueryReqVo req = null;
 		String resultXml = "";
 		try {
-			req = bankCommonService.receive(msg, ZhqdQueryReqVo.class);
+			req = bankCommonService.receiveZH(msg, ZhqdQueryReqVo.class);
 			rsp = zhqdBusinesService.queryEntry(req);//获取返回信息
 			resultXml = bankCommonService.response(req, rsp);
 		}catch (ApplicationException e) {
@@ -189,9 +237,21 @@ public class QnBankApiServiceImpl implements BankApiService {
 			rsp.setRetCd("999999");
 			rsp.setRetMsg("查询失败");
 		}
-		return resultXml;
+		String responseData = afeCommonService.encrypt(req, resultXml);
+		return responseData;
 	}
 
+
+	/**
+	 * 加密请求报文
+	 */
+	@Override
+	public String encryptXml(String msg)  {
+		log.info("QnBankApiServiceImpl encryptXml 请求明文:"+msg);
+		//AFE请求ACCT的柜面请求报文密文
+		String responseData = afeCommonService.encryptXML(msg);
+		return responseData;
+	}
 	/**
 	 * 文件下载方法
 	 * @param req 下载信息
@@ -269,7 +329,7 @@ public class QnBankApiServiceImpl implements BankApiService {
 			if (acctNo ==null || acctNo == 1){
 				// 1. 借款借据回单
 //				exe.execute(new LoanReceiptThread(endAcctDate));
-				threadPool.execute(new RefundReceiptThread(endAcctDate));
+				threadPool.execute(new LoanReceiptThread(endAcctDate));
 			}
 			if (acctNo ==null || acctNo == 2) {
 				// 2. 还款回单
@@ -329,5 +389,70 @@ public class QnBankApiServiceImpl implements BankApiService {
 			ThreadSleepUtil.sleepSecondIngoreEx(60);
 		}
 		return "0000";
+	}
+
+
+	@Autowired
+	private HandleService handleService;
+	@Override
+	public boolean makeDownloadFile(){
+		try {
+			boolean result = false;
+			log.info("makeDownloadFile" );
+			ArrayList<String> fileNameList = new ArrayList<>();
+			fileNameList.add("t_act_one_detail");
+			fileNameList.add("t_act_brch_day_tot");
+			fileNameList.add("t_act_busi_code_map");
+			fileNameList.add("t_act_pub_org");
+			fileNameList.add("t_act_one_detail_99000000");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd");
+			//String format = sdf.format(new Date());
+			//String format1 = sdf1.format(new Date());
+			String format =sdf.format(20230623);
+			String format1 =sdf.format(20230623);
+			Date fileDate = DateUtil.parse(format,"yyyyMMdd");
+			ArrayList<HjFileInfoModel> hjFileInfoModels = new ArrayList<>();
+			for (String fileName : fileNameList) {
+				HjFileInfoModel hjFileInfoModel = new HjFileInfoModel();
+				hjFileInfoModel.setFileName(fileName+"_"+format1+".txt");
+				hjFileInfoModel.setFileType(fileName);
+				hjFileInfoModel.setFilePath("/share_data/act/20230623");
+				//systemNO
+				hjFileInfoModel.setFileTransCode("113500");
+				hjFileInfoModels.add(hjFileInfoModel);
+			}
+			HjFileDataReqVo req = new HjFileDataReqVo();
+			for (HjFileInfoModel hjFileInfoModel : hjFileInfoModels) {
+				FileDownloadReqVo fileVo = new FileDownloadReqVo();
+				// 文件传输码
+				fileVo.setDownloadTranCode(hjFileInfoModel.getFileTransCode());
+				// 文件下载路径
+				fileVo.setFilePath(hjFileInfoModel.getFilePath());
+				// 下载文件
+				String downFilePath = hjFileHandleService.downloadFile(fileVo, req);
+				String fileType = hjFileInfoModel.getFileType();
+				if(StringUtils.isNotEmpty(downFilePath)){
+					log.info("日期{}，文件 {} ====== 下载成功", hjFileInfoModel.getFileDate(), fileType);
+
+					/** TODO 要改成定时器方式触发解析互金文件逻辑
+					 * 需要保存下载路径到数据库，然后定时器触发时，需要根据文件类型、文件日期，读取未删除、未读取的互金文件信息
+					 */
+					hjFileHandleService.saveHjFileDownloadPath(downFilePath, hjFileInfoModel);
+					// 下载成功后，解析文件，入库
+					handleService.startHandle(fileType, fileDate);
+
+				}
+				return result;
+			}
+			return result;
+		} catch (ApplicationException e) {
+			log.info(e.getMessage());
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void main(String[] args) throws ApplicationException {
+		new QnBankApiServiceImpl().makeDownloadFile();
 	}
 }

@@ -5,6 +5,7 @@ import com.tkcx.api.common.CommonService;
 import com.tkcx.api.business.acctPrint.dao.VoucherPrintDao;
 import com.tkcx.api.business.acctPrint.model.VoucherPrintModel;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,8 @@ import java.util.List;
  * @author tianyi
  * @Date 2019-10-31 11:50
  */
+
+@Slf4j
 @Service
 public class VoucherPrintService extends CommonService<VoucherPrintDao,VoucherPrintModel> {
 

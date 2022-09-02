@@ -61,6 +61,9 @@ public class BankCommonService {
 	@Autowired
 	private EncryptService encryptService;
 
+//	@Autowired
+//	private AfeDecryptService afeDecryptService;
+
 	/**
 	   * 接收请求
 	 */
@@ -79,6 +82,24 @@ public class BankCommonService {
 		}
 	}
 
+
+	/**
+	 * 接收请求
+	 */
+	public <T extends ServiceRequestVo> T receiveZH(String message, Class<T> reqClazz) throws ApplicationException {
+		log.info("接收请求-->" + message);
+		ServiceVo serviceVo = this.convertMessageToVoZH(message);
+		try {
+			T req = reqClazz.newInstance();
+			req.withMap(serviceVo.getBody().getParamMap());
+			req.setSysHeadVo(serviceVo.getSysHead());
+			req.setAppHeadVo(serviceVo.getAppHead());
+			return req;
+		} catch (InstantiationException | IllegalAccessException e) {
+			log.error(e.getMessage(), e);
+			throw new ApplicationException(ErrorCode.CANNOT_NEW_INSTANCE, "无法实例化对象", e);
+		}
+	}
 	/**
 	   * 响应请求
 	 */
@@ -115,7 +136,7 @@ public class BankCommonService {
 		/**
 		 *
 		 */
-		String responseMessage = this.convertVoToMessage(service);
+		String responseMessage = this.convertVoToMessageZH(service);
 		log.info("响应请求-->" + responseMessage);
 		return responseMessage;
 	}
@@ -213,6 +234,24 @@ public class BankCommonService {
 		return lengthBlock + macBlock + xmlBlock;
 	}
 
+	private String convertVoToMessageZH(ServiceVo service) throws ApplicationException {
+
+		XStream xStream = new XStream(new XppDriver(new NoNameCoder()));
+		xStream.processAnnotations(ServiceVo.class);
+		xStream.registerConverter(new BodyParamConverter());
+		xStream.registerConverter(new MapEntryConverter());
+
+		String xmlBlock = XML_DECLARATION_BLOCK + xStream.toXML(service);
+
+//		// 生成MAC
+//		String macBlock = encryptService.generateMac(xmlBlock);
+//
+//		String lengthBlock = String.format("%08d", macBlock.length() + xmlBlock.length());
+
+//		return lengthBlock + macBlock + xmlBlock;
+		return  xmlBlock;
+	}
+
 	private ServiceVo convertMessageToVo(String message) throws ApplicationException {
 
 		XStream xStream = new XStream(new XppDriver(new NoNameCoder()));
@@ -222,14 +261,34 @@ public class BankCommonService {
 		xStream.ignoreUnknownElements();
 		XStream.setupDefaultSecurity(xStream);
 		xStream.allowTypes(new Class[] { ServiceVo.class });
-
-		int macLenght = Integer.valueOf(message.substring(TOTAL_LENGTH_BIT, TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT));
+//MAC地址校验
+/*		int macLenght = Integer.valueOf(message.substring(TOTAL_LENGTH_BIT, TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT));
 		String expectMacBlock = message.substring(TOTAL_LENGTH_BIT,
 				TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
 		String xmlBlock = message.substring(TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
 
-		encryptService.verifyMac(xmlBlock, expectMacBlock);
-		Object xml = xStream.fromXML(xmlBlock);
+		encryptService.verifyMac(xmlBlock, expectMacBlock);*/
+		Object xml = xStream.fromXML(message);
+		return (ServiceVo)xml;
+	}
+
+	private ServiceVo convertMessageToVoZH(String message) throws ApplicationException {
+
+		XStream xStream = new XStream(new XppDriver(new NoNameCoder()));
+		xStream.processAnnotations(ServiceVo.class);
+		xStream.registerConverter(new BodyParamConverter());
+		xStream.registerConverter(new MapEntryConverter());
+		xStream.ignoreUnknownElements();
+		XStream.setupDefaultSecurity(xStream);
+		xStream.allowTypes(new Class[] { ServiceVo.class });
+
+//		int macLenght = Integer.valueOf(message.substring(TOTAL_LENGTH_BIT, TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT));
+//		String expectMacBlock = message.substring(TOTAL_LENGTH_BIT,
+//				TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
+//		String xmlBlock = message.substring(TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
+//
+//		encryptService.verifyMac(xmlBlock, expectMacBlock);
+		Object xml = xStream.fromXML(message);
 		return (ServiceVo)xml;
 	}
 	

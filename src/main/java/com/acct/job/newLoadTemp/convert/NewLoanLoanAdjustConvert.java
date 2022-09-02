@@ -77,7 +77,6 @@ public class NewLoanLoanAdjustConvert {
         if (org.apache.commons.lang3.StringUtils.isNotEmpty(buffers[13])) {
             loanAdjustModel.setAcctDate(DateUtil.parseDate(buffers[13].toString(), "yyyy-MM-dd"));
         }
-        loanAdjustModel.setNewLoanFlag("1");
         return loanAdjustModel;
     }
 }

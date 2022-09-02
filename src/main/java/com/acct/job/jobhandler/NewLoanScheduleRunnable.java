@@ -42,7 +42,7 @@ public class NewLoanScheduleRunnable implements Runnable {
         //异步进行保存工作
         try {
             log.info("NewLoanScheduleRunnable startHandle start 开始解析新网贷文件：日期【{"+new Date()+"}】");
-            Map<String, String> typeNameMap = newLoanCommonService.excuteFiles();
+            Map<String, String> typeNameMap = newLoanCommonService.excuteProduceFiles();
             ResourceBundle bundle = ResourceBundle.getBundle("bank");
             Map<String, Object> map = ResourceBundleUtil.getBundleMap(bundle);
             Boolean isRemove = MapUtil.objToBoolean("acct.isRemove", map);

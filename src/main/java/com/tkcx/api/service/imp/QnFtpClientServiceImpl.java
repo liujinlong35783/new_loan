@@ -1,8 +1,16 @@
 package com.tkcx.api.service.imp;
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.druid.util.StringUtils;
+import com.dcfs.esb.ftp.common.error.FtpException;
+import com.dcfs.esb.ftp2.client.FtpClientConfig;
+import com.dcfs.esb.ftp2.client.FtpGet;
+import com.dcfs.esb.ftp2.client.FtpPut;
 import com.tkcx.api.exception.FileErrorCode;
 import com.tkcx.api.service.FtpClientService;
+import com.tkcx.api.utils.SFTPUtil;
+import com.tkcx.api.vo.ZhqdQueryReqVo;
+import com.tkcx.api.vo.afe.AfeUploadBodyRspVo;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import com.tkcx.api.vo.ftpFile.FileDownloadRspVo;
 import com.tkcx.api.vo.ftpFile.FileUploadReqVo;
@@ -10,16 +18,10 @@ import com.tkcx.api.vo.ftpFile.FileUploadRspVo;
 import common.core.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.druid.util.StringUtils;
-import com.dcfs.esb.ftp.common.error.FtpException;
-import com.dcfs.esb.ftp2.client.FtpClientConfig;
-import com.dcfs.esb.ftp2.client.FtpGet;
-import com.dcfs.esb.ftp2.client.FtpPut;
 
 import java.io.File;
 import java.util.Date;
@@ -87,7 +89,7 @@ public class QnFtpClientServiceImpl implements FtpClientService {
             String jarPath = new ApplicationHome(getClass()).getSource().getParentFile().toString();
             log.info("jar路徑" + jarPath);
             configPath = jarPath + configPath;
-
+//            configPath = jarPath + "/ftpClientConfig.properties";
             // 初始化ftp配置
             FtpClientConfig.setConfFilePath(configPath);
             FtpClientConfig config = FtpClientConfig.getInstance();
@@ -199,12 +201,31 @@ public class QnFtpClientServiceImpl implements FtpClientService {
             throw new ApplicationException(FileErrorCode.GET_FILE_FAIL);
         }
     }
+    @Autowired
+    private AfeCommonService afeCommonService;
+
+    /** SFTP 登录用户名*/
+    @Value("${afe.sftp.username}")
+    String username;
+    /** SFTP 登录密码*/
+    @Value("${afe.sftp.password}")
+    private String password;
+    /** SFTP 服务器地址IP地址*/
+    @Value("${afe.sftp.host}")
+    private String host;
+    /** SFTP 端口*/
+    @Value("${afe.sftp.port}")
+    private int port;
+    /** SFTP 基础路径*/
+    @Value("${afe.sftp.basePath}")
+    private String basePath;
+
 
     /**
      * 上传单个文件
      */
     @Override
-    public FileUploadRspVo ftpFileUpload(FileUploadReqVo req) throws ApplicationException {
+    public FileUploadRspVo ftpFileUpload(FileUploadReqVo req, ZhqdQueryReqVo queryReq) throws ApplicationException {
         if (req == null) {
             throw new ApplicationException(FileErrorCode.FILES_CANNOT_BE_EMPTY);
         }
@@ -250,13 +271,33 @@ public class QnFtpClientServiceImpl implements FtpClientService {
             throw new ApplicationException(FileErrorCode.FILE_CANNOT_BE_EMPTY);
         }
 
-        String uploadUrl = this.upload(localFullPathFileName, remoteFullPathFileName);
-        FileUploadRspVo rspVo = new FileUploadRspVo();
-        if (!uploadUrl.startsWith("/")) {
-            uploadUrl = "/" + uploadUrl;
+        //ftp服务器上传对应文件
+        //直连esb的上传
+        //String uploadUrl = this.upload(localFullPathFileName, remoteFullPathFileName);
+        //通过SFTP上传至ftp服务器
+        SFTPUtil sftpUtil = new SFTPUtil();
+        String txnDt = DateUtil.format(new Date(),"yyyyMMdd");
+        String uploadPath=File.separator+basePath+File.separator+File.separator+"send"+File.separator+txnDt+File.separator;
+        log.info("上传路径："+uploadPath);
+        log.info("上传文件名："+fileName);
+        sftpUtil.uploadFile(host,port,username,password,File.separator+basePath+File.separator,File.separator+"send"+File.separator+txnDt+File.separator,fileName,localFullPathFileName);
+//        sftpUtil.uploadFile(host,port,username,password,"//upload/KNQNJY01/",txnDt+"/send",fileName,localFullPathFileName);
+        //发送上传报文及解析响应报文
+        AfeUploadBodyRspVo rspData = afeCommonService.getUpLoadRspData(req,queryReq,fileExt);
+        if (rspData==null){
+            log.info("AFE下载文件信息响应为空");
         }
-        rspVo.setUrl(uploadUrl);
-        rspVo.setTranCode(qnUploadtranCode);
+
+        //afe上传文件到文服的路径
+        String fileAllPath = rspData.getFileAllPath();
+        //afe上传文件的文件传输代码
+        String fileTransCode = rspData.getFileTransCode();
+        FileUploadRspVo rspVo = new FileUploadRspVo();
+        if (!fileAllPath.startsWith("/")) {
+            fileAllPath = "/" + fileAllPath;
+        }
+        rspVo.setUrl(fileAllPath);
+        rspVo.setTranCode(fileTransCode);
         return rspVo;
     }
 

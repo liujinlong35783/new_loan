@@ -62,6 +62,8 @@ public class AcctDetailReadThread extends Thread {
                     // 线程停止
                     return;
                 }
+
+
                 // 程序每60毫秒执行一次 值可更改
                 Thread.sleep(60);
                 // 业务逻辑

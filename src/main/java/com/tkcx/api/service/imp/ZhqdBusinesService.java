@@ -3,10 +3,7 @@ package com.tkcx.api.service.imp;
 import cn.hutool.core.date.DateUtil;
 import com.tkcx.api.business.acctPrint.dao.*;
 import com.tkcx.api.business.acctPrint.html2pdf.BusiHtmlToPdf;
-import com.tkcx.api.business.acctPrint.model.AccountVoucherModel;
-import com.tkcx.api.business.acctPrint.model.LoanReceiptModel;
-import com.tkcx.api.business.acctPrint.model.RefundReceiptModel;
-import com.tkcx.api.business.acctPrint.model.VoucherPrintModel;
+import com.tkcx.api.business.acctPrint.model.*;
 import com.tkcx.api.business.acctPrint.service.AcctLogService;
 import com.tkcx.api.business.acctPrint.service.VoucherPrintService;
 import com.tkcx.api.business.hjtemp.utils.FileUtil;
@@ -88,7 +85,7 @@ public class ZhqdBusinesService {
                     break;
                 case 2:
                     RefundReceiptQuery refundReceiptQuery = new RefundReceiptQuery(queryContent);
-                    log.info("查询----客户借款信息-----登记簿");
+                    log.info("查询----客户还款回单信息-----登记簿");
                     queryResult = realTimeQueryService.realTime(refundReceiptQuery);
                     if(queryResult == null){
                         queryResult = refundReceiptDao.selectListByQuery(refundReceiptQuery);
@@ -103,8 +100,9 @@ public class ZhqdBusinesService {
                     queryResult = busiOrgSeqDao.selectListByQuery(new BusiOrgQuery(queryContent));
                     break;
                 case 5:
+                    LoanBillAndAdjustQuery adjustQuery = new LoanBillAndAdjustQuery(queryContent, queryReq.getInterfaceIden());
                     log.info("查询----贷款科目分户账-----登记簿");
-                    queryResult = loanAccBillDao.selectListByQuery(new LoanBillAndAdjustQuery(queryContent, queryReq.getInterfaceIden()));
+                    queryResult = loanAccBillDao.selectListByQuery(adjustQuery);
                     break;
                 case 6:
                     LoanBillAndAdjustQuery loanBillAndAdjustQuery = new LoanBillAndAdjustQuery(queryContent, queryReq.getInterfaceIden());
@@ -163,7 +161,7 @@ public class ZhqdBusinesService {
         String uuidName = cn.hutool.core.lang.UUID.randomUUID().toString();
         String pathName = tempUploadPath + DateUtil.formatDate(new Date()) + "/" + interfaceIden + "/" + uuidName;
         //远程存储路径，不包含文件名
-        String remoteFullPath = "/"+DateUtil.formatDate(new Date())+"/";
+        String remoteFullPath = "/send/"+DateUtil.format(new Date(),"yyyyMMdd")+"/";
         FileUploadReqVo uploadVo = new FileUploadReqVo();
         uploadVo.setFilePath(pathName);
         uploadVo.setFileName(uuidName);
@@ -175,7 +173,7 @@ public class ZhqdBusinesService {
                     ? FileUtil.makeFile(queryResults, pathName + ".txt")
                     : GenerateTxtFileUtil.writeDataTxt(queryResults, queryReq, pathName + ".txt"))) {//生成本地txt文件
                 uploadVo.setFileType("txt");
-                FileUploadRspVo rspVo = qnFtpClientServiceImpl.ftpFileUpload(uploadVo);//上传本地txt文件
+                FileUploadRspVo rspVo = qnFtpClientServiceImpl.ftpFileUpload(uploadVo,queryReq);//上传本地txt文件
                 queryCount = queryResults.size();
                 rsp.setFileTrnsmCd(rspVo.getTranCode());
                 rsp.setFilePath(rspVo.getUrl());
@@ -208,7 +206,7 @@ public class ZhqdBusinesService {
         if (BusiHtmlToPdf.toPdf(queryResults, queryReq, pathName + ".pdf")) {
             uploadVo.setFileType("pdf");
             try {
-                qnFtpClientServiceImpl.ftpFileUpload(uploadVo);//上传本地pdf文件
+                qnFtpClientServiceImpl.ftpFileUpload(uploadVo,queryReq);//上传本地pdf文件
             } catch (ApplicationException e) {
                 e.printStackTrace();
             }
@@ -233,14 +231,14 @@ public class ZhqdBusinesService {
             vpm.setPrintCount(0);
             if (interfaceIden == 1) {
                 LoanReceiptModel lRModel = (LoanReceiptModel) model;
-                vpm.setSerialNo(lRModel.getContractNo());
+                vpm.setSerialNo(lRModel.getContractNo()+"");
             } else if (interfaceIden == 2) {
                 RefundReceiptModel rRmodel = (RefundReceiptModel) model;
                 if (rRmodel.getPayoffDate() != null)
                     vpm.setSerialNo(rRmodel.getContractNo() + DateUtil.format(rRmodel.getPayoffDate(), "yyyyMMddHHmmss"));
             } else if (interfaceIden == 8) {
                 AccountVoucherModel aVmodel = (AccountVoucherModel) model;
-                vpm.setSerialNo(aVmodel.getSerialNo());
+                vpm.setSerialNo(aVmodel.getSerialNo()+"");
             }
             voucherPrintService.saveOrUpdateAcctLogBySerialNo(vpm);
         }

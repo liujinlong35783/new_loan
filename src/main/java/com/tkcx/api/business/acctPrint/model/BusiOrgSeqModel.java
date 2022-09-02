@@ -127,12 +127,7 @@ public class BusiOrgSeqModel extends Model<BusiOrgSeqModel>  implements IAcctPri
 	@TableField(value="OPERATOR")
 	private String operator;
 
-	/**
-	 * 新网贷标志
-	 *
-	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+
 
 	@Override
 	protected Serializable pkVal() {

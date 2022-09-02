@@ -29,7 +29,6 @@ public class InterestBillThread extends AcctBaseThread {
 
     @Override
     public void run(){
-
         log.info("InterestBillThread start..." + new Date());
 
         // 贷款利息登记簿

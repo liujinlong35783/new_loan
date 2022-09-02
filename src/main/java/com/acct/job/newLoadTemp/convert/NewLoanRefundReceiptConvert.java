@@ -87,7 +87,6 @@ public class NewLoanRefundReceiptConvert {
         refundReceiptModel.setBorrowerIdnum(buffers[20].toString());
         refundReceiptModel.setOrgName(buffers[21].toString());
         refundReceiptModel.setOrgCode(buffers[22].toString());
-        refundReceiptModel.setNewLoanFlag("1");
 
         return refundReceiptModel;
     }

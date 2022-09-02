@@ -46,6 +46,16 @@ public class EnumConstant {
      * 等额本金
      */
     public static final Integer EQ_PRINCIPAL_PMT = 2;
+    /**
+     * 先息后本
+     */
+    //我改的
+    public static final Integer pay_int_principal_due = 3;
+
+    /**
+     * 等本等息
+     */
+    public static final Integer eq_prin_inte_pmt = 4;
 
     /**
      * 现转标识：0-现金，1-转账

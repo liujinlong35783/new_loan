@@ -251,12 +251,27 @@ public class BusiCommonService {
      * @return
      */
     public String getContractNoByAssetItemNo(String assetItemNo) {
-        if (StringUtils.isNotEmpty(assetItemNo)) {
+        /*if (StringUtils.isNotEmpty(assetItemNo)) {
             return (String) commonMapper.getBySql("select a.ASSET_ATTACHMENT_CONTRACT_CODE from QN_DB_BIZ.ASSET_ATTACHMENT a where a.ASSET_ATTACHMENT_ASSET_ITEM_NO = '"+assetItemNo+"' and a.ASSET_ATTACHMENT_TYPE = 'bank_loan_contract'");
+        }*/
+        //我改的
+        try {
+            if (StringUtils.isNotEmpty(assetItemNo)) {
+                String type = (String) commonMapper.getBySql("select a.asset_type from QN_DB_BIZ.ASSET a where a.ASSET_ITEM_NO = '" + assetItemNo + "'");
+                Object object = commonMapper.getBySql("select a.ASSET_ATTACHMENT_CONTRACT_CODE from QN_DB_BIZ.ASSET_ATTACHMENT a where a.ASSET_ATTACHMENT_ASSET_ITEM_NO = '"+assetItemNo+"' and a.ASSET_ATTACHMENT_TYPE = 'bank_loan_contract'");
+                if (object==null) {
+                    return (String) commonMapper.getBySql("select a.ASSET_ATTACHMENT_CONTRACT_CODE from QN_DB_BIZ.ASSET_ATTACHMENT a where a.ASSET_ATTACHMENT_ASSET_ITEM_NO = '" + assetItemNo + "' and a.ASSET_ATTACHMENT_TYPE like '" + type + "%contract'");
+                }else {
+                    return (String) object;
+                }}
+
+
+        } catch (Exception e) {
+            System.out.println(assetItemNo);
+            throw new RuntimeException(e);
         }
         return "";
     }
-
 
     /**
      * 获取历史已还本金金额（包含本次）

@@ -87,7 +87,6 @@ public class NewLoanInterestBillConvert {
         interestBillModel.setBorrowerIdnum(buffers[19].toString());
         interestBillModel.setLoanName(buffers[20].toString());
         interestBillModel.setContractNo(buffers[21].toString());
-        interestBillModel.setNewLoanFlag("1");
         return interestBillModel;
     }
 }

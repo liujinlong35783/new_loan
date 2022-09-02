@@ -57,6 +57,10 @@ public class AcctDataService extends CommonService<AcctDataDao,AcctDataModel> {
         return acctDataDao.selectModelList(startDate, endDate);
     }
 
+    public String selectMessage(Integer id){
+        return acctDataDao.selectAcctDataDetailMessage(id);
+    }
+
     public List<AcctDataModel> selectModelPage(Page<AcctDataModel> page, Date startDate, Date endDate) {
         // 不进行 count sql 优化，解决 MP 无法自动优化 SQL 问题，这时候你需要自己查询 count 部分
         // page.setOptimizeCountSql(false);

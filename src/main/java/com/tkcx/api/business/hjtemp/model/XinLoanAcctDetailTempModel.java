@@ -199,12 +199,7 @@ public class XinLoanAcctDetailTempModel extends Model<XinLoanAcctDetailTempModel
 	private String transferFlag;
 
 
-	/**
-	 * 新网贷标志
-	 *
-	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+
 
 	public XinLoanAcctDetailTempModel() {
 	}

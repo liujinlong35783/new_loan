@@ -62,6 +62,13 @@ public class AcctBusiCodeService extends CommonService<AcctBusiCodeDao,AcctBusiC
     }
 
     public AcctBusiCodeModel getModelByBusiCode(String busiCode, String balanceIdentifier){
+        try {
+            AcctBusiCodeModel modelByBusiCode = acctBusiCodeDao.getModelByBusiCode(busiCode, balanceIdentifier);
+        } catch (Exception e) {
+            System.out.println(busiCode);
+            System.out.println(balanceIdentifier);
+            throw new RuntimeException(e);
+        }
         return acctBusiCodeDao.getModelByBusiCode(busiCode, balanceIdentifier);
     }
 }
