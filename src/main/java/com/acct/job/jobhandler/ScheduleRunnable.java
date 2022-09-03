@@ -2,6 +2,7 @@ package com.acct.job.jobhandler;
 
 import cn.hutool.core.date.DateUtil;
 import com.acct.job.thread.*;
+import com.tkcx.api.business.hjtemp.fileService.AcctDetailFileService;
 import com.tkcx.api.business.hjtemp.model.HjFileInfoModel;
 import com.tkcx.api.business.hjtemp.service.HjFileInfoService;
 import com.tkcx.api.business.hjtemp.utils.HjFileFlagConstant;
@@ -32,7 +33,10 @@ public class ScheduleRunnable implements Runnable {
     private BusiCommonService busiCommonService = BeanContext.getBean(BusiCommonService.class);
 
     //@Autowired
-    private HjFileInfoService hjFileInfoService= BeanContext.getBean(HjFileInfoService.class);;
+    private HjFileInfoService hjFileInfoService= BeanContext.getBean(HjFileInfoService.class);
+
+    private AcctDetailFileService acctDetailFileService= BeanContext.getBean(AcctDetailFileService.class);
+
 
     @Override
     public void run() {
@@ -113,6 +117,7 @@ public class ScheduleRunnable implements Runnable {
         // 优雅关闭线程池
         try {
             boolean flag;
+            acctDetailFileService.delAcctDetailTempData(selectDate);
             do {
                 flag = ! threadPool.awaitTermination(500, TimeUnit.MILLISECONDS);
             } while (flag);

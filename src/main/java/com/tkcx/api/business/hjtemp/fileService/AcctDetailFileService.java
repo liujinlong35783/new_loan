@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -77,6 +78,13 @@ public class AcctDetailFileService {
         hjCommonService.updateReadFileInfo(queryResult);
     }
 
+    public boolean delAcctDetailTempData(Date fileDate) {
 
+        boolean remove = acctDetailTempService.remove(null);
+        if(remove){
+            log.info("{}日之前的AcctDetailTempModel数据清空成功", fileDate);
+        }
+        return remove;
+    }
 
 }
