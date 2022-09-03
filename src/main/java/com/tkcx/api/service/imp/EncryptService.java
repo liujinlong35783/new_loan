@@ -29,8 +29,11 @@ public class EncryptService {
 	@Value("${bank.service.sysId}")
 	private String systemId;
 
-	@Value("${bank.security.secNodeID}")
-	private String secNodeID;
+	@Value("${bank.service.sysId1}")
+	private String systemId1;
+
+	@Value("${bank.security.secNodeID1}")
+	private String secNodeID1;
 	
 	@Value("${bank.security.destSecNodeID}")
 	private String destSecNodeID;
@@ -43,7 +46,7 @@ public class EncryptService {
 	@PostConstruct
 	private void init() throws ApplicationException {
 		try {
-			SecAPI.nodeInit(secNodeID);
+			SecAPI.nodeInit(secNodeID1);
 		} catch (Throwable e) {
 			log.error("初始化加密机客户端失败,错误码：" + e.getMessage());
 		}
@@ -55,7 +58,7 @@ public class EncryptService {
 	@PreDestroy
 	private void destroy() throws ApplicationException {
 		try {
-			SecAPI.nodeFinal(secNodeID);
+			SecAPI.nodeFinal(secNodeID1);
 		} catch (Throwable e) {
 			log.error("退出加密机客户端失败,错误码：" + e.getMessage());
 		}
@@ -67,10 +70,10 @@ public class EncryptService {
 	public String generateMac(String content) throws ApplicationException {
 		try {
 			byte[] contentData = content.getBytes(StandardCharsets.UTF_8);
-			byte[] macData = SecAPI.mac(secNodeID, destSecNodeID, contentData);
+			byte[] macData = SecAPI.mac(secNodeID1, destSecNodeID, contentData);
 			String mac = new String(macData);
-			String length = String.format("%04d", mac.length()  +  secNodeID.length());
-			return length + mac + secNodeID;
+			String length = String.format("%04d", mac.length()  +  secNodeID1.length());
+			return length + mac + secNodeID1;
 		} catch (SecException e) {
 			log.error("生成mac失败,错误码：" + e.getMessage());
 			throw new ApplicationException(ErrorCode.FAIL_GENERATE_MAC, "生成mac失败", e);
@@ -84,7 +87,7 @@ public class EncryptService {
 		try {
 			byte[] contentData = content.getBytes(StandardCharsets.UTF_8);
 			String mac = macBlock.substring(MAC_BLOCK_LENGTH_BIT, macBlock.length() - destSecNodeID.length());
-			SecAPI.macVerify(secNodeID, destSecNodeID, contentData, mac.getBytes());
+			SecAPI.macVerify(secNodeID1, destSecNodeID, contentData, mac.getBytes());
 		} catch (SecException e) {
 			log.error("验证mac失败,错误码：" + e.getMessage());
 			throw new ApplicationException(ErrorCode.FAIL_VERIFY_MAC, "验证mac失败", e);
@@ -122,11 +125,27 @@ public class EncryptService {
 		return stringBuilder.append(systemId).append(formatTime).append(serialNumber).toString();
 	}
 
+	public String getNx1() {
+		StringBuilder stringBuilder = new StringBuilder();
+		Date time = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+		// 拿到系统时间
+		String formatTime = dateFormat.format(time);
+		// 拿到数据库序列号
+		Random rd = new SecureRandom();
+		int sn = rd.nextInt(100000000);
+		// 超过8位数后从头开始
+		int suffix = sn % 100000000;
+		// 虚列号不足8位的前边用0补足
+		String serialNumber = String.format("%08d", suffix);
+		return stringBuilder.append(systemId1).append(formatTime).append(serialNumber).toString();
+	}
+
 	public static void main(String[] args) {
 
 		EncryptService encryptService = new EncryptService();
 		System.out.println(encryptService.getNx());
-		System.out.println(encryptService.getNx().length());
+		System.out.println(encryptService.getNx1().length());
 	}
 
 }

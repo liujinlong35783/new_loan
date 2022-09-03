@@ -231,7 +231,7 @@ public class QnBankApiServiceImpl implements BankApiService {
 		try {
 			req = bankCommonService.receiveZH(msg, ZhqdQueryReqVo.class);
 			rsp = zhqdBusinesService.queryEntry(req);//获取返回信息
-			resultXml = bankCommonService.response(req, rsp);
+			resultXml = bankCommonService.responseZH(req, rsp);
 		}catch (ApplicationException e) {
 			log.error("查询失败,错误原因：" + e);
 			rsp.setRetCd("999999");

@@ -74,6 +74,10 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
         return acctDetailTempDao.getDetailBySeq(channelSeq, debtFlag);
     }
 
+    public List<AcctDetailTempModel> getDetailByAcctDate(Date acctDate){
+        return acctDetailTempDao.getDetailByAcctDate(acctDate);
+    }
+
     /**
      * 统计轧帐单
      * @param acctDate

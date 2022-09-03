@@ -6,7 +6,7 @@ spring:
   datasource:
     ## uat环境
     driver-class-name: oracle.jdbc.OracleDriver
-    #url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
+#    url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
 #    url: jdbc:oracle:thin:@//6.106.16.104:1521/orcl
     url: jdbc:oracle:thin:@//6.106.16.104:1521/QNA
     #QN_DB_ACCT  123456

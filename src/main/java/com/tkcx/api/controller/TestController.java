@@ -1,7 +1,6 @@
 package com.tkcx.api.controller;
 
 import cn.hutool.core.date.DateUtil;
-import com.acct.job.jobhandler.NewLoanScheduleRunnable;
 import com.acct.job.jobhandler.ScheduleRunnable;
 import com.alibaba.fastjson.JSONObject;
 import com.tkcx.api.business.hjtemp.fileService.BusiCodeFileService;
@@ -117,14 +116,6 @@ public class TestController {
         new ScheduleRunnable().run();
         return result;
     }
-
-    @RequestMapping(value = "/testNewLoanThread", method = RequestMethod.POST)
-    public String testNewLoanThread() {
-        String result = "ok";
-        new NewLoanScheduleRunnable().run();
-        return result;
-    }
-
     @Autowired
     private AfeCommonService afeCommonService;
 

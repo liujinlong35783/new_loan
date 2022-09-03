@@ -41,10 +41,10 @@ public class ScheduleRunnable implements Runnable {
         log.info("ScheduleRunnable start {} ..." + startDate);
         // 获取会计日期
         Date selectDate = busiCommonService.getCoreSysDate();
-/*        //测试使用
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2023,9,22);*/
-/*        Date selectDate = calendar.getTime();*/
+        //测试使用
+/*        Calendar calendar = Calendar.getInstance();
+        calendar.set(2024,5,21);
+        Date selectDate = calendar.getTime();*/
         if(selectDate!=null){
             selectDate = DateUtil.parse(DateUtil.formatDate(selectDate),"yyyy-MM-dd");
         }
@@ -93,6 +93,7 @@ public class ScheduleRunnable implements Runnable {
 
         // 4. 网贷业务机构业务流水，数据来自于网贷+会计凭证 ACCT_DETAIL_TEMP 表
         threadPool.execute(new BusiOrgSeqThread(selectDate));
+
         // 5. 贷款分户账 网贷数据+会计凭证ACCT_ORG_TEMP表，ACCT_ORG_TEMP数据来自于互金
         threadPool.execute(new LoanAccBillThread(selectDate));
 

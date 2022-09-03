@@ -213,6 +213,7 @@ public class AfeCommonService {
     private static final int RESERVE_SPACE = 64;
     private static final int ENCRYPT_LEN = 8;
     private static final String P_PASSWD="123456";
+
     @Value("${bank.service.sysId}")
     private String systemId;
 

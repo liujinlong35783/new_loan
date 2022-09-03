@@ -57,4 +57,12 @@ public interface AcctDetailTempDao extends BaseMapper<AcctDetailTempModel>{
             "GROUP BY adt.ACCT_ORG,adt.ITEM_CTRL,adt.CURRENCY,adt.DEBT_FLAG,adt.OFF_BALANCE_FLAG,adt.ACCT_TYPE " +
             "ORDER BY adt.ACCT_ORG,adt.ITEM_CTRL,adt.DEBT_FLAG,adt.OFF_BALANCE_FLAG")
     List<BusiOrgBillVo> findStatAllBusiOrgBillVo(@Param("acctDate")Date acctDate);
+
+    /**
+     * 根据会计日期查科目
+     * @return
+     */
+    @Select("select * from QN_DB_ACCT.ACCT_DETAIL_TEMP t where t.ITEM_CTRL not in ('200501') and  t.ACCT_DATE = #{acctDate}")
+    List<AcctDetailTempModel> getDetailByAcctDate(@Param("acctDate")Date acctDate);
+
 }

@@ -2,6 +2,7 @@ package com.tkcx.api.business.hjtemp.service;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import com.tkcx.api.common.CommonService;
 import com.tkcx.api.business.hjtemp.dao.AcctBrchTempDao;
 import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -53,6 +55,17 @@ public class AcctBrchTempService extends CommonService<AcctBrchTempDao,AcctBrchT
 
     public List<AcctBrchTempModel> selectList(AcctBrchTempModel model) {
         return acctBrchTempDao.selectModelList(model);
+    }
+
+    /**
+     * 通过会计日期获取会计科目数据
+     *
+     * @param curDate
+     * @return
+     */
+    public List<AcctBrchTempModel> queryBrchByAcctDate(Date curDate){
+        List<AcctBrchTempModel> acctBrchTempModels = acctBrchTempDao.queryBrchByAcctDate(curDate);
+        return acctBrchTempModels;
     }
 
 }

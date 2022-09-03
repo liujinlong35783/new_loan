@@ -50,6 +50,8 @@ public class BankCommonService {
 
 	@Value("${bank.service.sysId}")
 	private String sysId;
+	@Value("${bank.service.sysId1}")
+	private String sysId1;
 	@Value("${bank.service.txnChnlTp}")
 	private String txnChnlTp;
 	@Value("${bank.service.txntlrId}")
@@ -112,8 +114,49 @@ public class BankCommonService {
 		sysHead.setCnsmrSeqNo(request.getSysHeadVo().getCnsmrSeqNo());
 		sysHead.setOrigCnsmrSeqNo(request.getSysHeadVo().getOrigCnsmrSeqNo());
 		sysHead.setOrigCnsmrSvrId(request.getSysHeadVo().getOrigCnsmrSvrId());
-		sysHead.setSvcSplrSysId(sysId);
+		sysHead.setSvcSplrSysId(sysId1);
 		
+		String customerSeqNo = encryptService.getNx1();
+		sysHead.setSvcSplrSeqNo(customerSeqNo);
+		sysHead.setTxnSt(response.getTxnSt());
+		sysHead.setRetCd(response.getRetCd());
+		sysHead.setRetMsg(response.getRetMsg());
+
+		AppHeadVo appHead = new AppHeadVo();
+		appHead.setTxnTlrId(request.getAppHeadVo().getTxnTlrId());
+		appHead.setOrgId(request.getAppHeadVo().getOrgId());
+		appHead.setTlrPwsd(request.getAppHeadVo().getTlrPwsd());
+		appHead.setTlrLvl(request.getAppHeadVo().getTlrLvl());
+
+		BodyVo body = new BodyVo();
+		body.setParamMap(response.toMap());
+
+		ServiceVo service = new ServiceVo();
+		service.setSysHead(sysHead);
+		service.setAppHead(appHead);
+		service.setBody(body);
+		/**
+		 *
+		 */
+		String responseMessage = this.convertVoToMessageZH(service);
+		log.info("响应请求-->" + responseMessage);
+		return responseMessage;
+	}
+
+	/**
+	 * 响应请求
+	 */
+	public String responseZH(ServiceRequestVo request, ServiceResponseVo response) throws ApplicationException {
+
+		SysHeadVo sysHead = new SysHeadVo();
+		sysHead.setSvcCd(request.getSysHeadVo().getSvcCd());
+		sysHead.setSvcScn(request.getSysHeadVo().getSvcScn());
+		sysHead.setCnsmrSysId(request.getSysHeadVo().getCnsmrSysId());
+		sysHead.setCnsmrSeqNo(request.getSysHeadVo().getCnsmrSeqNo());
+		sysHead.setOrigCnsmrSeqNo(request.getSysHeadVo().getOrigCnsmrSeqNo());
+		sysHead.setOrigCnsmrSvrId(request.getSysHeadVo().getOrigCnsmrSvrId());
+		sysHead.setSvcSplrSysId(sysId);
+
 		String customerSeqNo = encryptService.getNx();
 		sysHead.setSvcSplrSeqNo(customerSeqNo);
 		sysHead.setTxnSt(response.getTxnSt());
@@ -262,12 +305,12 @@ public class BankCommonService {
 		XStream.setupDefaultSecurity(xStream);
 		xStream.allowTypes(new Class[] { ServiceVo.class });
 //MAC地址校验
-/*		int macLenght = Integer.valueOf(message.substring(TOTAL_LENGTH_BIT, TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT));
+		int macLenght = Integer.valueOf(message.substring(TOTAL_LENGTH_BIT, TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT));
 		String expectMacBlock = message.substring(TOTAL_LENGTH_BIT,
 				TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
 		String xmlBlock = message.substring(TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
 
-		encryptService.verifyMac(xmlBlock, expectMacBlock);*/
+		encryptService.verifyMac(xmlBlock, expectMacBlock);
 		Object xml = xStream.fromXML(message);
 		return (ServiceVo)xml;
 	}
