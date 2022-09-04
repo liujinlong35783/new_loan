@@ -72,9 +72,9 @@ public class QnBankApiServiceImpl implements BankApiService {
 	private static final int FILE_NAME_LENGTH = 40;
 
 	@Override
-	public String hjNotice(String EncryptMsg) throws ApplicationException {
+	public String hjNotice(String msg) throws ApplicationException {
 //		log.info("QnBankApiServiceImpl hjNotice EncryptMsg:"+EncryptMsg);
-		log.info("QnBankApiServiceImpl hjNotice DecryptMsg:"+EncryptMsg);
+		log.info("QnBankApiServiceImpl hjNotice DecryptMsg:"+msg);
 		//解密后的报文
 		//互金直推不过AFE
 //		String msg = afeUtilsService.afeDecryptMsg(EncryptMsg);
@@ -86,9 +86,9 @@ public class QnBankApiServiceImpl implements BankApiService {
 		HjFileDataReqVo req = null;
 		try {
 			//报文转实体对象
-			req = bankCommonService.receive(EncryptMsg, HjFileDataReqVo.class);
+			req = bankCommonService.receive(msg, HjFileDataReqVo.class);
 			//获取文件信息列表
-			List fileList = req.getFileInfo();
+			List<HjFileDataReqVo.FileInfo> fileList = req.getFileInfo();
 			log.info("fileList :"+fileList);
 			if(fileList == null || fileList.size() == 0) {
 				log.info("fileList size null or size==0");
@@ -453,15 +453,7 @@ public class QnBankApiServiceImpl implements BankApiService {
 	}
 
 
-	public String  makeDownloadFile1(){
-		try {
-			String message ="000016630030jwbSaTTkGJ6Qudgbe0rC/uNO106100<?xml version=\"1.0\" encoding=\"UTF-8\"?><Service><SysHead><SvcCd>3002040002</SvcCd><SvcScn>03</SvcScn><SvcSplrTxnCd></SvcSplrTxnCd><CnsmrSysId>108400</CnsmrSysId><TxnDt>2022-09-03</TxnDt><TxnTm>231706</TxnTm><AcgDt>2022-09-03</AcgDt><CnsmrSeqNo>1084002022090211170609180189</CnsmrSeqNo><TxnChnlTp>01000000</TxnChnlTp><ChnlDtl>01000000</ChnlDtl><TxnTmlId></TxnTmlId><CnsmrSvrId>8.1.8.244</CnsmrSvrId><OrigCnsmrSeqNo>1084002022090211170609180189</OrigCnsmrSeqNo><OrigCnsmrId>108400</OrigCnsmrId><OrigTmlId></OrigTmlId><OrigCnsmrSvrId></OrigCnsmrSvrId><UsrLng>CHINESE</UsrLng><FileFlg></FileFlg></SysHead><AppHead><TxnTlrId>ACCT</TxnTlrId><OrgId>27013000</OrgId><TlrPwsd></TlrPwsd><TlrLvl></TlrLvl><TlrTp></TlrTp><AprvFlg></AprvFlg><AhrTlrInf type=\"array\"></AhrTlrInf><AprvTlrInf type=\"array\"></AprvTlrInf><AhrFlg></AhrFlg></AppHead><Body><TranOcrDt>23:17:06</TranOcrDt><Rmrk>数据抽取</Rmrk><DtlInfoAry type=\"array\"><Struct><MakeFileFlg>t_act_one_detail</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_one_detail_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_brch_day_tot</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_brch_day_tot_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_busi_code_map</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_busi_code_map_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_pub_org</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_pub_org_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct></DtlInfoAry></Body></Service>";
-			return hjNotice(message);
-		} catch (ApplicationException e) {
-			log.info(e.getMessage());
-			throw new RuntimeException(e);
-		}
-	}
+
 
 	public static void main(String[] args) throws ApplicationException {
 		new QnBankApiServiceImpl().makeDownloadFile();

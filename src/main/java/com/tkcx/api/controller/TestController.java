@@ -10,6 +10,8 @@ import com.tkcx.api.business.wdData.service.AcctDataService;
 import com.tkcx.api.common.BeanContext;
 import com.tkcx.api.service.BankApiService;
 import com.tkcx.api.service.imp.AfeCommonService;
+import com.tkcx.api.service.imp.QnBankApiServiceImpl;
+import com.tkcx.api.utils.ToolUtil;
 import com.tkcx.api.vo.ftpFile.FileDownloadReqVo;
 import common.core.exception.ApplicationException;
 import lombok.extern.slf4j.Slf4j;
@@ -158,5 +160,16 @@ public class TestController {
         busiCodeFileService.delBusiCodeData(fileDate);
         return "ok";
     }
+
+//    /**
+//     * 测试业务编码表删除
+//     * @return
+//     */
+//    @RequestMapping(value = "/cu", method = RequestMethod.POST)
+//    public String cu() throws ApplicationException {
+//
+//        String message = new ToolUtil().diao("123");
+//        return "123";
+//    }
 
 }

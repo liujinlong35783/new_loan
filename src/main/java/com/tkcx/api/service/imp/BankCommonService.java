@@ -304,7 +304,7 @@ public class BankCommonService {
 		xStream.ignoreUnknownElements();
 		XStream.setupDefaultSecurity(xStream);
 		xStream.allowTypes(new Class[] { ServiceVo.class });
-//MAC地址校验
+		//MAC地址校验
 		int macLenght = Integer.valueOf(message.substring(TOTAL_LENGTH_BIT, TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT));
 		String expectMacBlock = message.substring(TOTAL_LENGTH_BIT,
 				TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
@@ -312,7 +312,7 @@ public class BankCommonService {
 		log.info("convertMessageToVo-xmlBlock: "+xmlBlock);
 		encryptService.verifyMac(xmlBlock, expectMacBlock);
 		log.info("验证MAC通过");
-		Object xml = xStream.fromXML(message);
+		Object xml = xStream.fromXML(xmlBlock);
 		return (ServiceVo)xml;
 	}
 

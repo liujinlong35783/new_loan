@@ -91,6 +91,7 @@ public class EncryptService {
 			byte[] contentData = content.getBytes(StandardCharsets.UTF_8);
 			String mac = macBlock.substring(MAC_BLOCK_LENGTH_BIT, macBlock.length() - destSecNodeID.length());
 			SecAPI.macVerify(secNodeID1, destSecNodeID, contentData, mac.getBytes());
+			log.info("MAC验证成功");
 		} catch (SecException e) {
 			log.error("验证mac失败,错误码：" + e.getMessage());
 			throw new ApplicationException(ErrorCode.FAIL_VERIFY_MAC, "验证mac失败", e);

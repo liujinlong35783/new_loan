@@ -44,10 +44,10 @@ public class ScheduleRunnable implements Runnable {
         Date startDate = new Date();
         log.info("ScheduleRunnable start {} ..." + startDate);
         // 获取会计日期
-        Date selectDate = busiCommonService.getCoreSysDate();
+       Date selectDate = busiCommonService.getCoreSysDate();
         //测试使用
 /*        Calendar calendar = Calendar.getInstance();
-        calendar.set(2024,5,21);
+        calendar.set(2022,8,01);
         Date selectDate = calendar.getTime();*/
         if(selectDate!=null){
             selectDate = DateUtil.parse(DateUtil.formatDate(selectDate),"yyyy-MM-dd");
@@ -115,17 +115,21 @@ public class ScheduleRunnable implements Runnable {
         // 关闭线程池
         threadPool.shutdown();
         // 优雅关闭线程池
+        boolean threadResult=true;
         try {
             boolean flag;
-            acctDetailFileService.delAcctDetailTempData(selectDate);
             do {
                 flag = ! threadPool.awaitTermination(500, TimeUnit.MILLISECONDS);
             } while (flag);
         } catch (InterruptedException e) {
+            threadResult=false;
             log.error("会计凭证定时任务执行异常：{}" ,e);
         } finally {
             Date endDate = new Date();
             log.info("ScheduleRunnable end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween(startDate, endDate));
+            if (threadResult) {
+                acctDetailFileService.delAcctDetailTempData(selectDate);
+            }
         }
     }
 }
