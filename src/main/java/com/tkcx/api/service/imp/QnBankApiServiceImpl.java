@@ -452,6 +452,17 @@ public class QnBankApiServiceImpl implements BankApiService {
 		}
 	}
 
+
+	public String  makeDownloadFile1(){
+		try {
+			String message ="000016630030jwbSaTTkGJ6Qudgbe0rC/uNO106100<?xml version=\"1.0\" encoding=\"UTF-8\"?><Service><SysHead><SvcCd>3002040002</SvcCd><SvcScn>03</SvcScn><SvcSplrTxnCd></SvcSplrTxnCd><CnsmrSysId>108400</CnsmrSysId><TxnDt>2022-09-03</TxnDt><TxnTm>231706</TxnTm><AcgDt>2022-09-03</AcgDt><CnsmrSeqNo>1084002022090211170609180189</CnsmrSeqNo><TxnChnlTp>01000000</TxnChnlTp><ChnlDtl>01000000</ChnlDtl><TxnTmlId></TxnTmlId><CnsmrSvrId>8.1.8.244</CnsmrSvrId><OrigCnsmrSeqNo>1084002022090211170609180189</OrigCnsmrSeqNo><OrigCnsmrId>108400</OrigCnsmrId><OrigTmlId></OrigTmlId><OrigCnsmrSvrId></OrigCnsmrSvrId><UsrLng>CHINESE</UsrLng><FileFlg></FileFlg></SysHead><AppHead><TxnTlrId>ACCT</TxnTlrId><OrgId>27013000</OrgId><TlrPwsd></TlrPwsd><TlrLvl></TlrLvl><TlrTp></TlrTp><AprvFlg></AprvFlg><AhrTlrInf type=\"array\"></AhrTlrInf><AprvTlrInf type=\"array\"></AprvTlrInf><AhrFlg></AhrFlg></AppHead><Body><TranOcrDt>23:17:06</TranOcrDt><Rmrk>数据抽取</Rmrk><DtlInfoAry type=\"array\"><Struct><MakeFileFlg>t_act_one_detail</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_one_detail_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_brch_day_tot</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_brch_day_tot_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_busi_code_map</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_busi_code_map_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_pub_org</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_pub_org_20220902.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct></DtlInfoAry></Body></Service>";
+			return hjNotice(message);
+		} catch (ApplicationException e) {
+			log.info(e.getMessage());
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static void main(String[] args) throws ApplicationException {
 		new QnBankApiServiceImpl().makeDownloadFile();
 	}

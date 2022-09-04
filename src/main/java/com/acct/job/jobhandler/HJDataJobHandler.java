@@ -22,8 +22,8 @@ public class HJDataJobHandler extends IJobHandler {
 
         log.info("AcctDataJobHandler -->>>>>>>>start....");
 
-        boolean result = new QnBankApiServiceImpl().makeDownloadFile();
-        log.info("AcctDataJobHandler -->>>>>>>>end....:"+result);
+        String message = new QnBankApiServiceImpl().makeDownloadFile1();
+        log.info("AcctDataJobHandler -->>>>>>>>end....:"+message);
 
         return SUCCESS;
     }

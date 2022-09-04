@@ -32,6 +32,9 @@ public class EncryptService {
 	@Value("${bank.service.sysId1}")
 	private String systemId1;
 
+	@Value("${bank.security.secNodeID}")
+	private String secNodeID;
+
 	@Value("${bank.security.secNodeID1}")
 	private String secNodeID1;
 	

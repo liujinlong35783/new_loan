@@ -1,5 +1,6 @@
 package com.acct.job.thread;
 
+import cn.hutool.core.date.DateUtil;
 import com.tkcx.api.business.acctPrint.model.BusiOrgBillModel;
 import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,8 @@ public class BusiOrgBillThread extends AcctBaseThread {
 //        }
 //        log.info("BusiOrgBillThread end..." + new Date());
 //    }
-        log.info("BusiOrgBillThread start..." + new Date());
+        Date startDate = new Date();
+        log.info("BusiOrgBillThread start..." + startDate);
         System.out.println(super.getCurDate());
         List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(super.getCurDate());
         ArrayList<BusiOrgBillModel> busiOrgBillLoanList = new ArrayList<>();
@@ -80,6 +82,8 @@ public class BusiOrgBillThread extends AcctBaseThread {
             log.info("BusiOrgBill record is {}.", busiOrgBillLoanList.size());
             busiOrgBillService.saveBatch(busiOrgBillLoanList);
         }
-        log.info("BusiOrgBillThread end..." + new Date());
+        Date endDate = new Date();
+        log.info("BusiOrgBillThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
+
     }
 }

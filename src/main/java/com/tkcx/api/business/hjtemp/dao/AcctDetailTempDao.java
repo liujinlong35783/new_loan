@@ -3,6 +3,7 @@ package com.tkcx.api.business.hjtemp.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import com.tkcx.api.business.hjtemp.model.vo.BusiOrgBillVo;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
@@ -64,5 +65,12 @@ public interface AcctDetailTempDao extends BaseMapper<AcctDetailTempModel>{
      */
     @Select("select * from QN_DB_ACCT.ACCT_DETAIL_TEMP t where t.ITEM_CTRL not in ('200501') and  t.ACCT_DATE = #{acctDate}")
     List<AcctDetailTempModel> getDetailByAcctDate(@Param("acctDate")Date acctDate);
+
+    /**
+     * 根据会计日期查科目
+     * @return
+     */
+    @Delete("DELETE from QN_DB_ACCT.ACCT_DETAIL_TEMP t where  t.ACCT_DATE <= #{acctDate}")
+    Boolean delAcctDetailTempData(@Param("acctDate")Date acctDate);
 
 }

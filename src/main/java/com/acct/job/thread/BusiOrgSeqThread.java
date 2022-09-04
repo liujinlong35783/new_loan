@@ -56,6 +56,7 @@ public class BusiOrgSeqThread extends AcctBaseThread {
 //        }catch (Exception e) {
 //            log.error("网贷业务机构业务流水线程执行：{}", e);
 //        }
+        Date startDate = new Date();
         List<AcctDetailTempModel> detailList = queryDetailByAcctDate(super.getCurDate());
         log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",getCurDate(),detailList.size());
         List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
@@ -77,6 +78,8 @@ public class BusiOrgSeqThread extends AcctBaseThread {
                 }
                 busiOrgSeq.setAbstracts(getAbstracts(acctData.getScene()));
                 busiOrgSeq.setAcctDate(DateUtil.parse(acctData.getAcgDt(),"yyyy-MM-dd"));
+            } else {
+                continue;
             }
             busiOrgSeq.setItemCtrl(acctDetail.getItemCtrl());
             if (busiOrgSeq.getOrgCode()!=null) {
@@ -98,6 +101,8 @@ public class BusiOrgSeqThread extends AcctBaseThread {
         }
         //保存入库
         saveBatchList(busiOrgSeqList);
+        Date endDate = new Date();
+        log.info("BusiOrgSeqThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
 
     }
     private void saveBatchList(List<BusiOrgSeqModel> busiOrgSeqList) {

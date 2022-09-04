@@ -138,7 +138,7 @@ public class BankCommonService {
 		/**
 		 *
 		 */
-		String responseMessage = this.convertVoToMessageZH(service);
+		String responseMessage = this.convertVoToMessage(service);
 		log.info("响应请求-->" + responseMessage);
 		return responseMessage;
 	}
@@ -309,8 +309,9 @@ public class BankCommonService {
 		String expectMacBlock = message.substring(TOTAL_LENGTH_BIT,
 				TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
 		String xmlBlock = message.substring(TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
-
+		log.info("convertMessageToVo-xmlBlock: "+xmlBlock);
 		encryptService.verifyMac(xmlBlock, expectMacBlock);
+		log.info("验证MAC通过");
 		Object xml = xStream.fromXML(message);
 		return (ServiceVo)xml;
 	}

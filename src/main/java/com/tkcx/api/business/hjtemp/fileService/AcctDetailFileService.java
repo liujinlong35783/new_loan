@@ -8,7 +8,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -78,13 +82,23 @@ public class AcctDetailFileService {
         hjCommonService.updateReadFileInfo(queryResult);
     }
 
-    public boolean delAcctDetailTempData(Date fileDate) {
-
-        boolean remove = acctDetailTempService.remove(null);
+    public  boolean delAcctDetailTempData(Date fileDate) {
+        Date beforDate = getBeforDate(fileDate);
+        boolean remove = acctDetailTempService.delAcctDetailTempData(beforDate);
         if(remove){
-            log.info("{}日之前的AcctDetailTempModel数据清空成功", fileDate);
+            log.info("{}日3天之前的AcctDetailTempModel数据清空成功", fileDate);
         }
         return remove;
+    }
+    public static Date getBeforDate(Date fileDate){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        String dateStr = sdf.format(fileDate);
+        Date parse = sdf.parse(dateStr, new ParsePosition(0));
+        calendar.setTime(parse);
+        calendar.add(Calendar.DATE,-3);
+        Date date = calendar.getTime();
+        return date;
     }
 
 }

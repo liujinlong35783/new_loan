@@ -78,6 +78,10 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
         return acctDetailTempDao.getDetailByAcctDate(acctDate);
     }
 
+    public Boolean delAcctDetailTempData(Date acctDate){
+        return acctDetailTempDao.delAcctDetailTempData(acctDate);
+    }
+
     /**
      * 统计轧帐单
      * @param acctDate
