@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tkcx.api.business.acctPrint.model.BusiOrgSeqModel;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
+import com.tkcx.api.business.hjtemp.utils.DateUtils;
 import com.tkcx.api.business.wdData.model.AcctDataModel;
 import com.tkcx.api.business.wdData.model.AssetModel;
 import com.tkcx.api.constant.AcctRecordScene;
@@ -58,11 +59,10 @@ public class BusiOrgSeqThread extends AcctBaseThread {
 //        }
         Date startDate = new Date();
         log.info("BusiOrgSeqThread end：{}",startDate);
-        if(startDate==null){//开始日期为空，取前一天数据
-            startDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(super.getCurDate(), -1)));
-        }
-        List<AcctDetailTempModel> detailList = queryDetailByAcctDate(startDate);
-        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",startDate,detailList.size());
+        //取前一天数据
+        Date startDate1 = DateUtils.getBeforDate(startDate);
+        List<AcctDetailTempModel> detailList = queryDetailByAcctDate(startDate1);
+        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",startDate1,detailList.size());
         List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
         for (AcctDetailTempModel acctDetail : detailList) {
             BusiOrgSeqModel busiOrgSeq = new BusiOrgSeqModel();

@@ -3,6 +3,7 @@ package com.acct.job.thread;
 import cn.hutool.core.date.DateUtil;
 import com.tkcx.api.business.acctPrint.model.BusiOrgBillModel;
 import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
+import com.tkcx.api.business.hjtemp.utils.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -60,10 +61,9 @@ public class BusiOrgBillThread extends AcctBaseThread {
 //    }
         Date startDate = new Date();
         log.info("BusiOrgBillThread start..." + startDate);
-        if(startDate==null){//开始日期为空，取前一天数据
-            startDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(super.getCurDate(), -1)));
-        }
-        List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(startDate);
+        //取前一天数据
+        Date startDate1 = DateUtils.getBeforDate(startDate);
+        List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(startDate1);
         ArrayList<BusiOrgBillModel> busiOrgBillLoanList = new ArrayList<>();
         for (AcctBrchTempModel brchTempModel : acctBrchTempModelList) {
             BusiOrgBillModel busiOrgBillModel = new BusiOrgBillModel();

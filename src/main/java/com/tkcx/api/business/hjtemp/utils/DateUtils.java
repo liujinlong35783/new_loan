@@ -3,6 +3,7 @@ package com.tkcx.api.business.hjtemp.utils;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -1039,7 +1040,16 @@ public class DateUtils
 		System.out.println(dateFormat1.format(date));
 		return dateFormat1.format(date);
 	}
-
+	public static Date getBeforDate(Date fileDate){
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar calendar = Calendar.getInstance();
+		String dateStr = sdf.format(fileDate);
+		Date parse = sdf.parse(dateStr, new ParsePosition(0));
+		calendar.setTime(parse);
+		calendar.add(Calendar.DATE,-1);
+		Date date = calendar.getTime();
+		return date;
+	}
 }
 
 
