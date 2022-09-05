@@ -22,15 +22,15 @@ public class HJDataJobHandler extends IJobHandler {
     @Override
     public ReturnT<String> execute(String param){
 
-//        log.info("AcctDataJobHandler -->>>>>>>>start....");
-//
-//        String message = null;
-//        try {
-//            message = new ToolUtil().diao("123");
-//        } catch (ApplicationException e) {
-//            throw new RuntimeException(e);
-//        }
-//        log.info("AcctDataJobHandler -->>>>>>>>end....:"+message);
+        log.info("AcctDataJobHandler -->>>>>>>>start....");
+
+        String message = null;
+        try {
+            message = new ToolUtil().diao("123");
+        } catch (ApplicationException e) {
+            throw new RuntimeException(e);
+        }
+        log.info("AcctDataJobHandler -->>>>>>>>end....:"+message);
 
         return SUCCESS;
     }

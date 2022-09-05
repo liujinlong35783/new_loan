@@ -57,6 +57,7 @@ public class BusiOrgSeqThread extends AcctBaseThread {
 //            log.error("网贷业务机构业务流水线程执行：{}", e);
 //        }
         Date startDate = new Date();
+        log.info("BusiOrgSeqThread end：{}",startDate);
         List<AcctDetailTempModel> detailList = queryDetailByAcctDate(super.getCurDate());
         log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",getCurDate(),detailList.size());
         List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();

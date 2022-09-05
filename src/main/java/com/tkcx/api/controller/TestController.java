@@ -165,8 +165,8 @@ public class TestController {
 //     * 测试业务编码表删除
 //     * @return
 //     */
-//    @RequestMapping(value = "/cu", method = RequestMethod.POST)
-//    public String cu() throws ApplicationException {
+//    @RequestMapping(value = "/cu1", method = RequestMethod.POST)
+//    public String cu1() throws ApplicationException {
 //
 //        String message = new ToolUtil().diao("123");
 //        return "123";
