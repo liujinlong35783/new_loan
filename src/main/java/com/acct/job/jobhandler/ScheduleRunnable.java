@@ -11,6 +11,7 @@ import com.tkcx.api.common.BusiCommonService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
+import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,12 +47,12 @@ public class ScheduleRunnable implements Runnable {
         // 获取会计日期
        Date selectDate = busiCommonService.getCoreSysDate();
         //测试使用
-/*        Calendar calendar = Calendar.getInstance();
-        calendar.set(2022,8,01);
-        Date selectDate = calendar.getTime();*/
-        if(selectDate!=null){
-            selectDate = DateUtil.parse(DateUtil.formatDate(selectDate),"yyyy-MM-dd");
-        }
+//       Calendar calendar = Calendar.getInstance();
+//        calendar.set(2024,5,22);
+//        Date selectDate = calendar.getTime();
+//        if(selectDate!=null){
+//            selectDate = DateUtil.parse(DateUtil.formatDate(selectDate),"yyyy-MM-dd");
+//        }
         // 判断互金数据是否已接入
         HjFileInfoModel queryInfo = new HjFileInfoModel();
         queryInfo.setFileDate(selectDate);
@@ -128,7 +129,7 @@ public class ScheduleRunnable implements Runnable {
             Date endDate = new Date();
             log.info("ScheduleRunnable end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween(startDate, endDate));
             if (threadResult) {
-                acctDetailFileService.delAcctDetailTempData(selectDate);
+//                acctDetailFileService.delAcctDetailTempData(selectDate);
             }
         }
     }
