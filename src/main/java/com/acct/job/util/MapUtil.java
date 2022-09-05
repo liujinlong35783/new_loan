@@ -1,7 +1,7 @@
 package com.acct.job.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -14,8 +14,9 @@ import java.util.*;
  * @date 2016年11月9日 下午7:59:56
  * @copyright Copyright © 2016 广电运通 All rights reserved.
  */
+@Slf4j
 public class MapUtil {
-    private static Logger logger = LoggerFactory.getLogger(MapUtil.class);
+
 
     /**
      * 获取Map中实际数据
@@ -78,7 +79,7 @@ public class MapUtil {
         try {
             returnValue = Integer.valueOf(value);
         } catch (Exception e) {
-            logger.error("MapUtil objToInteger [" + value + "] error " + e.getMessage());
+            log.error("MapUtil objToInteger [" + value + "] error " + e.getMessage());
         }
         return returnValue;
     }
@@ -97,7 +98,7 @@ public class MapUtil {
             value = "".equals(value) ? "" + defaultValue : value;
             returnValue = Double.valueOf(value);
         } catch (Exception e) {
-            logger.error("MapUtil objToDouble error " + e.getMessage());
+            log.error("MapUtil objToDouble error " + e.getMessage());
         }
         return returnValue;
     }
@@ -127,7 +128,7 @@ public class MapUtil {
             value = "".equals(value) ? "" + defaultValue : value;
             returnValue = Long.valueOf(value);
         } catch (Exception e) {
-            logger.error("MapUtil objToLong error " + e.getMessage());
+            log.error("MapUtil objToLong error " + e.getMessage());
         }
         return returnValue;
     }
@@ -146,7 +147,7 @@ public class MapUtil {
             val = "".equals(val) ? "" + defaultValue : val;
             returnValue = Integer.valueOf(val);
         } catch (Exception e) {
-            logger.error("MapUtil objToIntegerByMap error " + e.getMessage());
+            log.error("MapUtil objToIntegerByMap error " + e.getMessage());
         }
         return returnValue;
     }
@@ -157,7 +158,7 @@ public class MapUtil {
             String val = obj.get(key) == null ? "false" : obj.get(key).toString().trim();
             returnValue = Boolean.valueOf(val);
         } catch (Exception e) {
-            logger.error("MapUtil objToBoolean error " + e.getMessage());
+            log.error("MapUtil objToBoolean error " + e.getMessage());
         }
         return returnValue;
     }
@@ -174,7 +175,7 @@ public class MapUtil {
         try {
             returnStr = (Date) (obj.get(key) == null ? null : obj.get(key));
         } catch (Exception e) {
-            logger.error("MapUtil objToDate error " + e.getMessage());
+            log.error("MapUtil objToDate error " + e.getMessage());
         }
         return returnStr;
     }
@@ -192,7 +193,7 @@ public class MapUtil {
             String str = objToStr(key, obj);
             returnStr = new SimpleDateFormat(praseFormat).parse(str);
         } catch (Exception e) {
-            logger.error("MapUtil objToDate error " + e.getMessage());
+            log.error("MapUtil objToDate error " + e.getMessage());
         }
         return returnStr;
     }
@@ -239,7 +240,7 @@ public class MapUtil {
                 }
             }
         } catch (Exception e) {
-            logger.error("MapUtil toDualStrs error " + e.getMessage());
+            log.error("MapUtil toDualStrs error " + e.getMessage());
         }
         return ret;
     }

@@ -1,8 +1,8 @@
 package com.tkcx.api.utils;
 
 import com.jcraft.jsch.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
@@ -11,9 +11,9 @@ import java.util.Vector;
 /**
  * 类说明 sftp工具类
  */
-public class SFTPUtil {
 
-    private static Logger logger = Logger.getLogger(SFTPUtil.class);
+@Slf4j
+public class SFTPUtil {
 
     private ChannelSftp sftp;
 
@@ -224,8 +224,8 @@ public class SFTPUtil {
             sftp.upload(baseUploadPath,upLoadDirectory, sftpFileName, is);
             sftp.logout();
         } catch (Exception e) {
-            logger.info("SFTPUtil uploadFile exception:"+e.getMessage());
-            logger.error(e.getMessage());
+            log.info("SFTPUtil uploadFile exception:"+e.getMessage());
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
 
@@ -247,8 +247,8 @@ public class SFTPUtil {
             sftp.logout();
             return reslut;
         } catch (Exception e) {
-            logger.info("SFTPUtil downloadFile exception:"+e.getMessage());
-            logger.error(e.getMessage());
+            log.info("SFTPUtil downloadFile exception:"+e.getMessage());
+            log.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }
