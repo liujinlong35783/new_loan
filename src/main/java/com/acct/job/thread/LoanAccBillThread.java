@@ -34,7 +34,8 @@ public class LoanAccBillThread extends AcctBaseThread {
 
     @Override
     public void run() {
-        log.info("LoanAccBillThread start...");
+        Date startDate = new Date();
+        log.info("LoanAccBillThread start..." + startDate);
         // 查询网贷放款记录信息
         assetGrantRecordData();
         // 查询网贷资产信息
@@ -44,6 +45,9 @@ public class LoanAccBillThread extends AcctBaseThread {
         loanAccBillService.saveOrUpdateBatch(modelMap.values());
         log.info("保存数据成功....");
         log.info("LoanAccBill record is {}.", modelMap.size());
+        Date endDate = new Date();
+        log.info("LoanAccBillThread end..." + endDate);
+        log.info("LoanAccBillThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
     }
 
     /**

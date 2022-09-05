@@ -29,7 +29,8 @@ public class InterestBillThread extends AcctBaseThread {
 
     @Override
     public void run(){
-        log.info("InterestBillThread start..." + new Date());
+        Date startDate = new Date();
+        log.info("InterestBillThread start..." + startDate);
 
         // 贷款利息登记簿
         List<InterestBillModel> interestBillList = new ArrayList<>();
@@ -80,7 +81,9 @@ public class InterestBillThread extends AcctBaseThread {
             interestBillService.saveBatch(interestBillList);
         }
 
-        log.info("InterestBillThread end..." + new Date());
+        Date endDate = new Date();
+        log.info("InterestBillThread end..." + endDate);
+        log.info("InterestBillThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
     }
 
     /**

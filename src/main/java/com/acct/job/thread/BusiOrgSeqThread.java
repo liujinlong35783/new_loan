@@ -58,14 +58,18 @@ public class BusiOrgSeqThread extends AcctBaseThread {
 //        }
         Date startDate = new Date();
         log.info("BusiOrgSeqThread end：{}",startDate);
-        List<AcctDetailTempModel> detailList = queryDetailByAcctDate(super.getCurDate());
-        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",getCurDate(),detailList.size());
+        if(startDate==null){//开始日期为空，取前一天数据
+            startDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(super.getCurDate(), -1)));
+        }
+        List<AcctDetailTempModel> detailList = queryDetailByAcctDate(startDate);
+        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",startDate,detailList.size());
         List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
         for (AcctDetailTempModel acctDetail : detailList) {
             BusiOrgSeqModel busiOrgSeq = new BusiOrgSeqModel();
             String transSeqNo = acctDetail.getChannelSeq();
             QueryWrapper<AcctDataModel> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("TRANS_SEQ_NO",transSeqNo);
+            queryWrapper.eq("ACG_DT",acctDetail.getAcctDate());
             AcctDataModel acctData = acctDataService.getOne(queryWrapper);
             if (acctData!=null){
                 busiOrgSeq.setOrgCode(acctData.getOrgid());
@@ -103,6 +107,7 @@ public class BusiOrgSeqThread extends AcctBaseThread {
         //保存入库
         saveBatchList(busiOrgSeqList);
         Date endDate = new Date();
+        log.info("BusiOrgSeqThread end..." + endDate);
         log.info("BusiOrgSeqThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
 
     }

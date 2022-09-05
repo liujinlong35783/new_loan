@@ -34,8 +34,8 @@ public class LoanAdjustThread extends AcctBaseThread {
         LoanAdjustModel loanAdjustModel;
         AssetModel asset;
         CardiiModel cardii;
-
-        log.info("LoanAdjustThread start...");
+        Date startDate = new Date();
+        log.info("LoanAdjustThread start..." + startDate);
         // 查询贷款调整登记簿
         List<LoanAdjustModel> loanAdjustList = new ArrayList<>();
 
@@ -44,9 +44,8 @@ public class LoanAdjustThread extends AcctBaseThread {
         queryWrapperAcctData.in("SCENE", AcctRecordScene.OVERDUE_TO_IDLE, AcctRecordScene.NORMAL_TO_OVERDUE, AcctRecordScene.IDLE_TO_NORMAL_OR_OVERDUE);
         queryWrapperAcctData.select("ID", "SCENE", "ASSET_ITEM_NO", "CREATE_AT", "BIZ_TRACK_NO", "MESSAGE", "PRODUCT_CODE", "ACG_DT", "TRANS_SEQ_NO","REPAY_PLAN_NO","NORMAL_PRINCIPAL","OVERDUE_PRINCIPAL","IDLE_PRINCIPAL","BAD_PRINCIPAL");
         List<AcctDataModel> accDataList = acctDataService.list(queryWrapperAcctData);
-
+        log.info("查询到AcctDataModel数据:" + accDataList.size() + "条");
         if (accDataList != null && accDataList.size() > 0) {
-            log.info("查询到AcctDataModel数据:" + accDataList.size() + "条");
             for (AcctDataModel model : accDataList) {
                 loanAdjustModel = new LoanAdjustModel();
                 String assetItemNo = model.getAssetItemNo();
@@ -95,6 +94,10 @@ public class LoanAdjustThread extends AcctBaseThread {
             loanAdjustService.saveBatch(loanAdjustList);
             log.info("保存成功：" + loanAdjustList.size() + "条");
         }
+        Date endDate = new Date();
+        log.info("AcctVoucherThread end..." + endDate);
+        log.info("AcctVoucherThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
+
     }
 
     /**

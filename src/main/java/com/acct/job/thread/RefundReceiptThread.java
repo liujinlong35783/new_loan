@@ -28,8 +28,8 @@ public class RefundReceiptThread extends AcctBaseThread {
 
     @Override
     public void run(){
-
-        log.info("RefundReceiptThread start..." + new Date());
+        Date startDate = new Date();
+        log.info("RefundReceiptThread start..." + startDate);
 
         // 查询还款总成表前一天记录
         QueryWrapper queryWrapper = getQueryWrapper(RepayAssemblyRecordModel.class, "repayFinishTime");
@@ -121,7 +121,9 @@ public class RefundReceiptThread extends AcctBaseThread {
             refundReceiptService.saveBatch(refundReceiptList);
         }
 
-        log.info("RefundReceiptThread end..." + new Date());
+        Date endDate = new Date();
+        log.info("RefundReceiptThread end..." + endDate);
+        log.info("RefundReceiptThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
     }
 
 }

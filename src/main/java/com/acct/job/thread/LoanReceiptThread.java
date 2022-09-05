@@ -29,8 +29,8 @@ public class LoanReceiptThread extends AcctBaseThread {
 
     @Override
     public void run() {
-
-        log.info("LoanReceiptThread start..." + new Date());
+        Date startDate = new Date();
+        log.info("LoanReceiptThread start..." + startDate);
 
         // 查询前一天放款记录
         QueryWrapper queryWrapper = getQueryWrapper(AssetGrantRecordModel.class, "assetGrantRecordCreateAt");
@@ -99,8 +99,9 @@ public class LoanReceiptThread extends AcctBaseThread {
             log.info("LoanReceipt record is {}." ,loanReceiptList.size());
             loanReceiptService.saveBatch(loanReceiptList);
         }
-
-        log.info("LoanReceiptThread end..." + new Date());
+        Date endDate = new Date();
+        log.info("LoanReceiptThread end..." + endDate);
+        log.info("LoanReceiptThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
     }
 
 

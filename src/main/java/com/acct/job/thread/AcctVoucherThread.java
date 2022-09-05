@@ -29,8 +29,8 @@ public class AcctVoucherThread extends AcctBaseThread {
 
     @Override
     public void run(){
-
-        log.info("AcctVoucherThread start..." + new Date());
+        Date startDate = new Date();
+        log.info("AcctVoucherThread start..." + startDate);
 
         // 查询前一天放款记录
         QueryWrapper queryWrapper = getQueryWrapper(AssetGrantRecordModel.class, "assetGrantRecordCreateAt");
@@ -189,7 +189,9 @@ public class AcctVoucherThread extends AcctBaseThread {
             accountVoucherService.saveBatch(acctVoucherList);
         }
 
-        log.info("AcctVoucherThread end..." + new Date());
+        Date endDate = new Date();
+        log.info("AcctVoucherThread end..." + endDate);
+        log.info("AcctVoucherThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
 
     }
 }

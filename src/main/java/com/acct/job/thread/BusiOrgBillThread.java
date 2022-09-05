@@ -60,8 +60,10 @@ public class BusiOrgBillThread extends AcctBaseThread {
 //    }
         Date startDate = new Date();
         log.info("BusiOrgBillThread start..." + startDate);
-        System.out.println(super.getCurDate());
-        List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(super.getCurDate());
+        if(startDate==null){//开始日期为空，取前一天数据
+            startDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(super.getCurDate(), -1)));
+        }
+        List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(startDate);
         ArrayList<BusiOrgBillModel> busiOrgBillLoanList = new ArrayList<>();
         for (AcctBrchTempModel brchTempModel : acctBrchTempModelList) {
             BusiOrgBillModel busiOrgBillModel = new BusiOrgBillModel();
@@ -83,6 +85,7 @@ public class BusiOrgBillThread extends AcctBaseThread {
             busiOrgBillService.saveBatch(busiOrgBillLoanList);
         }
         Date endDate = new Date();
+        log.info("BusiOrgBillThread end..." + endDate);
         log.info("BusiOrgBillThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
 
     }
