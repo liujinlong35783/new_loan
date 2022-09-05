@@ -60,9 +60,9 @@ public class BusiOrgSeqThread extends AcctBaseThread {
         Date startDate = new Date();
         log.info("BusiOrgSeqThread end：{}",startDate);
         //取前一天数据
-        Date startDate1 = DateUtils.getBeforDate(startDate);
-        List<AcctDetailTempModel> detailList = queryDetailByAcctDate(startDate1);
-        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",startDate1,detailList.size());
+        Date selectDate1 = DateUtil.offsetDay(this.getCurDate(), -1);
+        List<AcctDetailTempModel> detailList = queryDetailByAcctDate(selectDate1);
+        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",selectDate1,detailList.size());
         List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
         for (AcctDetailTempModel acctDetail : detailList) {
             BusiOrgSeqModel busiOrgSeq = new BusiOrgSeqModel();

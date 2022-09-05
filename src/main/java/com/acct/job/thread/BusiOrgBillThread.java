@@ -62,8 +62,8 @@ public class BusiOrgBillThread extends AcctBaseThread {
         Date startDate = new Date();
         log.info("BusiOrgBillThread start..." + startDate);
         //取前一天数据
-        Date startDate1 = DateUtils.getBeforDate(startDate);
-        List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(startDate1);
+        Date selectDate1 = DateUtil.offsetDay(this.getCurDate(), -1);
+        List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(selectDate1);
         ArrayList<BusiOrgBillModel> busiOrgBillLoanList = new ArrayList<>();
         for (AcctBrchTempModel brchTempModel : acctBrchTempModelList) {
             BusiOrgBillModel busiOrgBillModel = new BusiOrgBillModel();
