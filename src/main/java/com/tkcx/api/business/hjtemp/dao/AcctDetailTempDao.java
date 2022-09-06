@@ -1,8 +1,11 @@
 package com.tkcx.api.business.hjtemp.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import com.tkcx.api.business.hjtemp.model.vo.BusiOrgBillVo;
+import com.tkcx.api.business.wdData.model.AcctDataModel;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -72,5 +75,18 @@ public interface AcctDetailTempDao extends BaseMapper<AcctDetailTempModel>{
      */
     @Delete("DELETE from QN_DB_ACCT.ACCT_DETAIL_TEMP t where  t.ACCT_DATE <= #{acctDate}")
     Boolean delAcctDetailTempData(@Param("acctDate")Date acctDate);
+
+
+    /**
+     * 统计数量
+     * @param preDate
+     * @param curDate
+     * @return
+     */
+    @Select("select count(1) from QN_DB_ACCT.ACCT_DETAIL_TEMP t WHERE t.ACCT_DATE >= #{preDate} AND t.ACCT_DATE < #{curDate} ")
+    Integer querydetailPage(@Param("preDate") Date preDate, @Param("curDate") Date curDate);
+
+    @Select("SELECT * FROM QN_DB_ACCT.ACCT_DETAIL_TEMP  t WHERE t.ACCT_DATE >= #{startDate} AND t.ACCT_DATE < #{endDate}")
+    IPage<AcctDetailTempModel> selectListByPage(Page<AcctDetailTempModel> page, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
 
 }

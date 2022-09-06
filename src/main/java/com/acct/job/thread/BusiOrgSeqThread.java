@@ -60,7 +60,72 @@ public class BusiOrgSeqThread extends AcctBaseThread {
         Date startDate = new Date();
         log.info("BusiOrgSeqThread end：{}",startDate);
         //取前一天数据
-        Date selectDate1 = DateUtil.offsetDay(this.getCurDate(), -1);
+        Date selectDate1 = DateUtil.offsetDay(super.getCurDate(), -1);
+
+        int acctDetailTotalRec = querydetailPage(super.getCurDate());
+        int acctDetailTotalPage = PageUtils.calTotalPage(acctDetailTotalRec);
+        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，ACCT_DATA总记录数：【{}】，总页数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",
+                    getCurDate(), acctDetailTotalRec, acctDetailTotalPage);
+        for(int currentPage = PageUtils.startPageNum; currentPage <= acctDetailTotalRec ; currentPage++){
+                List<AcctDetailTempModel> detailList = queryDetailByPage(currentPage, PageUtils.pageSizeSeq,
+                        super.getCurDate());
+                log.info("AcctDetailTempModel，第【{}】页数据记录数：【{}】", currentPage, detailList.size());
+                // 业务逻辑;
+            List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
+            for (AcctDetailTempModel acctDetail : detailList) {
+                BusiOrgSeqModel busiOrgSeq = new BusiOrgSeqModel();
+                String transSeqNo = acctDetail.getChannelSeq();
+                QueryWrapper<AcctDataModel> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("TRANS_SEQ_NO",transSeqNo);
+                queryWrapper.eq("ACG_DT",acctDetail.getAcctDate());
+                AcctDataModel acctData = acctDataService.getOne(queryWrapper);
+                if (acctData!=null){
+                    busiOrgSeq.setOrgCode(acctData.getOrgid());
+                    busiOrgSeq.setBusiDate(acctData.getCreateAt());
+                    busiOrgSeq.setTransSeqNo(acctData.getTransSeqNo());
+                    busiOrgSeq.setBizTrackNo(acctData.getBizTrackNo());
+                    AssetModel asset = busiCommonService.getAssetModel(acctData.getAssetItemNo(),"ASSET_DEBT_NO","ASSET_LOAN_ACCOUNT");
+                    if(asset!=null){
+                        busiOrgSeq.setDebtNo(asset.getAssetDebtNo());
+                        busiOrgSeq.setLoanAccount(asset.getAssetLoanAccount());
+                    }
+                    busiOrgSeq.setAbstracts(getAbstracts(acctData.getScene()));
+                    busiOrgSeq.setAcctDate(DateUtil.parse(acctData.getAcgDt(),"yyyy-MM-dd"));
+                } else {
+                    continue;
+                }
+                busiOrgSeq.setItemCtrl(acctDetail.getItemCtrl());
+                if (busiOrgSeq.getOrgCode()!=null) {
+                    busiOrgSeq.setOrgName(busiCommonService.getOrgNameByCode(busiOrgSeq.getOrgCode()));
+                }
+                busiOrgSeq.setOperator("QNWD");
+                if ("2".equals(acctDetail.getAcctType())) {
+                    busiOrgSeq.setAmount("-" + ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
+                } else {
+                    busiOrgSeq.setAmount(ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
+                }
+                busiOrgSeq.setBusiType(EnumConstant.BUSI_TYPE_NOMAL);
+                if ("D".equals(acctDetail.getDebtFlag())) {
+                    busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_DEBT);
+                } else if ("C".equals(acctDetail.getDebtFlag())) {
+                    busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_CREDIT);
+                }
+                busiOrgSeqList.add(busiOrgSeq);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
         List<AcctDetailTempModel> detailList = queryDetailByAcctDate(selectDate1);
         log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",selectDate1,detailList.size());
         List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
@@ -302,6 +367,12 @@ public class BusiOrgSeqThread extends AcctBaseThread {
         return acctDataService.selectCount(preDate, curDate);
     }
 
+    private int querydetailPage(Date curDate) {
+
+        Date preDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(curDate, -1)));
+        return acctDetailTempService.querydetailPage(preDate, curDate);
+    }
+
     /**
      * 查询ACCT_DETAIL_TEMP总页数
      * @return
@@ -331,6 +402,19 @@ public class BusiOrgSeqThread extends AcctBaseThread {
         Page<AcctDataModel> pageReq = new Page<>(currentPage, pageSize);
         Date startDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(curDate, -1)));
         return acctDataService.selectModelPage(pageReq, startDate, curDate);
+    }
+
+    /**
+     * 分页查询ACCT_DETAIL_TEMP资产数据
+     *
+     * @return
+     */
+    private List<AcctDetailTempModel> queryDetailByPage(int currentPage, int pageSize, Date curDate){
+
+
+        Page<AcctDetailTempModel> pageReq = new Page<>(currentPage, pageSize);
+        Date startDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(curDate, -1)));
+        return acctDetailTempService.selectModelPage(pageReq, startDate, curDate);
     }
 
     /**

@@ -15,6 +15,8 @@ public class PageUtils {
 
     public static int pageSize = 5000;
 
+    public static int pageSizeSeq = 50000;
+
     /**
      * 计算总页数
      *

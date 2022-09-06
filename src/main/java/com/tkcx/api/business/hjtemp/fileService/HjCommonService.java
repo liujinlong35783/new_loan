@@ -82,7 +82,7 @@ public class HjCommonService {
 
         if(readEndNum < txtTotalNum &&
                 (txtTotalNum-readEndNum) > HjFileFlagConstant.ONE_TIME_READ_LINE_NUM) {
-            log.info("文件总行数查询 - 已读取行数【大于】500行，文件读取继续");
+            log.info("文件总行数查询 - 已读取行数【大于】100000行，文件读取继续");
             // 结束行数与文件总行数之差大于500，则结束行数更新为当前结束行数+500(步长)
             return readEndNum + HjFileFlagConstant.ONE_TIME_READ_LINE_NUM;
         }else if(readEndNum < txtTotalNum &&
