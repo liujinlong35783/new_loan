@@ -54,6 +54,10 @@
 		<level value="WARN" />
 		<appender-ref ref="rootlog" />
 	</logger>
+	<logger name="com.alibaba.druid" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="rootlog" />
+	</logger>
 	<logger name="org.eclipse.jetty" additivity="false">
 		<level value="WARN" />
 		<appender-ref ref="rootlog" />

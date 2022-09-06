@@ -31,7 +31,7 @@ public class HjFileFlagConstant {
     /**
      * 文件读取步长
      */
-    public final static Integer ONE_TIME_READ_LINE_NUM = 100000;
+    public final static Integer ONE_TIME_READ_LINE_NUM = 50000;
 
     /**################################ 会计科目配置 ########################################*/
 

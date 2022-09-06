@@ -96,7 +96,7 @@ public class AcctDetailFileService {
         String dateStr = sdf.format(fileDate);
         Date parse = sdf.parse(dateStr, new ParsePosition(0));
         calendar.setTime(parse);
-        calendar.add(Calendar.DATE,-3);
+        calendar.add(Calendar.DATE,-10);
         Date date = calendar.getTime();
         return date;
     }
