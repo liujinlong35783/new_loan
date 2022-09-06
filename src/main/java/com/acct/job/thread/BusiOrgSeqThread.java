@@ -4,10 +4,12 @@ import cn.hutool.core.date.DateUtil;
 import com.acct.job.util.PageUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tkcx.api.business.acctPrint.model.BusiOrgSeqModel;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import com.tkcx.api.business.hjtemp.utils.DateUtils;
+import com.tkcx.api.business.wdData.config.MybatisConfig;
 import com.tkcx.api.business.wdData.model.AcctDataModel;
 import com.tkcx.api.business.wdData.model.AssetModel;
 import com.tkcx.api.constant.AcctRecordScene;
@@ -58,119 +60,69 @@ public class BusiOrgSeqThread extends AcctBaseThread {
 //            log.error("网贷业务机构业务流水线程执行：{}", e);
 //        }
         Date startDate = new Date();
-        log.info("BusiOrgSeqThread end：{}",startDate);
+        log.info("BusiOrgSeqThread start：{}",startDate);
         //取前一天数据
         Date selectDate1 = DateUtil.offsetDay(super.getCurDate(), -1);
-
-        int acctDetailTotalRec = querydetailPage(super.getCurDate());
-        int acctDetailTotalPage = PageUtils.calTotalPage(acctDetailTotalRec);
-        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，ACCT_DATA总记录数：【{}】，总页数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",
+        try {
+            int acctDetailTotalRec = querydetailPage(super.getCurDate());
+            int acctDetailTotalPage = PageUtils.calTotalPage(acctDetailTotalRec);
+            log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，ACCT_DATA总记录数：【{}】，总页数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",
                     getCurDate(), acctDetailTotalRec, acctDetailTotalPage);
-        for(int currentPage = PageUtils.startPageNum; currentPage <= acctDetailTotalRec ; currentPage++){
+            for (int currentPage=PageUtils.startPageNum; currentPage <= acctDetailTotalRec; currentPage++) {
                 List<AcctDetailTempModel> detailList = queryDetailByPage(currentPage, PageUtils.pageSizeSeq,
                         super.getCurDate());
+                Date detailDate = new Date();
+                log.info("BusiOrgSeqThread 第【{}】页 start时间：{}", currentPage,detailDate);
                 log.info("AcctDetailTempModel，第【{}】页数据记录数：【{}】", currentPage, detailList.size());
                 // 业务逻辑;
-            List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
-            for (AcctDetailTempModel acctDetail : detailList) {
-                BusiOrgSeqModel busiOrgSeq = new BusiOrgSeqModel();
-                String transSeqNo = acctDetail.getChannelSeq();
-                QueryWrapper<AcctDataModel> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("TRANS_SEQ_NO",transSeqNo);
-                queryWrapper.eq("ACG_DT",acctDetail.getAcctDate());
-                AcctDataModel acctData = acctDataService.getOne(queryWrapper);
-                if (acctData!=null){
-                    busiOrgSeq.setOrgCode(acctData.getOrgid());
-                    busiOrgSeq.setBusiDate(acctData.getCreateAt());
-                    busiOrgSeq.setTransSeqNo(acctData.getTransSeqNo());
-                    busiOrgSeq.setBizTrackNo(acctData.getBizTrackNo());
-                    AssetModel asset = busiCommonService.getAssetModel(acctData.getAssetItemNo(),"ASSET_DEBT_NO","ASSET_LOAN_ACCOUNT");
-                    if(asset!=null){
-                        busiOrgSeq.setDebtNo(asset.getAssetDebtNo());
-                        busiOrgSeq.setLoanAccount(asset.getAssetLoanAccount());
+                List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
+                for (AcctDetailTempModel acctDetail : detailList) {
+                    BusiOrgSeqModel busiOrgSeq = new BusiOrgSeqModel();
+                    String transSeqNo = acctDetail.getChannelSeq();
+                    Date acctDate = acctDetail.getAcctDate();
+                    AcctDataModel acctData = acctDataService.selectDateByDate(transSeqNo, acctDate);
+                    if (acctData != null) {
+                        busiOrgSeq.setOrgCode(acctData.getOrgid());
+                        busiOrgSeq.setBusiDate(acctData.getCreateAt());
+                        busiOrgSeq.setTransSeqNo(acctData.getTransSeqNo());
+                        busiOrgSeq.setBizTrackNo(acctData.getBizTrackNo());
+                        AssetModel asset = busiCommonService.getAssetModel(acctData.getAssetItemNo(), "ASSET_DEBT_NO", "ASSET_LOAN_ACCOUNT");
+                        if (asset != null) {
+                            busiOrgSeq.setDebtNo(asset.getAssetDebtNo());
+                            busiOrgSeq.setLoanAccount(asset.getAssetLoanAccount());
+                        }
+                        busiOrgSeq.setAbstracts(getAbstracts(acctData.getScene()));
+                        busiOrgSeq.setAcctDate(DateUtil.parse(acctData.getAcgDt(), "yyyy-MM-dd"));
+                    } else {
+                        continue;
                     }
-                    busiOrgSeq.setAbstracts(getAbstracts(acctData.getScene()));
-                    busiOrgSeq.setAcctDate(DateUtil.parse(acctData.getAcgDt(),"yyyy-MM-dd"));
-                } else {
-                    continue;
+                    busiOrgSeq.setItemCtrl(acctDetail.getItemCtrl());
+                    if (busiOrgSeq.getOrgCode() != null) {
+                        busiOrgSeq.setOrgName(busiCommonService.getOrgNameByCode(busiOrgSeq.getOrgCode()));
+                    }
+                    busiOrgSeq.setOperator("QNWD");
+                    if ("2".equals(acctDetail.getAcctType())) {
+                        busiOrgSeq.setAmount("-" + ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
+                    } else {
+                        busiOrgSeq.setAmount(ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
+                    }
+                    busiOrgSeq.setBusiType(EnumConstant.BUSI_TYPE_NOMAL);
+                    if ("D".equals(acctDetail.getDebtFlag())) {
+                        busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_DEBT);
+                    } else if ("C".equals(acctDetail.getDebtFlag())) {
+                        busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_CREDIT);
+                    }
+                    busiOrgSeqList.add(busiOrgSeq);
                 }
-                busiOrgSeq.setItemCtrl(acctDetail.getItemCtrl());
-                if (busiOrgSeq.getOrgCode()!=null) {
-                    busiOrgSeq.setOrgName(busiCommonService.getOrgNameByCode(busiOrgSeq.getOrgCode()));
-                }
-                busiOrgSeq.setOperator("QNWD");
-                if ("2".equals(acctDetail.getAcctType())) {
-                    busiOrgSeq.setAmount("-" + ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
-                } else {
-                    busiOrgSeq.setAmount(ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
-                }
-                busiOrgSeq.setBusiType(EnumConstant.BUSI_TYPE_NOMAL);
-                if ("D".equals(acctDetail.getDebtFlag())) {
-                    busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_DEBT);
-                } else if ("C".equals(acctDetail.getDebtFlag())) {
-                    busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_CREDIT);
-                }
-                busiOrgSeqList.add(busiOrgSeq);
+                //保存入库
+                saveBatchList(busiOrgSeqList);
+                Date detailEndDate = new Date();
+                log.info("BusiOrgSeqThread 第【{}】页 end时间：{} ,消耗时间：{}", currentPage,detailEndDate,DateUtil.formatBetween( detailEndDate,detailDate));
+                log.info("AcctDetailTempModel，第【{}】页数据记录数：【{}】条保存成功", currentPage, detailList.size());
             }
+        }catch (Exception e) {
+            log.error("网贷业务机构业务流水线程执行：{}", e);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-        List<AcctDetailTempModel> detailList = queryDetailByAcctDate(selectDate1);
-        log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，AcctDetailTemp总记录数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",selectDate1,detailList.size());
-        List<BusiOrgSeqModel> busiOrgSeqList = new ArrayList<>();
-        for (AcctDetailTempModel acctDetail : detailList) {
-            BusiOrgSeqModel busiOrgSeq = new BusiOrgSeqModel();
-            String transSeqNo = acctDetail.getChannelSeq();
-            QueryWrapper<AcctDataModel> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("TRANS_SEQ_NO",transSeqNo);
-            queryWrapper.eq("ACG_DT",acctDetail.getAcctDate());
-            AcctDataModel acctData = acctDataService.getOne(queryWrapper);
-            if (acctData!=null){
-                busiOrgSeq.setOrgCode(acctData.getOrgid());
-                busiOrgSeq.setBusiDate(acctData.getCreateAt());
-                busiOrgSeq.setTransSeqNo(acctData.getTransSeqNo());
-                busiOrgSeq.setBizTrackNo(acctData.getBizTrackNo());
-                AssetModel asset = busiCommonService.getAssetModel(acctData.getAssetItemNo(),"ASSET_DEBT_NO","ASSET_LOAN_ACCOUNT");
-                if(asset!=null){
-                    busiOrgSeq.setDebtNo(asset.getAssetDebtNo());
-                    busiOrgSeq.setLoanAccount(asset.getAssetLoanAccount());
-                }
-                busiOrgSeq.setAbstracts(getAbstracts(acctData.getScene()));
-                busiOrgSeq.setAcctDate(DateUtil.parse(acctData.getAcgDt(),"yyyy-MM-dd"));
-            } else {
-                continue;
-            }
-            busiOrgSeq.setItemCtrl(acctDetail.getItemCtrl());
-            if (busiOrgSeq.getOrgCode()!=null) {
-                busiOrgSeq.setOrgName(busiCommonService.getOrgNameByCode(busiOrgSeq.getOrgCode()));
-            }
-            busiOrgSeq.setOperator("QNWD");
-            if ("2".equals(acctDetail.getAcctType())) {
-                busiOrgSeq.setAmount("-" + ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
-            } else {
-                busiOrgSeq.setAmount(ToolUtil.yuanToFen(acctDetail.getTransAmount().toString()));
-            }
-            busiOrgSeq.setBusiType(EnumConstant.BUSI_TYPE_NOMAL);
-            if ("D".equals(acctDetail.getDebtFlag())) {
-                busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_DEBT);
-            } else if ("C".equals(acctDetail.getDebtFlag())) {
-                busiOrgSeq.setDebtFlag(EnumConstant.DEBT_FLAG_CREDIT);
-            }
-            busiOrgSeqList.add(busiOrgSeq);
-        }
-        //保存入库
-        saveBatchList(busiOrgSeqList);
         Date endDate = new Date();
         log.info("BusiOrgSeqThread end..." + endDate);
         log.info("BusiOrgSeqThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
@@ -412,9 +364,18 @@ public class BusiOrgSeqThread extends AcctBaseThread {
     private List<AcctDetailTempModel> queryDetailByPage(int currentPage, int pageSize, Date curDate){
 
 
-        Page<AcctDetailTempModel> pageReq = new Page<>(currentPage, pageSize);
         Date startDate = DateUtil.parse(DateUtil.formatDate(DateUtil.offsetDay(curDate, -1)));
-        return acctDetailTempService.selectModelPage(pageReq, startDate, curDate);
+        PaginationInterceptor paginationInterceptor = new MybatisConfig().paginationInterceptor();
+        paginationInterceptor.setLimit(-1);
+        Page<AcctDetailTempModel> acctDetailPage = new Page<>(currentPage, -1);
+        acctDetailPage.setSize(pageSize);
+        QueryWrapper queryWrapper = new QueryWrapper<>();
+//        queryWrapper.select("ITEM_CTRL","TRANS_AMOUNT","DEBT_FLAG","ACCT_TYPE");
+        queryWrapper.eq("ACCT_DATE",startDate);
+        queryWrapper.notIn("ITEM_CTRL","200501");
+        log.info("AcctDetailTempModel分页查询条件:{}", acctDetailPage);
+        IPage page = acctDetailTempService.page(acctDetailPage, queryWrapper);
+        return page.getRecords();
     }
 
     /**

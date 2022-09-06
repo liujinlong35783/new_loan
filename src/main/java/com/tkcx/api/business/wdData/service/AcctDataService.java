@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -75,5 +76,11 @@ public class AcctDataService extends CommonService<AcctDataDao,AcctDataModel> {
 //        return iPage.getRecords();
 
         return acctDataModelIPage.getRecords();
+    }
+
+    public AcctDataModel selectDateByDate(String transSeqNo,Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String acctDate =sdf.format(date);
+        return acctDataDao.selectDateByDate(transSeqNo,acctDate);
     }
 }

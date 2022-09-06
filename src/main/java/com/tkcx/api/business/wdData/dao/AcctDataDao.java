@@ -41,4 +41,8 @@ public interface AcctDataDao extends BaseMapper<AcctDataModel>{
 
     @Select("SELECT * FROM QN_DB_BIZ.ACCT_DATA t WHERE t.CREATE_AT >= #{startDate} AND t.CREATE_AT < #{endDate}")
     IPage<AcctDataModel> selectListByPage(Page<AcctDataModel> page, @Param("startDate")Date startDate, @Param("endDate")Date endDate);
+
+    @Select("select * from QN_DB_BIZ.ACCT_DATA  where TRANS_SEQ_NO =#{transSeqNo} and ACG_DT = #{acgDt}")
+    AcctDataModel selectDateByDate(@Param("transSeqNo")String transSeqNo, @Param("acgDt")String acgDt);
+
 }

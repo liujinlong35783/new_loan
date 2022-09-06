@@ -63,7 +63,9 @@ public class BusiOrgBillThread extends AcctBaseThread {
         log.info("BusiOrgBillThread start..." + startDate);
         //取前一天数据
         Date selectDate1 = DateUtil.offsetDay(super.getCurDate(), -1);
+        log.info("BusiOrgBill selectDate1 is {}.", selectDate1);
         List<AcctBrchTempModel> acctBrchTempModelList = acctBrchTempService.queryBrchByAcctDate(selectDate1);
+        log.info("BusiOrgBill acctBrchTempModelList is {}条记录", acctBrchTempModelList.size());
         ArrayList<BusiOrgBillModel> busiOrgBillLoanList = new ArrayList<>();
         for (AcctBrchTempModel brchTempModel : acctBrchTempModelList) {
             BusiOrgBillModel busiOrgBillModel = new BusiOrgBillModel();
@@ -83,6 +85,7 @@ public class BusiOrgBillThread extends AcctBaseThread {
         if (!busiOrgBillLoanList.isEmpty()) {
             log.info("BusiOrgBill record is {}.", busiOrgBillLoanList.size());
             busiOrgBillService.saveBatch(busiOrgBillLoanList);
+            log.info("BusiOrgBill {}条入库成功", busiOrgBillLoanList.size());
         }
         Date endDate = new Date();
         log.info("BusiOrgBillThread end..." + endDate);
