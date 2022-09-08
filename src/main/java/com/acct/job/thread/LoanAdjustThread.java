@@ -95,8 +95,8 @@ public class LoanAdjustThread extends AcctBaseThread {
             log.info("保存成功：" + loanAdjustList.size() + "条");
         }
         Date endDate = new Date();
-        log.info("AcctVoucherThread end..." + endDate);
-        log.info("AcctVoucherThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
+        log.info("LoanAdjustThread end..." + endDate);
+        log.info("LoanAdjustThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
 
     }
 
