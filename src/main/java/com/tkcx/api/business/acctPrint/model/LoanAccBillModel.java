@@ -199,7 +199,7 @@ public class LoanAccBillModel extends Model<LoanAccBillModel> implements IAcctPr
                 + "┃" + BusinessUtils.addDefaultVal(40 - orgName.length() * 2) + orgName
                 + "┃" + BusinessUtils.addDefaultVal(12 - loanName.length() * 2) + loanName
                 + "┃" + BusinessUtils.addDefaultVal(28 - loanAccount.length()) + loanAccount
-                + "┃" + BusinessUtils.addDefaultVal(10 - item.length()) + item
+                + "┃" + BusinessUtils.addDefaultVal(10 - (item==null? 5:item.length())) + item
                 + "┃" + BusinessUtils.addDefaultVal(8 - principalStatusStr.length() * 2) + principalStatusStr
                 + "┃" + BusinessUtils.addDefaultVal(8 - accStatus.length() * 2) + accStatus
                 + "┃" + BusinessUtils.addDefaultVal(10 - DateUtil.formatDate(grantDate).length()) + DateUtil.formatDate(grantDate)
