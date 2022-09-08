@@ -15,7 +15,7 @@ public class PageUtils {
 
     public static int pageSize = 5000;
 
-    public static int pageSizeSeq = 50000;
+    public static int pageSizeSeq = 10000;
 
     /**
      * 计算总页数
@@ -26,6 +26,17 @@ public class PageUtils {
     public static int calTotalPage(int totalRecord) {
 
         return (totalRecord + pageSize - 1) / pageSize;
+    }
+
+    /**
+     * 计算总页数
+     *
+     * @param totalRecord
+     * @return
+     */
+    public static int calTotalPageSeq(int totalRecord) {
+
+        return (totalRecord + pageSizeSeq - 1) / pageSizeSeq;
     }
 
 
