@@ -65,13 +65,16 @@ public class BusiOrgSeqThread extends AcctBaseThread {
         Date selectDate1 = DateUtil.offsetDay(super.getCurDate(), -1);
         try {
             int acctDetailTotalRec = querydetailPage(super.getCurDate());
-            int acctDetailTotalPage = PageUtils.calTotalPage(acctDetailTotalRec);
+            int acctDetailTotalPage = PageUtils.calTotalPageSeq(acctDetailTotalRec);
             log.info(">>>>>>>>>>>>>>>>>>>>>>{}日，ACCT_DATA总记录数：【{}】，总页数：【{}】<<<<<<<<<<<<<<<<<<<<<<<",
                     getCurDate(), acctDetailTotalRec, acctDetailTotalPage);
             for (int currentPage=PageUtils.startPageNum; currentPage <= acctDetailTotalRec; currentPage++) {
                 List<AcctDetailTempModel> detailList = queryDetailByPage(currentPage, PageUtils.pageSizeSeq,
                         super.getCurDate());
                 Date detailDate = new Date();
+                if(detailList.size()==0){
+                    break;
+                }
                 log.info("BusiOrgSeqThread 第【{}】页 start时间：{}", currentPage,detailDate);
                 log.info("AcctDetailTempModel，第【{}】页数据记录数：【{}】", currentPage, detailList.size());
                 // 业务逻辑;
