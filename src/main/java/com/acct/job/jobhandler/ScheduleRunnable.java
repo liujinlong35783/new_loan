@@ -109,7 +109,7 @@ public class ScheduleRunnable implements Runnable {
         threadPool.execute(new InterestBillThread(selectDate));
 
         // 8. 会计凭证(记账凭证/交易凭证)，数据来自网贷+会计凭证ACCT_DETAIL_TEMP表、ACCT_ORG_TEMP表
-        threadPool.execute(new AcctVoucherThread(selectDate));
+//        threadPool.execute(new AcctVoucherThread(selectDate));
 
         // 9. 贷款形态调整明细清单、贷款调整登记簿,数据来自网贷+会计凭证ACCT_ORG_TEMP表
         threadPool.execute(new LoanAdjustThread(selectDate));
