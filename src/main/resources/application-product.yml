@@ -45,3 +45,45 @@ xxl:
       #accessToken:
       logpath: /data/logs/acctprint/xxl-job/
       logretentiondays: -1
+
+
+afe:
+  lspublic:
+    Key:
+      #AFE公钥路径
+      path: /data/acctprint/afe_acct/113700.cer
+  private:
+    Key:
+      #本系统私钥路径
+      path: /data/acctprint/afe_acct/113501.pfx
+  passwd: 123456
+  socket:
+    #报文请求服务器
+    ip: 5.101.96.60
+  upload:
+    #上传报文请求端口
+    port: 21703
+  #??20220902?????
+  download:
+    #同步下载报文请求端口
+    port: 21705
+  sec:
+    node:
+      #系统节点号
+      id: 113501
+  #AFE-SFTP
+  sftp:
+    #SFTP服务器IP
+    host: 5.101.96.60
+    #SFTP服务器端口
+    port: 20022
+    #SFTP用户名
+    username: 113501
+    #SFTP
+    password: 113501
+    #SFTP服务器基础路径
+    basePath: /113501/
+    #SFTP 文服上传方式 1-集中式 2-分布式，不送默认走集中式
+    FileServerType: 1
+    #SFTP 分布式文服节点
+    DisNode: ""
