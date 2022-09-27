@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.tkcx.api.business.acctPrint.service.*;
+import com.tkcx.api.business.acctPrint.service.Loan.*;
 import com.tkcx.api.business.hjtemp.service.AcctBrchTempService;
 import com.tkcx.api.business.hjtemp.service.AcctBusiCodeService;
 import com.tkcx.api.business.hjtemp.service.AcctDetailTempService;
@@ -68,11 +69,9 @@ public class AcctBaseThread extends Thread {
 
     public LoanAccBillService loanAccBillService = BeanContext.getBean(LoanAccBillService.class);
 
-    public AccountVoucherService accountVoucherService = BeanContext.getBean(AccountVoucherService.class);
+    public LoanReceiptLoanService loanReceiptLoanService = BeanContext.getBean(LoanReceiptLoanService.class);
+    public RefundReceiptLoanService refundReceiptLoanService = BeanContext.getBean(RefundReceiptLoanService.class);
 
-    public AcctBrchTempService acctBrchTempService = BeanContext.getBean(AcctBrchTempService.class);
-
-    public BusiOrgBillService busiOrgBillService = BeanContext.getBean(BusiOrgBillService.class);
 
     public AcctDetailTempService acctDetailTempService = BeanContext.getBean(AcctDetailTempService.class);
 
@@ -82,11 +81,29 @@ public class AcctBaseThread extends Thread {
 
     public LoanAdjustService loanAdjustService = BeanContext.getBean(LoanAdjustService.class);
 
-    public AcctBusiCodeService acctBusiCodeService = BeanContext.getBean(AcctBusiCodeService.class);
 
     public InterestAccrualService interestAccrualService = BeanContext.getBean(InterestAccrualService.class);
 
     public RepayPlanService repayPlanService = BeanContext.getBean(RepayPlanService.class);
+
+    //新希望
+    public BusiOrgBillLoanService busiOrgBillLoanService = BeanContext.getBean(BusiOrgBillLoanService.class);
+
+    public AcctBusiCodeService acctBusiCodeService = BeanContext.getBean(AcctBusiCodeService.class);
+
+    public AcctBrchTempService acctBrchTempService = BeanContext.getBean(AcctBrchTempService.class);
+
+
+    public BusiOrgSeqLoanService busiOrgSeqLoanService = BeanContext.getBean(BusiOrgSeqLoanService.class);
+
+    public LoanAccBillLoanService loanAccBillLoanService = BeanContext.getBean(LoanAccBillLoanService.class);
+
+    public AccountVoucherLoanService accountVoucherLoanService = BeanContext.getBean(AccountVoucherLoanService.class);
+
+    public LoanAdjustLoanService loanAdjustLoanService = BeanContext.getBean(LoanAdjustLoanService.class);
+
+
+    public LoanAccBillLoanTempService loanAccBillLoanTempService = BeanContext.getBean(LoanAccBillLoanTempService.class);
 
     /**
      * 公共筛选构造器

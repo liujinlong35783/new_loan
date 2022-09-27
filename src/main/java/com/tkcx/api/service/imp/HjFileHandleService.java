@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,21 +40,31 @@ public class HjFileHandleService {
     private HandleService handleService;
 
     @Autowired
-    private QnFtpClientServiceImpl qnFtpClientServiceImpl;
-
-    @Autowired
     private HjFileInfoService hjFileInfoService;
 
     @Autowired
     private AfeCommonService afeCommonService;
 
-    @Value("${storage.tempUpload.path}")
-    private String tempUploadPath;
     @Value("${storage.tempDownload.path}")
     private String tempDownloadPath;
-    @Value("${storage.remote.path}")
-    private String remotePath;
+
     private static final int FILE_NAME_LENGTH = 40;
+
+    /** SFTP 登录用户名*/
+    @Value("${afe.sftp.username}")
+    String username;
+    /** SFTP 登录密码*/
+    @Value("${afe.sftp.password}")
+    private String password;
+    /** SFTP 服务器地址IP地址*/
+    @Value("${afe.sftp.host}")
+    private String host;
+    /** SFTP 端口*/
+    @Value("${afe.sftp.port}")
+    private int port;
+    /** SFTP 基础路径*/
+    @Value("${afe.sftp.basePath}")
+    private String basePath;
 
     /**
      * 异步下载文件信息
@@ -61,7 +72,6 @@ public class HjFileHandleService {
      * @param hjFileList
      * @throws ApplicationException
      */
-    @Async
     public void downloadHjFile(List<HjFileInfoModel> hjFileList, Date fileDate, HjFileDataReqVo req) throws ApplicationException {
         log.info("HjFileHandleService downloadHjFile hjFileList:"+hjFileList+",fileDate"+fileDate);
         for (HjFileInfoModel hjFileInfoModel : hjFileList) {
@@ -70,6 +80,10 @@ public class HjFileHandleService {
             fileVo.setDownloadTranCode(hjFileInfoModel.getFileTransCode());
             // 文件下载路径
             fileVo.setFilePath(hjFileInfoModel.getFilePath());
+            // 文件下载日期
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+            String fileDate1 = format.format(hjFileInfoModel.getFileDate());
+            fileVo.setFileDate(fileDate1);
             // 下载文件
             String downFilePath = downloadFile(fileVo,req);
             String fileType = hjFileInfoModel.getFileType();
@@ -84,26 +98,6 @@ public class HjFileHandleService {
                 handleService.startHandle(fileType, fileDate);
             }
         }
-    }
-
-    /**
-     * 保存互金下载路径
-     *
-     * @param downFilePath
-     * @param hjFileInfoModel
-     */
-    public void saveHjFileDownloadPath(String downFilePath, HjFileInfoModel hjFileInfoModel){
-
-        log.info("日期{}，文件类型:{}，下载路径：{}", hjFileInfoModel.getFileDate(), hjFileInfoModel.getFileType(), downFilePath);
-        hjFileInfoModel.setFileDownloadPath(downFilePath);
-        int totalNum = FileUtil.calTextLineNum(downFilePath);
-        hjFileInfoModel.setFileLineTotalNum(totalNum);
-        if(totalNum <= HjFileFlagConstant.READ_END_NUM_INITIAL){
-            // 如果互金文件总行数小于501，则直接更新文件读取结束行数为文件的总行数
-            hjFileInfoModel.setNextReadEndNum(totalNum);
-        }
-
-        hjFileInfoService.updateDownloadFile(hjFileInfoModel);
     }
 
     public String downloadFile(FileDownloadReqVo req, HjFileDataReqVo reqCn) throws ApplicationException {
@@ -137,37 +131,37 @@ public class HjFileHandleService {
         String fileName = remoteFile.getName();
         String fileExt = fileName.substring(fileName.lastIndexOf(".") + 1);
 
+//        String localFullPathFileName = downloadPath
+//                + RandomStringUtils.randomAlphanumeric(FILE_NAME_LENGTH).toLowerCase() + "." + fileExt;
         String localFullPathFileName = downloadPath
-                + RandomStringUtils.randomAlphanumeric(FILE_NAME_LENGTH).toLowerCase() + "." + fileExt;
+                + fileName;
+        File file = new File(downloadPath);
+        if (!file.exists()){
+            boolean result = file.mkdirs();
+            log.info("创建下载路径："+downloadPath+","+result);
+        }
 
-
-
-//        //发送下载报文及解析响应报文
-//        AfeDownFileBodyRspVo rspData = afeCommonService.getDownLoanRspData(req,reqCn);
-//        if (rspData==null){
-//            log.info("AFE下载文件信息响应为空");
-//        }
-//        //ftp服务器路径
-//        String ftpFilePath = rspData.getLocalFilePath();
-//        //ftp服务器获取对应文件
-////        qnFtpClientServiceImpl.getFileStreamByTranCode(localFullPathFileName, remoteFilePath, downloadTranCode);
-//        //文服直连通过传输码下载文件
-////        qnFtpClientServiceImpl.getFileStreamByTranCode(localFullPathFileName, localFilePath, downloadTranCode);
-//        //通过SFTP工具下载文件
-//        SFTPUtil sftpUtil = new SFTPUtil();
-//        List<String> fileInfo = fileExcute(ftpFilePath);
-//        //0:sftp服务器的路径 1:sftp端文件名
-//        log.info("上传到sftp服务器的路径"+fileInfo.get(0));
-//        log.info("上传到sftp端文件名"+fileInfo.get(1));
-//        boolean b = sftpUtil.downloadFile(fileInfo.get(0), fileInfo.get(1), localFullPathFileName);
-//        if (!b){
-//            log.error("ftp服务器获取对应文件失败");
-//        }
-//        return localFullPathFileName;
-
-
-
-        qnFtpClientServiceImpl.getFileStreamByTranCode(localFullPathFileName, remoteFilePath, downloadTranCode);
+        //发送下载报文及解析响应报文
+        AfeDownFileBodyRspVo rspData = afeCommonService.getDownLoanRspData(req,reqCn);
+        if (rspData==null){
+            log.info("AFE下载文件信息响应为空");
+        }
+        //ftp服务器路径
+        String ftpFilePath = rspData.getLocalFilePath();
+        //ftp服务器获取对应文件
+//        qnFtpClientServiceImpl.getFileStreamByTranCode(localFullPathFileName, remoteFilePath, downloadTranCode);
+        //文服直连通过传输码下载文件
+//        qnFtpClientServiceImpl.getFileStreamByTranCode(localFullPathFileName, localFilePath, downloadTranCode);
+        //通过SFTP工具下载文件
+        SFTPUtil sftpUtil = new SFTPUtil();
+        List<String> fileInfo = fileExcute(ftpFilePath);
+        //0:sftp服务器的路径 1:sftp端文件名
+        log.info("sftp服务器的路径"+fileInfo.get(0));
+        log.info("sftp端文件名"+fileInfo.get(1));
+        boolean b = sftpUtil.downloadFile(fileInfo.get(0), fileInfo.get(1), localFullPathFileName,host,port,username,password);
+        if (!b){
+            log.error("ftp服务器获取对应文件失败");
+        }
         return localFullPathFileName;
     }
 
@@ -180,12 +174,25 @@ public class HjFileHandleService {
         info.add(filename);
         return info;
     }
-    public static void main(String[] args) {
-        String str = "c:\\data\\test\\a.txt";
-        int start = str.lastIndexOf(File.separator);
-        String path = str.substring(0, start);
-        String filename = str.substring(start + 1);
-        System.out.println(path);
-        System.out.println(filename);
+
+    /**
+     * 保存互金下载路径
+     *
+     * @param downFilePath
+     * @param hjFileInfoModel
+     */
+    public void saveHjFileDownloadPath(String downFilePath, HjFileInfoModel hjFileInfoModel){
+
+        log.info("日期{}，文件类型:{}，下载路径：{}", hjFileInfoModel.getFileDate(), hjFileInfoModel.getFileType(), downFilePath);
+        hjFileInfoModel.setFileDownloadPath(downFilePath);
+        int totalNum = FileUtil.calTextLineNum(downFilePath);
+        hjFileInfoModel.setFileLineTotalNum(totalNum);
+        if(totalNum <= HjFileFlagConstant.READ_END_NUM_INITIAL){
+            // 如果互金文件总行数小于501，则直接更新文件读取结束行数为文件的总行数
+            hjFileInfoModel.setNextReadEndNum(totalNum);
+        }
+
+        int number = hjFileInfoService.updateDownloadFile(hjFileInfoModel);
+        System.out.println(number);
     }
 }

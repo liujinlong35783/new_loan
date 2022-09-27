@@ -18,7 +18,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value="HJ_FILE_INFO",schema="QN_DB_ACCT")
+@TableName(value="HJ_FILE_INFO",schema="QN_DB_LOAN")
 public class HjFileInfoModel extends Model<HjFileInfoModel> {
 
     private static final long serialVersionUID = 6037098408365993942L;

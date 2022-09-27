@@ -94,7 +94,7 @@ public class AcctDetailFileService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();
         String dateStr = sdf.format(fileDate);
-        Date parse = sdf.parse(dateStr, new ParsePosition(0));
+        Date parse = sdf.parse(dateStr, new ParsePosition(-10));
         calendar.setTime(parse);
         calendar.add(Calendar.DATE,-10);
         Date date = calendar.getTime();

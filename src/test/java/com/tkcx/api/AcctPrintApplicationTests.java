@@ -80,7 +80,7 @@ public class AcctPrintApplicationTests {
     @Resource
     private BankApiService bankApiService;
 
-    private Date selectDate = DateUtil.parseDate("2074-05-20");
+    private Date selectDate = DateUtil.parseDate("2033-04-04");
 
     @Test
     public void contextLoads() {
@@ -272,11 +272,10 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 1. 借款借据回单
-//        LoanReceiptThread loanThead = new LoanReceiptThread();
-//        loanThead.setCurDate(selectDate);
-//        loanThead.setStartDate(startDate);
-//        exe.execute(new Thread(loanThead));
-        exe.execute(new LoanReceiptThread(selectDate));
+        LoanReceiptThread loanThead = new LoanReceiptThread();
+        loanThead.setCurDate(selectDate);
+        loanThead.setStartDate(startDate);
+        exe.execute(new Thread(loanThead));
 
         // 关闭线程池
         exe.shutdown();
@@ -299,11 +298,10 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 2. 还款回单
-//        RefundReceiptThread refundThead = new RefundReceiptThread();
-//        refundThead.setCurDate(selectDate);
-//        refundThead.setStartDate(startDate);
-//        exe.execute(new Thread(refundThead));
-        exe.execute(new RefundReceiptThread(selectDate));
+        RefundReceiptThread refundThead = new RefundReceiptThread();
+        refundThead.setCurDate(selectDate);
+        refundThead.setStartDate(startDate);
+        exe.execute(new Thread(refundThead));
 
         // 关闭线程池
         exe.shutdown();
@@ -317,17 +315,16 @@ public class AcctPrintApplicationTests {
         }
     }
 
-    @Test
+    //@Test
     public void testBusiOrgBillThread(){
-        //selectDate = busiCommonService.getCoreSysDate();
+        selectDate = busiCommonService.getCoreSysDate();
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 3. 网贷业务机构轧账单
-//        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
-//        busiOrgBillThread.setCurDate(selectDate);
-//        exe.execute(new Thread(busiOrgBillThread));
-        exe.execute(new BusiOrgBillThread(selectDate));
+        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
+        busiOrgBillThread.setCurDate(selectDate);
+        exe.execute(new Thread(busiOrgBillThread));
 
         // 关闭线程池
         exe.shutdown();
@@ -349,10 +346,9 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 4. 网贷业务机构业务流水
-//        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
-//        busiOrgSeqThread.setCurDate(selectDate);
-//        exe.execute(new Thread(busiOrgSeqThread));
-        exe.execute(new BusiOrgSeqThread(selectDate));
+        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
+        busiOrgSeqThread.setCurDate(selectDate);
+        exe.execute(new Thread(busiOrgSeqThread));
 
         // 关闭线程池
         exe.shutdown();
@@ -373,11 +369,10 @@ public class AcctPrintApplicationTests {
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
         // 5. 贷款分户账
-//        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
-//        loanAccBillThread.setCurDate(selectDate);
+        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
+        loanAccBillThread.setCurDate(selectDate);
         //loanAccBillThread.setStartDate(startDate);
-//        exe.execute(new Thread(loanAccBillThread));
-        exe.execute(new LoanAccBillThread(selectDate));
+        exe.execute(new Thread(loanAccBillThread));
         // 关闭线程池
         exe.shutdown();
 
@@ -395,10 +390,9 @@ public class AcctPrintApplicationTests {
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
         // 5. 贷款形态调整明细清单、贷款调整登记簿
-//        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
-//        loanAdjustThread.setCurDate(selectDate);
-//        exe.execute(new Thread(loanAdjustThread));
-        exe.execute(new LoanAdjustThread(selectDate));
+        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
+        loanAdjustThread.setCurDate(selectDate);
+        exe.execute(new Thread(loanAdjustThread));
         // 关闭线程池
         exe.shutdown();
 
@@ -417,10 +411,10 @@ public class AcctPrintApplicationTests {
         // 创建线程池
         ExecutorService exe = Executors.newFixedThreadPool(1);
         // 6. 贷款明细账
-//        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
-//        loanDetailBillThread.setCurDate(selectDate);
-//        exe.execute(new Thread(loanDetailBillThread));
-        exe.execute(new LoanDetailBillThread(selectDate));
+        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
+
+        loanDetailBillThread.setCurDate(selectDate);
+        exe.execute(new Thread(loanDetailBillThread));
         // 关闭线程池
         exe.shutdown();
 
@@ -445,10 +439,9 @@ public class AcctPrintApplicationTests {
 
         for(int i = 0; i < days; i++) {
             // 7. 贷款利息登记簿
-//            InterestBillThread interestBillThread = new InterestBillThread();
-//            interestBillThread.setCurDate(selectDate);
-//            exe.execute(new Thread(interestBillThread));
-            exe.execute(new InterestBillThread(selectDate));
+            InterestBillThread interestBillThread = new InterestBillThread();
+            interestBillThread.setCurDate(selectDate);
+            exe.execute(new Thread(interestBillThread));
 
             selectDate = DateUtil.offsetDay(selectDate, -1);
 
@@ -474,10 +467,9 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(1);
 
         // 8. 会计凭证(记账凭证/交易凭证)
-//        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
-//        acctVoucherThread.setCurDate(selectDate);
-//        exe.execute(new Thread(acctVoucherThread));
-        exe.execute(new AcctVoucherThread(selectDate));
+        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
+        acctVoucherThread.setCurDate(selectDate);
+        exe.execute(new Thread(acctVoucherThread));
 
         // 关闭线程池
         exe.shutdown();
@@ -498,58 +490,49 @@ public class AcctPrintApplicationTests {
         ExecutorService exe = Executors.newFixedThreadPool(10);
 
         // 1. 借款借据回单
-//        LoanReceiptThread loanThead = new LoanReceiptThread();
-//        loanThead.setCurDate(selectDate);
-//        exe.execute(new Thread(loanThead));
-        exe.execute(new LoanReceiptThread(selectDate));
+        LoanReceiptThread loanThead = new LoanReceiptThread();
+        loanThead.setCurDate(selectDate);
+        exe.execute(new Thread(loanThead));
 
         // 2. 还款回单
-//        RefundReceiptThread refundThead = new RefundReceiptThread();
-//        refundThead.setCurDate(selectDate);
-//        exe.execute(new Thread(refundThead));
-        exe.execute(new RefundReceiptThread(selectDate));
+        RefundReceiptThread refundThead = new RefundReceiptThread();
+        refundThead.setCurDate(selectDate);
+        exe.execute(new Thread(refundThead));
 
         // 3. 网贷业务机构轧账单
-//        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
-//        busiOrgBillThread.setCurDate(selectDate);
-//        exe.execute(new Thread(busiOrgBillThread));
-        exe.execute(new BusiOrgBillThread(selectDate));
+        BusiOrgBillThread busiOrgBillThread = new BusiOrgBillThread();
+        busiOrgBillThread.setCurDate(selectDate);
+        exe.execute(new Thread(busiOrgBillThread));
 
         // 4. 网贷业务机构业务流水
-//        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
-//        busiOrgSeqThread.setCurDate(selectDate);
-//        exe.execute(new Thread(busiOrgSeqThread));
-        exe.execute(new BusiOrgSeqThread(selectDate));
+        BusiOrgSeqThread busiOrgSeqThread = new BusiOrgSeqThread();
+        busiOrgSeqThread.setCurDate(selectDate);
+        exe.execute(new Thread(busiOrgSeqThread));
 
         // 5. 贷款分户账
-//        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
-//        loanAccBillThread.setCurDate(selectDate);
-//        exe.execute(new Thread(loanAccBillThread));
-        exe.execute(new LoanAccBillThread(selectDate));
+        LoanAccBillThread loanAccBillThread = new LoanAccBillThread();
+        loanAccBillThread.setCurDate(selectDate);
+        exe.execute(new Thread(loanAccBillThread));
 
         // 6. 贷款明细账
-//        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
-//        loanDetailBillThread.setCurDate(selectDate);
-//        exe.execute(new Thread(loanDetailBillThread));
-        exe.execute(new LoanDetailBillThread(selectDate));
+        LoanDetailBillThread loanDetailBillThread = new LoanDetailBillThread();
+        loanDetailBillThread.setCurDate(selectDate);
+        exe.execute(new Thread(loanDetailBillThread));
 
         // 7. 贷款利息登记簿
-//        InterestBillThread interestBillThread = new  InterestBillThread();
-//        interestBillThread.setCurDate(selectDate);
-//        exe.execute(new Thread(interestBillThread));
-        exe.execute(new InterestBillThread(selectDate));
+        InterestBillThread interestBillThread = new  InterestBillThread();
+        interestBillThread.setCurDate(selectDate);
+        exe.execute(new Thread(interestBillThread));
 
         // 8. 会计凭证(记账凭证/交易凭证)
-//        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
-//        acctVoucherThread.setCurDate(selectDate);
-//        exe.execute(new Thread(acctVoucherThread));
-        exe.execute(new AcctVoucherThread(selectDate));
+        AcctVoucherThread acctVoucherThread = new AcctVoucherThread();
+        acctVoucherThread.setCurDate(selectDate);
+        exe.execute(new Thread(acctVoucherThread));
 
         // 9. 贷款形态调整明细清单、贷款调整登记簿
-//        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
-//        loanAdjustThread.setCurDate(selectDate);
-//        exe.execute(new Thread(loanAdjustThread));
-        exe.execute(new LoanAdjustThread(selectDate));
+        LoanAdjustThread loanAdjustThread = new LoanAdjustThread();
+        loanAdjustThread.setCurDate(selectDate);
+        exe.execute(new Thread(loanAdjustThread));
 
         // 关闭线程池
         exe.shutdown();
@@ -570,6 +553,6 @@ public class AcctPrintApplicationTests {
     public void testHjHotice() throws ApplicationException {
 
         String msg = "000016630030VQZlYUpkxjnij9o72ywnt/W5106100<?xml version=\"1.0\" encoding=\"UTF-8\"?><Service><SysHead><SvcCd>3002040002</SvcCd><SvcScn>03</SvcScn><SvcSplrTxnCd></SvcSplrTxnCd><CnsmrSysId>108400</CnsmrSysId><TxnDt>2020-12-17</TxnDt><TxnTm>224604</TxnTm><AcgDt>2020-12-17</AcgDt><CnsmrSeqNo>1084002020121610460407263058</CnsmrSeqNo><TxnChnlTp>01000000</TxnChnlTp><ChnlDtl>01000000</ChnlDtl><TxnTmlId></TxnTmlId><CnsmrSvrId>8.1.8.242</CnsmrSvrId><OrigCnsmrSeqNo>1084002020121610460407263058</OrigCnsmrSeqNo><OrigCnsmrId>108400</OrigCnsmrId><OrigTmlId></OrigTmlId><OrigCnsmrSvrId></OrigCnsmrSvrId><UsrLng>CHINESE</UsrLng><FileFlg></FileFlg></SysHead><AppHead><TxnTlrId>ACCT</TxnTlrId><OrgId>27013000</OrgId><TlrPwsd></TlrPwsd><TlrLvl></TlrLvl><TlrTp></TlrTp><AprvFlg></AprvFlg><AhrTlrInf type=\"array\"></AhrTlrInf><AprvTlrInf type=\"array\"></AprvTlrInf><AhrFlg></AhrFlg></AppHead><Body><TranOcrDt>22:46:04</TranOcrDt><Rmrk>数据抽取</Rmrk><DtlInfoAry type=\"array\"><Struct><MakeFileFlg>t_act_one_detail</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_one_detail_20201216.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_brch_day_tot</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_brch_day_tot_20201216.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_busi_code_map</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_busi_code_map_20201216.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct><Struct><MakeFileFlg>t_act_pub_org</MakeFileFlg><FilPath>/100024/acc/</FilPath><FileNm>t_act_pub_org_20201216.txt</FileNm><FileTrnsmCd>100024</FileTrnsmCd></Struct></DtlInfoAry></Body></Service>";
-        //bankApiService.hjNotice(msg);
+        bankApiService.hjHotice(msg);
     }
 }

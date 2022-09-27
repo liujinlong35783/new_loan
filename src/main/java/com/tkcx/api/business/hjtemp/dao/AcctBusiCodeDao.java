@@ -40,6 +40,14 @@ public interface AcctBusiCodeDao extends BaseMapper<AcctBusiCodeModel> {
      * @param balanceIdentifier
      * @return
      */
-    @Select("select * from QN_DB_ACCT.ACCT_BUSI_CODE b where b.BUSI_CODE = '${busiCode}' and b.BALANCE_IDENTIFIER = '${balanceIdentifier}'")
+    @Select("select * from QN_DB_LOAN.ACCT_BUSI_CODE b where b.BUSI_CODE = '${busiCode}' and b.BALANCE_IDENTIFIER = '${balanceIdentifier}'")
     AcctBusiCodeModel getModelByBusiCode(@Param("busiCode")String busiCode, @Param("balanceIdentifier")String balanceIdentifier);
+ /**
+     * 查询
+     * @param busiCode
+     * @param balanceIdentifier
+     * @return
+     */
+    @Select("select * from QN_DB_LOAN.ACCT_BUSI_CODE b where b.ITEM_CTRL = '${itemCtrl}'")
+    AcctBusiCodeModel getModelByItemCtrl(@Param("busiCode")String itemCtrl);
 }

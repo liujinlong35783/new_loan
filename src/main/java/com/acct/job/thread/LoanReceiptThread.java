@@ -29,8 +29,8 @@ public class LoanReceiptThread extends AcctBaseThread {
 
     @Override
     public void run() {
-        Date startDate = new Date();
-        log.info("LoanReceiptThread start..." + startDate);
+
+        log.info("LoanReceiptThread start..." + new Date());
 
         // 查询前一天放款记录
         QueryWrapper queryWrapper = getQueryWrapper(AssetGrantRecordModel.class, "assetGrantRecordCreateAt");
@@ -70,9 +70,6 @@ public class LoanReceiptThread extends AcctBaseThread {
                     loanReceipt.setPayoffType(EnumConstant.EQ_LOAN_PMT);
                 }else if(interestType!=null&&interestType.equals("eq_principal_pmt")){
                     loanReceipt.setPayoffType(EnumConstant.EQ_PRINCIPAL_PMT);
-                    //我改的
-                }else if(interestType!=null&&interestType.equals("pay_int_principal_due")){
-                    loanReceipt.setPayoffType(EnumConstant.pay_int_principal_due);
                 }
             } else {
                 log.info("{} assetItemNo of Asset is null", assetItemNo);
@@ -99,9 +96,8 @@ public class LoanReceiptThread extends AcctBaseThread {
             log.info("LoanReceipt record is {}." ,loanReceiptList.size());
             loanReceiptService.saveBatch(loanReceiptList);
         }
-        Date endDate = new Date();
-        log.info("LoanReceiptThread end..." + endDate);
-        log.info("LoanReceiptThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
+
+        log.info("LoanReceiptThread end..." + new Date());
     }
 
 

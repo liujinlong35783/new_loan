@@ -171,6 +171,12 @@ public class RefundReceiptModel extends Model<RefundReceiptModel> implements IAc
 	@TableField(value="ORG_NAME")
 	private String orgName;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
 
 	private String printCount;
 
@@ -183,12 +189,12 @@ public class RefundReceiptModel extends Model<RefundReceiptModel> implements IAc
 	public String toString() {
 		return (DateUtil.formatDateTime(payoffDate) + "^@" + refundName + "^@"
 				+ contractNo + "^@" + loanAccount + "^@" + payAccount + "^@"
-				+ debtNo + "^@" + ToolUtil.fenToYuan(loanAmount) + "^@" + DateUtil.formatDateTime(grantDate) + "^@"
+				+ debtNo + "^@" + loanAmount + "^@" + DateUtil.formatDateTime(grantDate) + "^@"
 				+ DateUtil.formatDateTime(dueDate) + "^@" + interestRate + "^@"
-				+ overdueInterestRate + "^@" + ToolUtil.fenToYuan(repaidPrincipalAmount) + "^@"
-				+ ToolUtil.fenToYuan(unsettlePrincipalAmount) + "^@" + ToolUtil.fenToYuan(repaidInterestAmount) + "^@"
-				+ ToolUtil.fenToYuan(unsettleInterestAmount) + "^@" + ToolUtil.fenToYuan(unsettleSumAmount) + "^@"
-				+ ToolUtil.fenToYuan(repaidSumAmount) + "^@" + orgCode + "^@" + orgName + "^@" + "^@" + (printCount == null ? String.valueOf(0) : printCount)
+				+ overdueInterestRate + "^@" + repaidPrincipalAmount + "^@"
+				+ unsettlePrincipalAmount + "^@" + repaidInterestAmount + "^@"
+				+ unsettleInterestAmount + "^@" + unsettleSumAmount + "^@"
+				+ repaidSumAmount + "^@" + orgCode + "^@" + orgName + "^@" + "^@" + (printCount == null ? String.valueOf(0) : printCount)
 		).replace("null", "");
 	}
 

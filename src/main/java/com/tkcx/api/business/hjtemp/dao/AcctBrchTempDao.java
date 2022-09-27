@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
 
-import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import javafx.scene.control.Pagination;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -40,7 +39,7 @@ public interface AcctBrchTempDao extends BaseMapper<AcctBrchTempModel> {
      * 根据会计日期查科目
      * @return
      */
-    @Select("select * from QN_DB_ACCT.ACCT_BRCH_TEMP t where t.ACCT_DATE = #{acctDate}")
+    @Select("select * from QN_DB_LOAN.ACCT_BRCH_TEMP t where t.ACCT_DATE = #{acctDate}")
     List<AcctBrchTempModel> queryBrchByAcctDate(@Param("acctDate") Date acctDate);
 
 }

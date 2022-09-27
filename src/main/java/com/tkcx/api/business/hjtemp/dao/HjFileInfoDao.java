@@ -44,6 +44,6 @@ public interface HjFileInfoDao extends BaseMapper<HjFileInfoModel> {
      * @param model
      * @return
      */
-    @Update("UPDATE QN_DB_ACCT.HJ_FILE_INFO SET FILE_LINE_TOTAL_NUM = #{e.fileLineTotalNum}, FILE_DOWNLOAD_PATH = #{e.fileDownloadPath} WHERE FILE_TYPE=#{e.fileType} AND FILE_DATE=#{e.fileDate} AND DELETE_FLAG=#{e.deleteFlag} AND READ_FLAG=#{e.readFlag}")
+    @Update("UPDATE QN_DB_LOAN.HJ_FILE_INFO SET FILE_LINE_TOTAL_NUM = #{e.fileLineTotalNum}, FILE_DOWNLOAD_PATH = #{e.fileDownloadPath} WHERE FILE_TYPE=#{e.fileType} AND FILE_DATE=#{e.fileDate} AND DELETE_FLAG=#{e.deleteFlag} AND READ_FLAG=#{e.readFlag}")
     int updateDownloadFile(@Param("e")HjFileInfoModel model);
 }

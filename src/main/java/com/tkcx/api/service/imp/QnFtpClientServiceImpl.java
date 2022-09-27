@@ -88,8 +88,9 @@ public class QnFtpClientServiceImpl implements FtpClientService {
             // 获取当前jar运行目录
             String jarPath = new ApplicationHome(getClass()).getSource().getParentFile().toString();
             log.info("jar路徑" + jarPath);
-            configPath = jarPath + configPath;
-//            configPath = jarPath + "/ftpClientConfig.properties";
+//            configPath = jarPath + configPath;
+            configPath = jarPath + "/ftpClientConfig.properties";
+
             // 初始化ftp配置
             FtpClientConfig.setConfFilePath(configPath);
             FtpClientConfig config = FtpClientConfig.getInstance();

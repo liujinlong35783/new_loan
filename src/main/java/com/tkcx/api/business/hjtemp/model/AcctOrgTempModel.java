@@ -19,7 +19,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName("ACCT_ORG_TEMP")
+@TableName(value = "ACCT_ORG_TEMP" ,schema="QN_DB_LOAN")
 public class AcctOrgTempModel extends Model<AcctOrgTempModel> {
 
     private static final long serialVersionUID = 1L;

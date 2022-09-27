@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tkcx.api.business.acctPrint.dao.Loan.LoanReceiptLoanDao">
+
+	<resultMap id="BaseResultMap" type="com.tkcx.api.business.acctPrint.model.Loan.LoanReceiptLoanModel">
+		<result column="BORROWER_ADDR" property="borrowerAddr"/>
+		<result column="BORROWER_IDNUM" property="borrowerIdnum"/>
+		<result column="BORROWER_NAME" property="borrowerName"/>
+		<result column="CONTRACT_NO" property="contractNo"/>
+		<result column="CREATE_DATE" property="createDate"/>
+		<result column="DUE_DATE" property="dueDate"/>
+		<result column="INTEREST_RATE" property="interestRate"/>
+		<result column="LOAN_ACCOUNT" property="loanAccount"/>
+		<result column="LOAN_AMOUNT" property="loanAmount"/>
+		<result column="LOAN_DATE" property="loanDate"/>
+		<result column="LOAN_TYPE" property="loanType"/>
+		<result column="LOAN_USAGE" property="loanUsage"/>
+		<result column="LRECEIPT_ID" property="lreceiptId"/>
+		<result column="PAYOFF_TYPE" property="payoffType"/>
+		<result column="RECEIVER_ACCOUNT" property="receiverAccount"/>
+		<result column="ACCT_DATE" property="acctDate"/>
+		<result column="ORG_CODE" property="orgCode" />
+		<result column="ORG_NAME" property="orgName" />
+		<result column="PRINT_COUNT" property="printCount" />
+	</resultMap>
+
+	<select id="selectListByDate" resultMap="BaseResultMap">
+			select * from LOAN_RECEIPT t
+		<where>
+			<include refid="select_content"/>
+		</where>
+	</select>
+
+	<sql id="select_content">
+		<if test="e.createDate != null and e.createDate != '' ">
+			AND t.CREATE_DATE = #{e.createDate}
+		</if>
+	</sql>
+
+</mapper>

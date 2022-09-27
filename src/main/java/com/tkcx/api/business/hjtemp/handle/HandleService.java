@@ -62,6 +62,9 @@ public class HandleService {
                 case HjFileFlagConstant.ACT_PUB_ORG_FILE:
                     readThreadPool.execute(new AcctOrgReadThread(fileDate));
                     break;
+                case HjFileFlagConstant.XIN_LOAN_ACCT_DETAIL_FILE:
+                    readThreadPool.execute(new XinLoanAcctDetailReadThread(isRemove,fileDate));
+                    break;
                 default:
                     log.error("文件类型：【{}】错误", fileType);
             }
@@ -75,7 +78,6 @@ public class HandleService {
             log.error("解析互金文件异常{}" ,e);
         }
     }
-
     /**
      * 通用处理
      * @param path

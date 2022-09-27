@@ -1,6 +1,7 @@
 package com.tkcx.api.controller;
 
 import com.tkcx.api.service.BankApiService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import common.core.exception.ApplicationException;
 
+import java.text.ParseException;
 
+@Slf4j
 @RestController
 public class ServerController {
 
@@ -17,30 +20,19 @@ public class ServerController {
     private BankApiService bankApiService;
 
     /**
-     * 互金通知下载报文
+     * 互金通知下载报文（23：00（日切之后）~2：00通知下载，日期文件都为23：00当日）
      * @param message xml加密报文
      * @return
      */
     @RequestMapping(value = "/acctNotice", method = RequestMethod.POST)
     public String singleSend(@RequestBody String message) {
         try {
-            return bankApiService.hjNotice(message);
-        } catch (ApplicationException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    /**
-     * 综合前端查询
-     * @param message ml加密报文
-     * @return
-     */
-    @RequestMapping(value = "/queryAcctData", method = RequestMethod.POST)
-    public String queryAcctData(@RequestBody String message) {
-        try {
-            String rspVo = bankApiService.zhqdQuery(message);
+            String rspVo = bankApiService.hjNotice(message);
+            log.info("/acctNotice end :"+rspVo);
             return rspVo;
         } catch (ApplicationException e) {
+            e.printStackTrace();
+            log.info(e.getMessage());
             return null;
         }
     }

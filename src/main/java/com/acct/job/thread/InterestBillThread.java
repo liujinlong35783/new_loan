@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ForkJoinPool;
 
 /**
  * 贷款利息登记簿
@@ -28,15 +27,10 @@ public class InterestBillThread extends AcctBaseThread {
         super(curDate);
     }
 
-
-    public static final  int listSize =10000;
-
-
     @Override
     public void run(){
 
-        Date startDate = new Date();
-        log.info("InterestBillThread start..." + startDate);
+        log.info("InterestBillThread start..." + new Date());
 
         // 贷款利息登记簿
         List<InterestBillModel> interestBillList = new ArrayList<>();
@@ -60,36 +54,26 @@ public class InterestBillThread extends AcctBaseThread {
         interestList.addAll(interestAccrualList);
         interestList.addAll(repayAssemblyList);
 
-        ForkJoinPool forkJoinPool = new ForkJoinPool(4);
-        try {
-            forkJoinPool.submit(() -> interestList.parallelStream().forEach(t-> {
-                String assetItemNo = "";
-                InterestBillModel interestBill = null;
-                if (t instanceof Map) {
-                    // 利息计提
-                    Map<String, Object> map = (Map<String, Object>) t;
-                    assetItemNo = (String)map.get("ASSET_ITEM_NO");
-                    interestBill = this.getInterestBillModelByInterestAccrual(map);
-                } else if (t instanceof RepayAssemblyRecordModel) {
-                    // 还款记录
-                    RepayAssemblyRecordModel repayAssembly = (RepayAssemblyRecordModel)t;
-                    assetItemNo = repayAssembly.getAssetNo();
-                    interestBill = this.getInterestBillModelByRepayAssemblyRecord(repayAssembly);
-                }
+        for (Object obj : interestList) {
+            String assetItemNo = "";
+            InterestBillModel interestBill = null;
 
-                // 填充利息登记簿资产信息
-                this.setInterestBillByAsset(assetItemNo, interestBill);
-
-                interestBillList.add(interestBill);
-            if (interestBillList.size()%listSize == 0){
-                Date endDate = new Date();
-                log.info("InterestBillThread interestBillList.size:{},目前耗时：{}",interestBillList.size(),endDate, DateUtil.formatBetween( endDate,startDate));
+            if (obj instanceof Map) {
+                // 利息计提
+                Map<String, Object> map = (Map<String, Object>) obj;
+                assetItemNo = (String)map.get("ASSET_ITEM_NO") ;
+                interestBill = this.getInterestBillModelByInterestAccrual(map);
+            } else if (obj instanceof RepayAssemblyRecordModel) {
+                // 还款记录
+                RepayAssemblyRecordModel repayAssembly = (RepayAssemblyRecordModel)obj;
+                assetItemNo = repayAssembly.getAssetNo();
+                interestBill = this.getInterestBillModelByRepayAssemblyRecord(repayAssembly);
             }
-            })).get();
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-        }finally {
-            forkJoinPool.shutdown();
+
+            // 填充利息登记簿资产信息
+            this.setInterestBillByAsset(assetItemNo, interestBill);
+
+            interestBillList.add(interestBill);
         }
 
         if (!interestBillList.isEmpty()) {
@@ -97,9 +81,7 @@ public class InterestBillThread extends AcctBaseThread {
             interestBillService.saveBatch(interestBillList);
         }
 
-        Date endDate = new Date();
-        log.info("InterestBillThread end..." + endDate);
-        log.info("InterestBillThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
+        log.info("InterestBillThread end..." + new Date());
     }
 
     /**

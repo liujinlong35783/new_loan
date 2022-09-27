@@ -1,15 +1,15 @@
 ADATE=`date +%Y%m%d%H%M%S`
-APP_NAME=acctprint
+APP_NAME=newloan
 
-APP_HOME=/data/bank/acctprint
+APP_HOME=/home/loan/newloan
 
-LOG_PATH=/data/logs/acctprint/acctprint.out
-GC_LOG_PATH=/data/logs/acctprint/gc-$APP_NAME-$ADATE.log
+LOG_PATH=/home/loan/logs/newloan/newloan.out
+GC_LOG_PATH=/home/loan/logs/newloan/gc-$APP_NAME-$ADATE.log
 JVM_OPTS="-Dname=$APP_NAME -Xms512M -Xmx1024M  -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintGCDateStamps -Xloggc:$GC_LOG_PATH -XX:+PrintGCDetails"
 
-JAR_FILE=$APP_HOME/acctprint-1.0.jar
+JAR_FILE=$APP_HOME/newloan-1.0.jar
 pid=0
-	if [ "$USER" != "mng" ];then
+	if [ "$USER" != "loan" ];then
          echo "该用户无权限！"
          exit 1;
         fi 

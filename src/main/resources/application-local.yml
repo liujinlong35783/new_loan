@@ -1,18 +1,17 @@
 server:
-  port: 11244
+  port: 11245
   max-http-header-size: 10240
 
 spring:
   datasource:
     ## uat环境
     driver-class-name: oracle.jdbc.OracleDriver
-#    url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
+    url: jdbc:oracle:thin:@//6.106.4.52:1521/qinnong
 #    url: jdbc:oracle:thin:@//6.106.16.104:1521/orcl
-    url: jdbc:oracle:thin:@//6.106.16.104:1521/QNA
-    #QN_DB_ACCT  123456
+#    url: jdbc:oracle:thin:@//6.106.16.104:1521/QNA
 #    username: SYSTEM
 #    password: qinnong
-    username: QN_DB_ACCT
+    username: QN_DB_LOAN
     password: 123456
     filters: wall,mergeStat
     druid:
@@ -21,7 +20,7 @@ spring:
       min-idle: 5
       max-wait: 60000
       pool-prepared-statements: false
-      max-pool-prepared-statement-per-connection-size: 20
+      max-pool-prepared-statement-per-connection-size: 201
       max-open-prepared-statements: 20
       validation-query-timeout: 30000
       test-on-borrow: true
@@ -31,10 +30,10 @@ spring:
 
 storage:
   tempUpload:
-    path: /data/acctprint/fileserver/upload/
+    path: /home/loan/fileserver/upload/
 #    path: D:\data\acctprint\fileserver\upload\
   tempDownload:
-    path: /data/acctprint/fileserver/download/
+    path: /home/loan/fileserver/download/
   remote:
     path: /file/
   configPath: /ftpClientConfig.properties
@@ -46,11 +45,11 @@ xxl:
     admin:
       addresses: http://6.106.4.23:8080/xxl-job-admin/
     executor:
-      appname: acctPrint
+      appname: newLoan
       ip:
       port: 8099
       #accessToken:
-      logpath: /data/logs/acctprint/xxl-job/
+      logpath: /home/loan/logs/newloan/xxl-job/
       logretentiondays: -1
 
 
@@ -58,13 +57,13 @@ afe:
   lspublic:
     Key:
       #AFE公钥路径
-#      path: /data/acctprint/afe_acct/113700.cer
-        #AFE公钥路径
+      #      path: /data/acctprint/afe_acct/113700.cer
+      #AFE公钥路径
       path: D:\JAVA\Company\bersion_gitlab\kjpz\src\main\resources\rsa_2048\113700.cer
   private:
     Key:
       #本系统私钥路径
-#      path: /data/acctprint/afe_acct/113501.pfx
+      #      path: /data/acctprint/afe_acct/113501.pfx
       #本系统私钥路径
       path: D:\JAVA\Company\bersion_gitlab\kjpz\src\main\resources\rsa_2048\113501.pfx
   passwd: 123456
@@ -97,3 +96,7 @@ afe:
     FileServerType: 1
     #SFTP 分布式文服节点
     DisNode: ""
+#新希望推送文件路径
+newLoan:
+  filePath: D:\\JAVA\\Company\\new_loan\\file_data\\
+#  filePath: /home/loan/file_data/

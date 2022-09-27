@@ -1,8 +1,8 @@
 package com.tkcx.api.utils;
 
 import com.jcraft.jsch.*;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.*;
@@ -11,9 +11,9 @@ import java.util.Vector;
 /**
  * 类说明 sftp工具类
  */
-
-@Slf4j
 public class SFTPUtil {
+
+    private static Logger logger = Logger.getLogger(SFTPUtil.class);
 
     private ChannelSftp sftp;
 
@@ -224,8 +224,8 @@ public class SFTPUtil {
             sftp.upload(baseUploadPath,upLoadDirectory, sftpFileName, is);
             sftp.logout();
         } catch (Exception e) {
-            log.info("SFTPUtil uploadFile exception:"+e.getMessage());
-            log.error(e.getMessage());
+            logger.info("SFTPUtil uploadFile exception:"+e.getMessage());
+            logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
 
@@ -238,17 +238,21 @@ public class SFTPUtil {
      * @throws SftpException
      * @throws IOException
      */
-    public  boolean downloadFile(String downloadPath,String downloadFile,String saveLocalFile) {
+    public  boolean downloadFile(String downloadPath,String downloadFile,String saveLocalFile,String host,int port,String username,String password) {
         boolean reslut=true;
         try {
             SFTPUtil sftp = new SFTPUtil(username, password, host, port);
+            logger.info("username:"+username);
+            logger.info("password:"+password);
+            logger.info("host:"+host);
+            logger.info("port:"+port);
             sftp.login();
             sftp.download(downloadPath, downloadFile, saveLocalFile);
             sftp.logout();
             return reslut;
         } catch (Exception e) {
-            log.info("SFTPUtil downloadFile exception:"+e.getMessage());
-            log.error(e.getMessage());
+            logger.info("SFTPUtil downloadFile exception:"+e.getMessage());
+            logger.error(e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

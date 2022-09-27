@@ -20,7 +20,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value="ACCT_BRCH_TEMP",schema="QN_DB_ACCT")
+@TableName(value="ACCT_BRCH_TEMP",schema="QN_DB_LOAN")
 public class AcctBrchTempModel extends Model<AcctBrchTempModel> {
 
     private static final long serialVersionUID = 1L;

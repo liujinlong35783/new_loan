@@ -2,7 +2,6 @@ package com.tkcx.api.business.hjtemp.service;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import com.tkcx.api.common.CommonService;
 import com.tkcx.api.business.hjtemp.dao.AcctBrchTempDao;
 import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;

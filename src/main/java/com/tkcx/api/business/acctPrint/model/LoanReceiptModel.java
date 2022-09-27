@@ -141,6 +141,12 @@ public class LoanReceiptModel extends Model<LoanReceiptModel> implements IAcctPr
 	@TableField(value="ORG_NAME")
 	private String orgName;
 
+	/**
+	 * 新网贷标志
+	 *
+	 */
+	@TableField(value="NEWLOAN_FLAG")
+	private String newLoanFlag;
 
 	private String printCount;
 
@@ -156,9 +162,6 @@ public class LoanReceiptModel extends Model<LoanReceiptModel> implements IAcctPr
 			payoffTypeStr = "等额本息" ;
 		} else if (payoffType == EnumConstant.EQ_PRINCIPAL_PMT) {
 			payoffTypeStr = "等额本金" ;
-			//我改的
-		}else if(payoffType.equals(EnumConstant.pay_int_principal_due)){
-			payoffTypeStr = "等额本金";
 		}
 
 		return (borrowerName + "^@" + borrowerIdnum + "^@" + borrowerAddr + "^@"
@@ -166,7 +169,7 @@ public class LoanReceiptModel extends Model<LoanReceiptModel> implements IAcctPr
 				+ receiverAccount + "^@" + loanUsage + "^@" + interestRate + "^@"
 				+ payoffTypeStr + "^@" + DateUtil.formatDateTime(loanDate) + "^@"
 				+ DateUtil.formatDateTime(dueDate) + "^@" + contractNo + "^@"
-				+ ToolUtil.fenToYuan(loanAmount) + "^@" + orgCode + "^@" + orgName + "^@" + "^@" + (printCount == null ? String.valueOf(0) : printCount))
+				+ loanAmount + "^@" + orgCode + "^@" + orgName + "^@" + "^@" + (printCount == null ? String.valueOf(0) : printCount))
 				.replace("null", "");
 	}
 
@@ -181,7 +184,8 @@ public class LoanReceiptModel extends Model<LoanReceiptModel> implements IAcctPr
 				"    <tr><td>借款利率:</td><td>"+interestRate+"</td><td>还款方式:</td><td>"+(payoffType == Integer.valueOf(1) ? "等额本息": "等额本金") +"</td></tr>\n" +
 				"    <tr><td>贷款用途:</td><td>"+loanUsage+"</td><td>借据种类:</td><td>"+(loanType == Integer.valueOf(0)  ? "短期" : "")+"</td></tr>\n" +
 				"    <tr><td>贷款日期:</td><td>"+DateUtil.formatDateTime(loanDate)+"</td><td>到期日期:</td><td>"+DateUtil.formatDateTime(dueDate)+"</td></tr>\n" +
-				"    <tr><td>借款金额:</td><td colspan=\"3\">￥"+ToolUtil.fenToYuan(loanAmount)+"  人民币："+ToolUtil.toChinese(ToolUtil.fenToYuan(loanAmount))+"</td></tr>"
+				"    <tr><td>借款金额:</td><td colspan=\"3\">￥"+ToolUtil.fenToYuan(loanAmount)+"  人民币："+ToolUtil.toChinese(ToolUtil.fenToYuan(loanAmount))+"</td></tr>" +
+				"    <tr><td>机构名称:</td><td>"+orgName+"</td><td>机构号:</td><td>"+orgCode+"</td></tr>\n"
 						.replace("null", "");
 	}
 	@Override

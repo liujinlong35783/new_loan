@@ -19,7 +19,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value="ACCT_BUSI_CODE",schema="QN_DB_ACCT")
+@TableName(value="ACCT_BUSI_CODE",schema="QN_DB_LOAN")
 public class AcctBusiCodeModel extends Model<AcctBusiCodeModel> {
 
     private static final long serialVersionUID = 1L;

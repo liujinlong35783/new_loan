@@ -1,5 +1,5 @@
 server:
-  port: 11244
+  port: 11245
   max-http-header-size: 10240
 
 spring:
@@ -26,9 +26,9 @@ spring:
 
 storage:
   tempUpload:
-    path: /data/acctprint/fileserver/upload/
+    path: /home/loan/fileserver/upload/
   tempDownload:
-    path: /data/acctprint/fileserver/download/
+    path: /home/loan/fileserver/download/
   remote:
     path: /file/
   configPath: /ftpClientConfig.properties
@@ -49,9 +49,8 @@ xxl:
       ## SIT 8098
       ## UAT 8099
       #accessToken:
-      logpath: /data/logs/acctprint/xxl-job/
+      logpath: /home/loan/logs/newloan/xxl-job/
       logretentiondays: -1
-
 
 
 afe:
@@ -93,3 +92,7 @@ afe:
     FileServerType: 1
     #SFTP 分布式文服节点
     DisNode: ""
+#新希望推送文件路径
+newLoan:
+  filePath: D:\\JAVA\\Company\\new_loan\\file_data\\
+#  filePath: /home/loan/file_data/

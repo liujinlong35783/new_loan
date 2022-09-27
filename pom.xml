@@ -10,13 +10,13 @@
 	</parent>
 
 	<groupId>com.tkcx</groupId>
-	<artifactId>acctprint</artifactId>
-	<version>1.2</version>
+	<artifactId>newloan</artifactId>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
-	<name>acct_print</name>
+	<name>new_loan</name>
 	<url>http://maven.apache.org</url>
-	<description>会计打印项目</description>
+	<description>新希望项目</description>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

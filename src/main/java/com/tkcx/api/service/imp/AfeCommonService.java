@@ -1,5 +1,6 @@
 package com.tkcx.api.service.imp;
 
+import com.acct.job.util.DateUtil;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import sxxh.LGBC.sxxh_LGBC;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @Slf4j
@@ -34,6 +37,10 @@ public class AfeCommonService {
     @Value("${afe.download.port}")
     String downLoadPort;
 
+    @Value("${afe.sec.node.id}")
+    String secNodeId;
+
+
     /**
      *
      * 加密发送下载报文及解析响应报文
@@ -44,7 +51,11 @@ public class AfeCommonService {
         AfeDownFileBodyRspVo receive=new AfeDownFileBodyRspVo();
         try {
             //生成流水
-            String cnsmrSeqNo = reqCn.getSysHeadVo().getCnsmrSeqNo();
+//            String cnsmrSeqNo = reqCn.getSysHeadVo().getCnsmrSeqNo();
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+            String dateStr = format.format(new Date());
+            String cnsmrSeqNo = secNodeId+dateStr+RandomUtils.creatCnsmrSeqNo();
+
             log.info("流水号:{}", cnsmrSeqNo);
             //获取16位随机数
             String randomNum = RandomUtils.getGUID();
@@ -70,7 +81,7 @@ public class AfeCommonService {
             log.info("请求报文:{}", message);
             //发送请求
             Map<String, String> responData = TCPUtil.sendTCPRequest(socketIp, downLoadPort, message, "utf-8");
-            String reqData = responData.get("reqData");
+            String reqData = responData.get("respData");
             log.info("响应报文:" + reqData);
             String tranData = afeUtilsService.getTranData(reqData);
             log.info("业务报文明文:" + tranData);
@@ -166,8 +177,6 @@ public class AfeCommonService {
      *
      * @return
      */
-    @Value("${afe.sec.node.id}")
-    String secNodeId;
     public String getSendMessage(String cnsmrSeqNo, String encryptPkgDataLen, String encryptRndLen, String encryptPkgDataStr, String encryptRndStr, byte[] signData) {
         //系统节点号+28位流水号+预留位+业务报文密文长度+随机数密文长度+业务报文密文+随机数密文+签
         String reqParam = secNodeId + cnsmrSeqNo + getReserve() + encryptPkgDataLen + encryptRndLen + encryptPkgDataStr + encryptRndStr + new String(signData);
@@ -206,14 +215,10 @@ public class AfeCommonService {
         }
         return str;
     }
-
-    @Autowired
-    private EncryptService encryptService;
     private static final int FILE_NAME_LENGTH_AFE = 16;
     private static final int RESERVE_SPACE = 64;
     private static final int ENCRYPT_LEN = 8;
     private static final String P_PASSWD="123456";
-
     @Value("${bank.service.sysId}")
     private String systemId;
 
@@ -221,7 +226,10 @@ public class AfeCommonService {
     public String encrypt(ServiceRequestVo request,  String message) {
         try {
             //生成流水
-            String cnsmrSeqNo = request.getSysHeadVo().getCnsmrSeqNo();
+//            String cnsmrSeqNo = request.getSysHeadVo().getCnsmrSeqNo();
+            SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+            String dateStr = format.format(new Date());
+            String cnsmrSeqNo = secNodeId+dateStr+RandomUtils.creatCnsmrSeqNo();
             log.info("流水号:{}", cnsmrSeqNo);
             //获取16位随机数
             String randomNum = RandomUtils.getGUID();
@@ -244,7 +252,7 @@ public class AfeCommonService {
             byte[] signData = sign(encryptRndLen, encryptPkgDataLen, encryptRndStr, encryptPkgDataStr);
             //获取发送数据
             message = getSendMessage(cnsmrSeqNo, encryptPkgDataLen, encryptRndLen, encryptPkgDataStr, encryptRndStr, signData);
-            log.info("请求报文:{}", message);
+            log.info("互金请求响应报文:{}", message);
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -262,7 +270,7 @@ public class AfeCommonService {
     public String encryptXML(String message) {
         try {
             //生成流水
-            String cnsmrSeqNo = encryptService.getNx();
+            String cnsmrSeqNo = "123";
             log.info("流水号:{}", cnsmrSeqNo);
             //获取16位随机数
             String randomNum = RandomUtils.getGUID();

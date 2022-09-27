@@ -1,6 +1,5 @@
 package com.acct.job.thread;
 
-import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tkcx.api.business.acctPrint.model.LoanDetailBillModel;
 import com.tkcx.api.business.wdData.model.*;
@@ -28,8 +27,8 @@ public class LoanDetailBillThread extends AcctBaseThread {
 
     @Override
     public void run(){
-        Date startDate = new Date();
-        log.info("LoanDetailBillThread start..." + startDate);
+
+        log.info("LoanDetailBillThread start..." + new Date());
 
         // 查询前一天还款记录
         QueryWrapper queryWrapper = getQueryWrapper(RepayAssemblyRecordModel.class, "repayFinishTime");
@@ -153,9 +152,7 @@ public class LoanDetailBillThread extends AcctBaseThread {
             log.info("LoanDetailBill record is {}." , loanDetailBillList.size());
             loanDetailBillService.saveBatch(loanDetailBillList);
         }
-        Date endDate = new Date();
-        log.info("LoanDetailBillThread end..." + endDate);
-        log.info("LoanDetailBillThread end：{},定时任务耗时：{}", endDate, DateUtil.formatBetween( endDate,startDate));
 
+        log.info("LoanDetailBillThread end..." + new Date());
     }
 }

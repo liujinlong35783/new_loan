@@ -21,21 +21,21 @@
 
 
 	<select id="selectModelCount" resultType="Integer">
-			select count(1) from QN_DB_ACCT.HJ_FILE_INFO t
+			select count(1) from QN_DB_LOAN.HJ_FILE_INFO t
 		<where>
 			<include refid="select_content"/>
 		</where>
 	</select>
 
 	<select id="selectModelList" resultMap="BaseResultMap">
-			select * from QN_DB_ACCT.HJ_FILE_INFO t
+			select * from QN_DB_LOAN.HJ_FILE_INFO t
 		<where>
 			<include refid="select_content"/>
 		</where>
 	</select>
 
 	<select id="selectOneModel" resultMap="BaseResultMap">
-		select * from QN_DB_ACCT.HJ_FILE_INFO t
+		select * from QN_DB_LOAN.HJ_FILE_INFO t
 		<where>
 			<include refid="select_content"/>
 		</where>

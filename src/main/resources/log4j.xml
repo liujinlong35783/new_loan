@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
-<log4j:configuration debug="false">
+<log4j:configuration debug="true">
 	<appender name="console"
-		class="org.apache.log4j.ConsoleAppender">
+			  class="org.apache.log4j.ConsoleAppender">
 		<param name="Encoding" value="UTF-8" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern"
-				value="[%d{yyyy-MM-dd HH:mm:ss SSS}]-[%p]-[%c{2}(%L)]-[%t] %m%n" />
+				   value="[%d{yyyy-MM-dd HH:mm:ss SSS}]-[%p]-[%c{2}(%L)]-[%t] %m%n" />
 		</layout>
 	</appender>
 
 	<appender name="rootlog" class="org.apache.log4j.DailyRollingFileAppender">
 		<!-- 设置日志信息输出文件全路径名 -->
-		<param name="File" value="/data/logs/acctprint/root.log" />
+		<param name="File" value="/data/logs/newloan/root.log" />
 		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
 		<!-- 设置是否在重新启动服务时，在原有日志的基础添加新日志 -->
 		<param name="Append" value="true" />
@@ -52,10 +52,6 @@
 	</logger>
 	<logger name="org.springframework" additivity="false">
 		<level value="WARN" />
-		<appender-ref ref="rootlog" />
-	</logger>
-	<logger name="com.alibaba.druid" additivity="false">
-		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="org.eclipse.jetty" additivity="false">

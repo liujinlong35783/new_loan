@@ -15,13 +15,13 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @PropertySource({"classpath:bank.properties"})
 @MapperScan("com.tkcx.api.business.*.dao")
 @SpringBootApplication
-public class AcctPrintApplication {
+public class NewLoanApplication {
 
-	private final static Logger logger = LoggerFactory.getLogger(AcctPrintApplication.class);
+	private final static Logger logger = LoggerFactory.getLogger(NewLoanApplication.class);
 
 	public static void main(String[] args) {
-		SpringApplication.run(AcctPrintApplication.class, args);
-		logger.info(AcctPrintApplication.class.getSimpleName() + " is success!");
+		SpringApplication.run(NewLoanApplication.class, args);
+		logger.info(NewLoanApplication.class.getSimpleName() + " is success!");
 	}
 
 }

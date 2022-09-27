@@ -100,9 +100,8 @@ public class ZhqdBusinesService {
                     queryResult = busiOrgSeqDao.selectListByQuery(new BusiOrgQuery(queryContent));
                     break;
                 case 5:
-                    LoanBillAndAdjustQuery adjustQuery = new LoanBillAndAdjustQuery(queryContent, queryReq.getInterfaceIden());
                     log.info("查询----贷款科目分户账-----登记簿");
-                    queryResult = loanAccBillDao.selectListByQuery(adjustQuery);
+                    queryResult = loanAccBillDao.selectListByQuery(new LoanBillAndAdjustQuery(queryContent, queryReq.getInterfaceIden()));
                     break;
                 case 6:
                     LoanBillAndAdjustQuery loanBillAndAdjustQuery = new LoanBillAndAdjustQuery(queryContent, queryReq.getInterfaceIden());

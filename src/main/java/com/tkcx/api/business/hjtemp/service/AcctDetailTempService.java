@@ -1,13 +1,11 @@
 package com.tkcx.api.business.hjtemp.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.tkcx.api.business.acctPrint.model.BusiOrgBillModel;
+import com.tkcx.api.business.acctPrint.model.Loan.BusiOrgBillLoanModel;
 import com.tkcx.api.business.hjtemp.dao.AcctDetailTempDao;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
 import com.tkcx.api.business.hjtemp.model.vo.BusiOrgBillVo;
-import com.tkcx.api.business.wdData.model.AcctDataModel;
 import com.tkcx.api.common.CommonService;
 import com.tkcx.api.utils.ToolUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -65,12 +63,6 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
         return acctDetailTempDao.selectModelCount(model);
     }
 
-    public Integer querydetailPage(Date preDate, Date curDate) {
-        return acctDetailTempDao.querydetailPage(preDate, curDate);
-    }
-
-
-
     public Integer selectCountNotInEleAccount(AcctDetailTempModel model) {
         return acctDetailTempDao.selectCountNotInEleAccount(model);
     }
@@ -83,12 +75,8 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
         return acctDetailTempDao.getDetailBySeq(channelSeq, debtFlag);
     }
 
-    public List<AcctDetailTempModel> getDetailByAcctDate(Date acctDate){
-        return acctDetailTempDao.getDetailByAcctDate(acctDate);
-    }
-
-    public Boolean delAcctDetailTempData(Date acctDate){
-        return acctDetailTempDao.delAcctDetailTempData(acctDate);
+    public AcctDetailTempModel getDetailBySeqNo(String channelSeq){
+        return acctDetailTempDao.getDetailBySeqNo(channelSeq);
     }
 
     /**
@@ -96,12 +84,13 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
      * @param acctDate
      * @return
      */
-    public  List<BusiOrgBillModel> statAllBusiOrgBillVo(Date acctDate){
+    public  List<BusiOrgBillLoanModel> statAllBusiOrgBillVo(Date acctDate){
+        //TO do:删除过滤渠道条件
         List<BusiOrgBillVo> voList = acctDetailTempDao.findStatAllBusiOrgBillVo(acctDate);
-        List<BusiOrgBillModel> modelList = new ArrayList<>();
+        List<BusiOrgBillLoanModel> modelList = new ArrayList<>();
         String uid = "",debtFlag = "",offBalanceFlag = "";
         BigDecimal transAmount = null;
-        BusiOrgBillModel busiOrgBill = null;
+        BusiOrgBillLoanModel busiOrgBill = null;
         for (BusiOrgBillVo vo: voList) {
             if(uid.equals(vo.getAcctOrg()+vo.getItemCtrl()) && busiOrgBill != null){//如果已存在
                 if(debtFlag.equals(vo.getDebtFlag()) && offBalanceFlag.equals(vo.getOffBalanceFlag())){//表内外关系相同
@@ -126,7 +115,7 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
                     continue;
                 }
             }
-            busiOrgBill = new BusiOrgBillModel();
+            busiOrgBill = new BusiOrgBillLoanModel();
             modelList.add(busiOrgBill);
             busiOrgBill.setOrgCode(vo.getAcctOrg());
             busiOrgBill.setOrgName(vo.getOrgName());
@@ -154,19 +143,7 @@ public class AcctDetailTempService extends CommonService<AcctDetailTempDao,AcctD
         return modelList;
     }
 
-    public List<AcctDetailTempModel> selectModelPage(Page<AcctDetailTempModel> page, Date startDate, Date endDate) {
-        // 不进行 count sql 优化，解决 MP 无法自动优化 SQL 问题，这时候你需要自己查询 count 部分
-        // page.setOptimizeCountSql(false);
-        // 当 total 为小于 0 或者设置 setSearchCount(false) 分页插件不会进行 count 查询
-        // 要点!! 分页返回的对象与传入的对象是同一个
-        Page<AcctDetailTempModel> result = new Page<>(page.getCurrent(), page.getSize());
-        IPage<AcctDetailTempModel> acctDataModelIPage = acctDetailTempDao.selectListByPage(page, startDate, endDate);
-
-
-//        Page<Student> page = new Page<>(pageNum.longValue(), pageSize.longValue());
-//        IPage<Student> iPage = settlementBankMapper.selectPage(page, queryWrapper);
-//        return iPage.getRecords();
-
-        return acctDataModelIPage.getRecords();
+    public Boolean delAcctDetailTempData(Date acctDate){
+        return acctDetailTempDao.delAcctDetailTempData(acctDate);
     }
 }

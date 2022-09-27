@@ -4,7 +4,11 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tkcx.api.business.acctPrint.model.AcctLogModel;
 import com.tkcx.api.business.acctPrint.service.AcctLogService;
+import com.tkcx.api.business.hjtemp.fileService.BusiCodeFileService;
+import com.tkcx.api.business.hjtemp.model.AcctBrchTempModel;
+import com.tkcx.api.business.hjtemp.model.AcctBusiCodeModel;
 import com.tkcx.api.business.hjtemp.model.AcctDetailTempModel;
+import com.tkcx.api.business.hjtemp.service.AcctBusiCodeService;
 import com.tkcx.api.business.hjtemp.service.AcctDetailTempService;
 import com.tkcx.api.business.wdData.dao.CommonMapper;
 import com.tkcx.api.business.wdData.model.AcctDataModel;
@@ -46,6 +50,9 @@ public class BusiCommonService {
     private AcctDetailTempService acctDetailTempService;
 
     @Autowired
+    private AcctBusiCodeService acctBusiCodeService;
+
+    @Autowired
     private CardiiService cardiiService;
 
     @Autowired
@@ -78,6 +85,21 @@ public class BusiCommonService {
         }
 
     }
+
+    /**
+     * 科目控制字获取科目名称
+     *
+     * @param itemCtrl 科目控制字
+     * @return
+     */
+    public String selectItemName(String itemCtrl) {
+        if (StringUtils.isNotEmpty(itemCtrl)) {
+            AcctBusiCodeModel acctBusiCodeModel = acctBusiCodeService.getDetailByItemCtrl(itemCtrl);
+            return acctBusiCodeModel.getItemName();
+        }
+        return null;
+    }
+
 
     /**
      * 借贷标识
@@ -220,7 +242,7 @@ public class BusiCommonService {
      */
     public String getOrgNameByCode(String orgCode) {
         if (StringUtils.isNotEmpty(orgCode)) {
-            return (String) commonMapper.getBySql("select org.ORG_NAME from QN_DB_ACCT.ACCT_ORG_TEMP org where org.ORG_CODE = '"+orgCode+"' and org.STATUS = '1'");
+            return (String) commonMapper.getBySql("select org.ORG_NAME from QN_DB_LOAN.ACCT_ORG_TEMP org where org.ORG_CODE = '"+orgCode+"' and org.STATUS = '1'");
         }
         return "";
     }

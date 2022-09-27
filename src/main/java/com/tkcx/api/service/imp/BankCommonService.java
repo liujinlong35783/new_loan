@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
 import com.tkcx.api.exception.BankException;
 import com.tkcx.api.exception.ErrorCode;
+import com.tkcx.api.utils.afe.RandomUtils;
 import com.tkcx.api.vo.ResponseVo;
 import com.tkcx.api.vo.base.*;
 import com.tkcx.api.vo.callback.ServiceRequestVo;
@@ -29,6 +30,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 银行通用服务
@@ -50,8 +53,6 @@ public class BankCommonService {
 
 	@Value("${bank.service.sysId}")
 	private String sysId;
-	@Value("${bank.service.sysId1}")
-	private String sysId1;
 	@Value("${bank.service.txnChnlTp}")
 	private String txnChnlTp;
 	@Value("${bank.service.txntlrId}")
@@ -59,12 +60,6 @@ public class BankCommonService {
 	@Value("${bank.service.orgId}")
 	private String orgId;
 
-
-	@Autowired
-	private EncryptService encryptService;
-
-//	@Autowired
-//	private AfeDecryptService afeDecryptService;
 
 	/**
 	   * 接收请求
@@ -84,24 +79,6 @@ public class BankCommonService {
 		}
 	}
 
-
-	/**
-	 * 接收请求
-	 */
-	public <T extends ServiceRequestVo> T receiveZH(String message, Class<T> reqClazz) throws ApplicationException {
-		log.info("接收请求-->" + message);
-		ServiceVo serviceVo = this.convertMessageToVoZH(message);
-		try {
-			T req = reqClazz.newInstance();
-			req.withMap(serviceVo.getBody().getParamMap());
-			req.setSysHeadVo(serviceVo.getSysHead());
-			req.setAppHeadVo(serviceVo.getAppHead());
-			return req;
-		} catch (InstantiationException | IllegalAccessException e) {
-			log.error(e.getMessage(), e);
-			throw new ApplicationException(ErrorCode.CANNOT_NEW_INSTANCE, "无法实例化对象", e);
-		}
-	}
 	/**
 	   * 响应请求
 	 */
@@ -114,9 +91,13 @@ public class BankCommonService {
 		sysHead.setCnsmrSeqNo(request.getSysHeadVo().getCnsmrSeqNo());
 		sysHead.setOrigCnsmrSeqNo(request.getSysHeadVo().getOrigCnsmrSeqNo());
 		sysHead.setOrigCnsmrSvrId(request.getSysHeadVo().getOrigCnsmrSvrId());
-		sysHead.setSvcSplrSysId(sysId1);
+		sysHead.setSvcSplrSysId(sysId);
 		
-		String customerSeqNo = encryptService.getNx1();
+
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		String dateStr = format.format(new Date());
+		String customerSeqNo = sysId+dateStr+ RandomUtils.creatCnsmrSeqNo();
+
 		sysHead.setSvcSplrSeqNo(customerSeqNo);
 		sysHead.setTxnSt(response.getTxnSt());
 		sysHead.setRetCd(response.getRetCd());
@@ -139,47 +120,6 @@ public class BankCommonService {
 		 *
 		 */
 		String responseMessage = this.convertVoToMessage(service);
-		log.info("响应请求-->" + responseMessage);
-		return responseMessage;
-	}
-
-	/**
-	 * 响应请求
-	 */
-	public String responseZH(ServiceRequestVo request, ServiceResponseVo response) throws ApplicationException {
-
-		SysHeadVo sysHead = new SysHeadVo();
-		sysHead.setSvcCd(request.getSysHeadVo().getSvcCd());
-		sysHead.setSvcScn(request.getSysHeadVo().getSvcScn());
-		sysHead.setCnsmrSysId(request.getSysHeadVo().getCnsmrSysId());
-		sysHead.setCnsmrSeqNo(request.getSysHeadVo().getCnsmrSeqNo());
-		sysHead.setOrigCnsmrSeqNo(request.getSysHeadVo().getOrigCnsmrSeqNo());
-		sysHead.setOrigCnsmrSvrId(request.getSysHeadVo().getOrigCnsmrSvrId());
-		sysHead.setSvcSplrSysId(sysId);
-
-		String customerSeqNo = encryptService.getNx();
-		sysHead.setSvcSplrSeqNo(customerSeqNo);
-		sysHead.setTxnSt(response.getTxnSt());
-		sysHead.setRetCd(response.getRetCd());
-		sysHead.setRetMsg(response.getRetMsg());
-
-		AppHeadVo appHead = new AppHeadVo();
-		appHead.setTxnTlrId(request.getAppHeadVo().getTxnTlrId());
-		appHead.setOrgId(request.getAppHeadVo().getOrgId());
-		appHead.setTlrPwsd(request.getAppHeadVo().getTlrPwsd());
-		appHead.setTlrLvl(request.getAppHeadVo().getTlrLvl());
-
-		BodyVo body = new BodyVo();
-		body.setParamMap(response.toMap());
-
-		ServiceVo service = new ServiceVo();
-		service.setSysHead(sysHead);
-		service.setAppHead(appHead);
-		service.setBody(body);
-		/**
-		 *
-		 */
-		String responseMessage = this.convertVoToMessageZH(service);
 		log.info("响应请求-->" + responseMessage);
 		return responseMessage;
 	}
@@ -215,7 +155,7 @@ public class BankCommonService {
 		sysHead.setSvcCd(serviceCode);
 		sysHead.setSvcScn(serviceScreen);
 		sysHead.setCnsmrSysId(sysId);
-		String customerSeqNo = encryptService.getNx();
+		String customerSeqNo = "ncryptService.getNx()";
 		sysHead.setCnsmrSeqNo(customerSeqNo);
 		sysHead.setTxnChnlTp(txnChnlTp);
 		sysHead.setOrigCnsmrSeqNo(customerSeqNo);
@@ -269,23 +209,6 @@ public class BankCommonService {
 
 		String xmlBlock = XML_DECLARATION_BLOCK + xStream.toXML(service);
 
-		// 生成MAC
-		String macBlock = encryptService.generateMac(xmlBlock);
-
-		String lengthBlock = String.format("%08d", macBlock.length() + xmlBlock.length());
-
-		return lengthBlock + macBlock + xmlBlock;
-	}
-
-	private String convertVoToMessageZH(ServiceVo service) throws ApplicationException {
-
-		XStream xStream = new XStream(new XppDriver(new NoNameCoder()));
-		xStream.processAnnotations(ServiceVo.class);
-		xStream.registerConverter(new BodyParamConverter());
-		xStream.registerConverter(new MapEntryConverter());
-
-		String xmlBlock = XML_DECLARATION_BLOCK + xStream.toXML(service);
-
 //		// 生成MAC
 //		String macBlock = encryptService.generateMac(xmlBlock);
 //
@@ -296,27 +219,6 @@ public class BankCommonService {
 	}
 
 	private ServiceVo convertMessageToVo(String message) throws ApplicationException {
-
-		XStream xStream = new XStream(new XppDriver(new NoNameCoder()));
-		xStream.processAnnotations(ServiceVo.class);
-		xStream.registerConverter(new BodyParamConverter());
-		xStream.registerConverter(new MapEntryConverter());
-		xStream.ignoreUnknownElements();
-		XStream.setupDefaultSecurity(xStream);
-		xStream.allowTypes(new Class[] { ServiceVo.class });
-		//MAC地址校验
-		int macLenght = Integer.valueOf(message.substring(TOTAL_LENGTH_BIT, TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT));
-		String expectMacBlock = message.substring(TOTAL_LENGTH_BIT,
-				TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
-		String xmlBlock = message.substring(TOTAL_LENGTH_BIT + MAC_BLOCK_LENGTH_BIT + macLenght);
-		log.info("convertMessageToVo-xmlBlock: "+xmlBlock);
-		encryptService.verifyMac(xmlBlock, expectMacBlock);
-		log.info("验证MAC通过");
-		Object xml = xStream.fromXML(xmlBlock);
-		return (ServiceVo)xml;
-	}
-
-	private ServiceVo convertMessageToVoZH(String message) throws ApplicationException {
 
 		XStream xStream = new XStream(new XppDriver(new NoNameCoder()));
 		xStream.processAnnotations(ServiceVo.class);
