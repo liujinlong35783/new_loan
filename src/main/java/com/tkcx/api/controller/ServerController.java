@@ -36,4 +36,19 @@ public class ServerController {
             return null;
         }
     }
+
+    /**
+     * 综合前端查询
+     * @param message ml加密报文
+     * @return
+     */
+    @RequestMapping(value = "/queryAcctData", method = RequestMethod.POST)
+    public String queryAcctData(@RequestBody String message) {
+        try {
+            String rspVo = bankApiService.zhqdQuery(message);
+            return rspVo;
+        } catch (ApplicationException e) {
+            return null;
+        }
+    }
 }

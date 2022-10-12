@@ -23,7 +23,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value="LOAN_DETAIL_BILL",schema="QN_DB_ACCT")
+@TableName(value="LOAN_DETAIL_BILL",schema="QN_DB_LOAN")
 public class LoanDetailBillModel extends Model<LoanDetailBillModel> implements IAcctPrintCommon {
 
     private static final long serialVersionUID = 1L;
@@ -149,11 +149,11 @@ public class LoanDetailBillModel extends Model<LoanDetailBillModel> implements I
 	private String loanName;
 
 	/**
-	 * 新网贷标志
+	 * 渠道来源
 	 *
 	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+	@TableField(value="CHANNEL")
+	private String channel;
 
 	@Override
 	protected Serializable pkVal() {

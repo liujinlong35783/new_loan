@@ -21,7 +21,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value = "VOUCHER_PRINT", schema = "QN_DB_ACCT")
+@TableName(value = "VOUCHER_PRINT", schema = "QN_DB_LOAN")
 public class VoucherPrintModel extends Model<VoucherPrintModel> {
 
     private static final long serialVersionUID = 1L;

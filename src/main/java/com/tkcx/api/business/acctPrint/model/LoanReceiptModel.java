@@ -25,7 +25,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value="LOAN_RECEIPT",schema="QN_DB_ACCT")
+@TableName(value="LOAN_RECEIPT",schema="QN_DB_LOAN")
 public class LoanReceiptModel extends Model<LoanReceiptModel> implements IAcctPrintCommon {
 
     private static final long serialVersionUID = 1L;
@@ -142,11 +142,11 @@ public class LoanReceiptModel extends Model<LoanReceiptModel> implements IAcctPr
 	private String orgName;
 
 	/**
-	 * 新网贷标志
+	 * 渠道来源
 	 *
 	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+	@TableField(value="CHANNEL")
+	private String channel;
 
 	private String printCount;
 

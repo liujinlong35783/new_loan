@@ -18,6 +18,12 @@ public interface BankApiService {
      * 互金通知
      */
     String hjNotice(String msg) throws ApplicationException;
+
+    /**
+     * 综合前端查询接口
+     */
+    String zhqdQuery(String msg) throws ApplicationException;
+
     /**
      * 文件下载
      * @param req

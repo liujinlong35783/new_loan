@@ -61,6 +61,9 @@ public class QnBankApiServiceImpl implements BankApiService {
 	@Autowired
 	private AfeCommonService afeCommonService;
 
+	@Autowired
+	private ZhqdBusinesService zhqdBusinesService;
+
 	@Value("${storage.tempDownload.path}")
 	private String tempDownloadPath;
 	private static final int FILE_NAME_LENGTH = 40;
@@ -130,6 +133,28 @@ public class QnBankApiServiceImpl implements BankApiService {
 
 			return responseData;
 		}
+	}
+
+	@Override
+	public String zhqdQuery(String EncryptMsg) throws ApplicationException {
+		log.info("QnBankApiServiceImpl zhqdQuery EncryptMsg:"+EncryptMsg);
+		//解密后的报文
+		String msg = afeUtilsService.afeDecryptMsg(EncryptMsg);
+		log.info("QnBankApiServiceImpl zhqdQuery DecryptMsg:"+msg);
+		ZhqdQueryRspVo rsp = new ZhqdQueryRspVo();
+		ZhqdQueryReqVo req = null;
+		String resultXml = "";
+		try {
+			req = bankCommonService.receive(msg, ZhqdQueryReqVo.class);
+			rsp = zhqdBusinesService.queryEntry(req);//获取返回信息
+			resultXml = bankCommonService.response(req, rsp);
+		}catch (ApplicationException e) {
+			log.error("查询失败,错误原因：" + e);
+			rsp.setRetCd("999999");
+			rsp.setRetMsg("查询失败");
+		}
+		String responseData = afeCommonService.encrypt(req, resultXml);
+		return responseData;
 	}
 
 	/**

@@ -23,7 +23,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value="BUSI_ORG_SEQ",schema="QN_DB_ACCT")
+@TableName(value="BUSI_ORG_SEQ",schema="QN_DB_LOAN")
 public class BusiOrgSeqModel extends Model<BusiOrgSeqModel>  implements IAcctPrintCommon {
 
     private static final long serialVersionUID = 1L;
@@ -128,11 +128,11 @@ public class BusiOrgSeqModel extends Model<BusiOrgSeqModel>  implements IAcctPri
 	private String operator;
 
 	/**
-	 * 新网贷标志
+	 * 渠道来源
 	 *
 	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+	@TableField(value="CHANNEL")
+	private String channel;
 
 	@Override
 	protected Serializable pkVal() {

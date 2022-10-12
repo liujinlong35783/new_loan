@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value = "ACCT_LOG", schema = "QN_DB_ACCT")
+@TableName(value = "ACCT_LOG", schema = "QN_DB_LOAN")
 public class AcctLogModel extends Model<AcctLogModel> {
 
     private static final long serialVersionUID = 1L;

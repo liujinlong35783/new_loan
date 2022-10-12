@@ -78,18 +78,12 @@ public class ZhqdBusinesService {
                 case 1:
                     LoanReceiptQuery loanReceiptQuery = new LoanReceiptQuery(queryContent);
                     log.info("查询----客户借款信息-----登记簿");
-                    queryResult = realTimeQueryService.realTime(loanReceiptQuery);
-                    if(queryResult == null){
-                        queryResult = loanReceiptDao.selectListByQuery(loanReceiptQuery);
-                    }
+                    queryResult = loanReceiptDao.selectListByQuery(loanReceiptQuery);
                     break;
                 case 2:
                     RefundReceiptQuery refundReceiptQuery = new RefundReceiptQuery(queryContent);
                     log.info("查询----客户还款回单信息-----登记簿");
-                    queryResult = realTimeQueryService.realTime(refundReceiptQuery);
-                    if(queryResult == null){
-                        queryResult = refundReceiptDao.selectListByQuery(refundReceiptQuery);
-                    }
+                    queryResult = refundReceiptDao.selectListByQuery(refundReceiptQuery);
                     break;
                 case 3:
                     log.info("查询----机构扎账单-----登记簿");
@@ -106,18 +100,12 @@ public class ZhqdBusinesService {
                 case 6:
                     LoanBillAndAdjustQuery loanBillAndAdjustQuery = new LoanBillAndAdjustQuery(queryContent, queryReq.getInterfaceIden());
                     log.info("查询----贷款明细账-----登记簿");
-                    queryResult = realTimeQueryService.realTime(loanBillAndAdjustQuery);
-                    if(queryResult == null) {
-                        queryResult = loanDetailBillDao.selectListByQuery(loanBillAndAdjustQuery);
-                    }
+                    queryResult = loanDetailBillDao.selectListByQuery(loanBillAndAdjustQuery);
                     break;
                 case 7:
                     InterestBillQuery interestBillQuery = new InterestBillQuery(queryContent);
                     log.info("查询----贷款利息-----登记簿");
-                    queryResult = realTimeQueryService.realTime(interestBillQuery);
-                    if(queryResult == null) {
-                        queryResult = interestBillDao.selectListByQuery(interestBillQuery);
-                    }
+                    queryResult = interestBillDao.selectListByQuery(interestBillQuery);
                     break;
                 case 8:
                     log.info("查询----电子凭证-----登记簿");

@@ -24,7 +24,7 @@ import java.util.Date;
  */
 @Getter
 @Setter
-@TableName(value="ACCOUNT_VOUCHER",schema="QN_DB_ACCT")
+@TableName(value="ACCOUNT_VOUCHER",schema="QN_DB_LOAN")
 public class AccountVoucherModel  extends Model<AccountVoucherModel> implements IAcctPrintCommon {
 
     private static final long serialVersionUID = 1L;
@@ -175,11 +175,11 @@ public class AccountVoucherModel  extends Model<AccountVoucherModel> implements 
 	private String printCount;
 
 	/**
-	 * 新网贷标志
+	 * 渠道来源
 	 *
 	 */
-	@TableField(value="NEWLOAN_FLAG")
-	private String newLoanFlag;
+	@TableField(value="CHANNEL")
+	private String channel;
 
 	@Override
 	protected Serializable pkVal() {
