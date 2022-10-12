@@ -30,69 +30,80 @@
 	</appender>
 
 
+
 	<logger name="org.springframework.jdbc.core.JdbcTemplate" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="org.springframework.jdbc.core.StatementCreatorUtils" additivity="false">
-		<level value="TRACE" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 
 	<logger name="org.springmodules" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="net.sf.ehcache" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
 	</logger>
 	<logger name="org.apache" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="org.springframework" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
+		<appender-ref ref="rootlog" />
+	</logger>
+	<!--连接池数据库日志-->
+	<logger name="com.alibaba.druid" additivity="false">
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="org.eclipse.jetty" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 
 	<!-- esb -->
 	<logger name="stdLogger" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="daeLogger" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="trcLogger" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="bizLogger" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 
 	<!-- rocketmq -->
 	<logger name="RocketmqClient" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="RocketmqCommon" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
 	</logger>
 	<logger name="RocketmqRemoting" additivity="false">
-		<level value="WARN" />
+		<level value="INFO" />
 		<appender-ref ref="rootlog" />
+	</logger>
+	<!--atomikos日志-->
+	<logger name="com.atomikos">
+		<level value="error"></level>
 	</logger>
 
 	<root>
 		<appender-ref ref="rootlog" />
 		<appender-ref ref="console" />
 	</root>
+
 </log4j:configuration>

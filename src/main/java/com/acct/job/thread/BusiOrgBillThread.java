@@ -46,8 +46,8 @@ public class BusiOrgBillThread extends AcctBaseThread {
             busiOrgBillLoanModel.setCreditNum(brchTempModel.getTodayLoanQuantities());
             busiOrgBillLoanModel.setCreditAmount(brchTempModel.getTodayLoanAmount()+"");
             busiOrgBillLoanModel.setCreateDate(brchTempModel.getCreateDate());
-            busiOrgBillLoanModel.setAcctDate(super.getCurDate());
-            busiOrgBillLoanModel.setBusiDate(super.getCurDate());
+            busiOrgBillLoanModel.setAcctDate(selectDate1);
+            busiOrgBillLoanModel.setBusiDate(selectDate1);
             busiOrgBillLoanModel.setChannel("1");
             busiOrgBillLoanList.add(busiOrgBillLoanModel);
         }
