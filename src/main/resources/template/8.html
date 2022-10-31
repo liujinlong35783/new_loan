@@ -11,11 +11,11 @@
         <td colspan="7" style="height: 50px;font-size: 25px;text-align: center;border: none">网贷电子凭证</td>
     </tr>
     </thead>
-    <tbody>
+    <tbody style="border: 0px solid #666;">
     <tr>
-        <td style="border: none">
+        <td style="border: none;border-bottom: 1px solid #666;">
             <table style="width: 100%;">
-                <tr>
+                <tr >
                     <td align="left"><span>机构名称：#{orgName}</span></td>
                     <td><span>机构号：#{orgCode}</span></td>
                     <td><span>交易日期时间：#{busiDate}</span></td>
@@ -31,8 +31,9 @@
         </td>
     </tr>
     <tr>
-        <td style="border: none">
+        <td>
             <table #{lineNum=20} style="width: 100%;">
+
                 <tr>
                     <td>账号和户名</td>
                     <td>科目控制字</td>
