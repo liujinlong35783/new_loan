@@ -41,7 +41,7 @@ xxl:
     admin:
       addresses: http://6.106.4.23:8080/xxl-job-admin/
     executor:
-      appname: acctPrint
+      appname: newLoan
       ip: 6.106.4.15
       ## SIT 6.106.4.15
       ## UAT 6.106.4.25

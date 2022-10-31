@@ -39,7 +39,7 @@ xxl:
     admin:
       addresses: http://xxl.bank.com/xxl-job-admin/
     executor:
-      appname: acctprint
+      appname: newLoan
       ip:
       port: 8099
       #accessToken:
@@ -89,5 +89,5 @@ afe:
     DisNode: ""
 #新希望推送文件路径
 newLoan:
-  filePath: D:\\JAVA\\Company\\new_loan\\file_data\\
-#  filePath: /home/loan/file_data/
+#  filePath: D:\\JAVA\\Company\\new_loan\\file_data\\
+  filePath: /home/loan/file_data/

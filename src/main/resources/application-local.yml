@@ -57,7 +57,7 @@ afe:
   lspublic:
     Key:
       #AFE公钥路径
-      #      path: /data/acctprint/afe_acct/113700.cer
+      #path: /data/acctprint/afe_acct/113700.cer
       #AFE公钥路径
       path: D:\JAVA\Company\bersion_gitlab\kjpz\src\main\resources\rsa_2048\113700.cer
   private:
@@ -98,5 +98,5 @@ afe:
     DisNode: ""
 #新希望推送文件路径
 newLoan:
-  filePath: D:\\JAVA\\Company\\new_loan\\file_data\\
+  filePath: D:\\JAVA\\Company\\bersion_gitlab\\new_loan\\data\\file_data\\
 #  filePath: /home/loan/file_data/
